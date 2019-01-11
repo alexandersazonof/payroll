@@ -23,11 +23,10 @@ public class ConcreteCardService implements AbstractCardService {
 
 
     @Override
-    public boolean addCard(String firstName, String lastName, String address, String city, String account, String rate, String valute, String company, int userId) throws ServiceException {
+    public boolean addCard(String firstName, String lastName, String address, String city, String account, String rate, String company, int userId) throws ServiceException {
         if (!Validator.validateString(firstName) || !Validator.validateString(lastName)
                 || !Validator.validateString(address) || !Validator.validateString(city)
-                || !Validator.validateNumber(account) || !Validator.validateString(rate)
-                || !Validator.validateString(valute)) {
+                || !Validator.validateNumber(account) || !Validator.validateString(rate)) {
             throw new ServiceWrongNameException("incorrect value");
         }
 
@@ -38,9 +37,10 @@ public class ConcreteCardService implements AbstractCardService {
         SqlCompanyDAO companyDAO = daoFactory.getCompanyDAO();
 
         try {
-            int idBankAccount = bankAccountDAO.getByNumber(account).getId();
+            BankAccount bankAccount = bankAccountDAO.getByNumber(account);
+            int idBankAccount = bankAccount.getId();
             int idRate = rateDAO.getIdByName(rate);
-            int idValute = valuteDAO.getIdByName(valute);
+
             int idCompany = companyDAO.getIdByName(company);
             String customer = Creator.getCustomer(firstName, lastName);
 
@@ -53,12 +53,11 @@ public class ConcreteCardService implements AbstractCardService {
             int money = 0;
 
             UserData userData = Creator.takeUserData(firstName, lastName, address, city,1);
-            Card card = Creator.takeCard(number, validDate, customer, idCompany, idBankAccount, idRate, money, valute);
+            Card card = Creator.takeCard(number, validDate, customer, idCompany, idBankAccount, idRate, money, bankAccount.getValute());
             Operation operation = Creator.takeOperation(ACTION_OPERATION + number, account, userId);
 
 
             SqlCardDAO cardDAO = daoFactory.getCardDAO();
-            System.out.println("after transaction");
 
             cardDAO.addCard(card, operation, userData);
         } catch (DAOException e) {

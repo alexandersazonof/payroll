@@ -24,9 +24,6 @@
                 <div class="col-sm-1">
                     <img src="../img/delete.png" width="25" height="25">
                 </div>
-                <div class="col-sm-1">
-                    <img src="../img/edit.svg" width="25" height="25">
-                </div>
             </div>
         </div>
         <div class="col-sm-6">
