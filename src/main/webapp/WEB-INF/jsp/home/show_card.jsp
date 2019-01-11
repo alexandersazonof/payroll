@@ -33,6 +33,7 @@
                     <img src="../img/${company.getName()}.png" width="30" height="25">
                 </div>
                 <div class="col-sm-2">
+
                     <c:choose>
                         <c:when test = "${status == true}">
                             <span class="badge badge-success">Active</span>

@@ -82,6 +82,7 @@ public class ConcreteCardService implements AbstractCardService {
         }
     }
 
+
     @Override
     public List<Company> getAllCompany() throws ServiceException {
         try {
