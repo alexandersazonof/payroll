@@ -1,0 +1,34 @@
+<web-app xmlns="http://java.sun.com/xml/ns/javaee" version="2.5">
+
+    <servlet>
+        <display-name>controller</display-name>
+        <servlet-name>controller</servlet-name>
+        <servlet-class>by.etc.payroll.controller.Controller</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>controller</servlet-name>
+        <url-pattern>/controller</url-pattern>
+    </servlet-mapping>
+
+
+
+    <error-page>
+        <error-code>404</error-code>
+        <location>/controller?command=error</location>
+    </error-page>
+
+    <filter>
+        <filter-name>charsetfilter</filter-name>
+        <filter-class>by.etc.payroll.controller.filter.CharsetFilter</filter-class>
+        <init-param>
+            <param-name>encoding</param-name>
+            <param-value>UTF-8</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>charsetfilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    
+
+</web-app>
