@@ -15,4 +15,7 @@ public interface CardDAO<Card> extends CrudDAO<Card> {
 
     boolean addCard (Card card, Operation operation, UserData userData) throws DAOException;
     Card getByCardNumber (String number) throws DAOException;
+
+    boolean isBlock (int idCard) throws DAOException;
+    boolean blockCard (int idCard) throws DAOException;
 }

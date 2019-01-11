@@ -47,6 +47,14 @@
             </button>
         </div>
     </c:when>
+    <c:when test="${param.wrongquery != null}">
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            Некорректный запрос
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    </c:when>
 </c:choose>
 
 

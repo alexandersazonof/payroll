@@ -42,7 +42,6 @@ public class ShowCardPageCommand implements ActionCommand {
         User user = (User)request.getSession().getAttribute("user");
 
         try {
-        // add show only admin and user owns the card
         if (user == null) {
             throw new ServiceUnauthorizedAccessException("Incorrect acccess");
         }
@@ -66,8 +65,9 @@ public class ShowCardPageCommand implements ActionCommand {
         Company company = cardService.getCompanyById(card.getCompany());
         Rate rate = cardService.getRateById(card.getRate());
 
+        boolean status = cardService.checkCardOnBlockByCardId(Integer.valueOf(carId));
 
-
+        request.setAttribute("status", status);
         request.setAttribute("rate", rate);
         request.setAttribute("company", company);
         request.setAttribute("valute", valute);

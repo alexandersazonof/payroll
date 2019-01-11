@@ -10,9 +10,9 @@ import java.util.List;
 
 public interface AbstractCardService {
     boolean addCard (String firstName, String lastName, String address, String city, String account, String rate, String company, int userId) throws ServiceException;
-    List<Valute> getValute () throws ServiceException;
-    List<Rate> getRate () throws ServiceException;
-    List<Company> getCompany() throws ServiceException;
+    List<Valute> getAllValute() throws ServiceException;
+    List<Rate> getAllRate() throws ServiceException;
+    List<Company> getAllCompany() throws ServiceException;
 
     Rate getRateById (int id) throws ServiceException;
     Valute getValuteById (String nameValute) throws ServiceException;
@@ -20,4 +20,11 @@ public interface AbstractCardService {
 
 
     Card getCard (String id) throws ServiceException;
+    Card getCardByNumber (String number) throws ServiceException;
+
+
+    boolean checkCardOnBlockByCardId (int cardId) throws ServiceException;
+    boolean blockCard (Card card) throws ServiceException;
+    boolean doOperation (String action, String accountNumber, int userId) throws ServiceException;
+
 }

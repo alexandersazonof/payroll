@@ -6,10 +6,7 @@ import by.etc.payroll.dao.factory.DaoFactory;
 import by.etc.payroll.dao.impl.*;
 import by.etc.payroll.service.AbstractCardService;
 import by.etc.payroll.service.creator.Creator;
-import by.etc.payroll.service.exception.ServiceException;
-import by.etc.payroll.service.exception.ServiceWrongCardNumber;
-import by.etc.payroll.service.exception.ServiceWrongNameException;
-import by.etc.payroll.service.exception.ServiceWrongNumberException;
+import by.etc.payroll.service.exception.*;
 import by.etc.payroll.service.util.Validator;
 
 import java.text.SimpleDateFormat;
@@ -68,7 +65,7 @@ public class ConcreteCardService implements AbstractCardService {
     }
 
     @Override
-    public List<Valute> getValute() throws ServiceException {
+    public List<Valute> getAllValute() throws ServiceException {
         try {
             return DaoFactory.getInstance().getValuteDAO().getAll();
         } catch (DAOException e) {
@@ -77,7 +74,7 @@ public class ConcreteCardService implements AbstractCardService {
     }
 
     @Override
-    public List<Rate> getRate() throws ServiceException {
+    public List<Rate> getAllRate() throws ServiceException {
         try {
             return DaoFactory.getInstance().getRateDAO().getAll();
         } catch (DAOException e) {
@@ -86,7 +83,7 @@ public class ConcreteCardService implements AbstractCardService {
     }
 
     @Override
-    public List<Company> getCompany() throws ServiceException {
+    public List<Company> getAllCompany() throws ServiceException {
         try {
             return DaoFactory.getInstance().getCompanyDAO().getAll();
         } catch (DAOException e) {
@@ -148,5 +145,63 @@ public class ConcreteCardService implements AbstractCardService {
         } catch (DAOException e) {
             throw new ServiceException(e.getMessage(), e);
         }
+    }
+
+    @Override
+    public Card getCardByNumber(String number) throws ServiceException {
+        try {
+            return DaoFactory.getInstance().getCardDAO().getByCardNumber(number);
+        } catch (DAOException e) {
+            throw new ServiceException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public boolean checkCardOnBlockByCardId(int cardId) throws ServiceException {
+        try {
+            return !DaoFactory.getInstance().getCardDAO().isBlock(cardId);
+        } catch (DAOException e) {
+            throw new ServiceException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public boolean blockCard(Card card) throws ServiceException {
+        if (card == null) {
+            throw new ServiceQueryException("Incorrect query");
+        }
+
+        DaoFactory daoFactory = DaoFactory.getInstance();
+        SqlCardDAO cardDAO = daoFactory.getCardDAO();
+        SqlOperationDAO operationDAO = daoFactory.getOperationDAO();
+
+        try {
+            boolean nowStatus = cardDAO.isBlock(card.getId());
+            if (nowStatus == true) {
+                throw new ServiceQueryException("Incorrect query");
+            }
+
+            cardDAO.blockCard(card.getId());
+
+        } catch (DAOException e) {
+            throw new ServiceException(e.getMessage(), e);
+        }
+
+
+        return false;
+    }
+
+    @Override
+    public boolean doOperation(String action, String accountNumber, int userId) throws ServiceException {
+        Operation operation = Creator.takeOperation(action, accountNumber, userId);
+        DaoFactory daoFactory = DaoFactory.getInstance();
+        SqlOperationDAO operationDAO = daoFactory.getOperationDAO();
+
+        try {
+            operationDAO.insert(operation);
+        } catch (DAOException e) {
+            throw new ServiceException(e.getMessage(), e);
+        }
+        return true;
     }
 }

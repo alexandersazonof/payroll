@@ -6,6 +6,8 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <html>
 <head>
     <title>Title</title>
@@ -19,21 +21,40 @@
     <div class="row">
         <div class="col-sm-6">
             <img src="../img/${company.getName()}${rate.getName()}.png" width="300" height="150">
-            <br>
-            <div class="form-group row">
-                <div class="col-sm-1">
-                    <img src="../img/delete.png" width="25" height="25">
-                </div>
-            </div>
+
         </div>
         <div class="col-sm-6">
             <div class="form-group row">
                 <label for="card" class="col-sm-2 col-form-label">Card number:</label>
                 <div class="col-sm-4">
-                    <input type="text" readonly class="form-control-plaintext" id="card" value="${card.getNumber()}">
+                    <input type="text" readonly class="form-control-plaintext" id="card" value="${card.getNumber()}" name="card">
                 </div>
                 <div class="col-sm-1">
                     <img src="../img/${company.getName()}.png" width="30" height="25">
+                </div>
+                <div class="col-sm-2">
+                    <c:choose>
+                        <c:when test = "${status == true}">
+                            <span class="badge badge-success">Active</span>
+                        </c:when>
+                        <c:otherwise>
+                            <span class="badge badge-danger">Blocking</span>
+                        </c:otherwise>
+                    </c:choose>
+                </div>
+                <div class="col-sm-1">
+                    <img src="../img/delete.png" width="25" height="25">
+                </div>
+                <div class="col-sm-1">
+                    <c:choose>
+                        <c:when test="${status == true}">
+                            <a href="/controller?command=blockcard&account=${account.getNumber()}&card=${card.getNumber()}"><img src="../img/block.png" width="25" height="25"></a>
+                        </c:when>
+                        <c:otherwise>
+                            <img src="../img/unblock.png" width="25" height="25">
+                        </c:otherwise>
+                    </c:choose>
+
                 </div>
             </div>
             <div class="form-group row">
@@ -63,7 +84,7 @@
             <div class="form-group row">
                 <label for="account" class="col-sm-2 col-form-label">Number account:</label>
                 <div class="col-sm-4">
-                    <input type="text" readonly class="form-control-plaintext" id="account" value="${account.getNumber()}">
+                    <input type="text" readonly class="form-control-plaintext" id="account" value="${account.getNumber()}" name="account">
                 </div>
             </div>
         </div>

@@ -22,6 +22,7 @@ public class SqlCardDAO implements CardDAO<Card>{
     private final String INSERT_INTO_OPERATION = "insert into operation (action, date, account_number, user_id) values (?, ?, ?, ?);";
 
 
+    private final String SELECT_BLOCK_CARD_BY_CARD_ID = "select * from block_cards where card_id = ?";
     private final String SELECT_CARD_BY_NUMBER = "select * from cards where number = ?";
     private final String SELECT_VALUTE_BY_CARD_ID = "select * from valute where id = ?";
     private final String SELECT_VALUTE_BY_NAME = "select * from valute where name = ?";
@@ -29,7 +30,7 @@ public class SqlCardDAO implements CardDAO<Card>{
 
     private final String INSERT_USER_DATA = "insert into user_data (first_name, last_name, address, city, id_card) values (?, ?, ?, ?, ?)";
     private final String INSERT_CARD = "insert into cards (number, valid_thru, customer, company_id, id_account, rate_id, money, id_valute) values (?, ?, ?, ?, ?, ?, ?, ?)";
-
+    private final String INSERT_BLOCK_CARD = "insert into block_cards (card_id) values (?)";
 
     private final String CARD_ID = "id";
     private final String CARD_NUMBER= "number";
@@ -218,10 +219,9 @@ public class SqlCardDAO implements CardDAO<Card>{
         Card card = null;
         PreparedStatement statement = null;
         ResultSet resultSet = null;
-        Connection connection = null;
 
         try {
-            connection = ConnectionPool.getInstance().getConnection();
+            Connection connection = ConnectionPool.getInstance().getConnection();
             statement = connection.prepareStatement(SELECT_CARD_BY_NUMBER);
             statement.setString(1, number);
 
@@ -253,6 +253,50 @@ public class SqlCardDAO implements CardDAO<Card>{
             }
         }
         return card;
+    }
+
+    @Override
+    public boolean isBlock(int idCard) throws DAOException {
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+
+        try(Connection connection = ConnectionPool.getInstance().getConnection()) {
+            statement = connection.prepareStatement(SELECT_BLOCK_CARD_BY_CARD_ID);
+            statement.setInt(1, idCard);
+
+            resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                return true;
+            }
+
+        } catch (SQLException e) {
+            throw new DAOException(e.getMessage(), e);
+        } finally {
+            try {
+                statement.close();
+                resultSet.close();
+            } catch (SQLException e) {
+                throw new DAOException(e.getMessage(), e);
+            }
+        }
+
+        return false;
+    }
+
+    @Override
+    public boolean blockCard(int idCard) throws DAOException {
+        PreparedStatement statement = null;
+
+        try(Connection connection = ConnectionPool.getInstance().getConnection()) {
+            statement = connection.prepareStatement(INSERT_BLOCK_CARD);
+            statement.setInt(1, idCard);
+
+
+            return statement.execute();
+        } catch (SQLException e) {
+            throw new DAOException(e.getMessage(), e);
+        }
     }
 
 

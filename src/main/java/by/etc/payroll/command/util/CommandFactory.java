@@ -2,6 +2,7 @@ package by.etc.payroll.command.util;
 
 import by.etc.payroll.command.ActionCommand;
 import by.etc.payroll.command.impl.account.*;
+import by.etc.payroll.command.impl.card.BlockCardCommand;
 import by.etc.payroll.command.impl.card.NewCardCommand;
 import by.etc.payroll.command.impl.card.NewCardPageCommand;
 import by.etc.payroll.command.impl.card.ShowCardPageCommand;
@@ -118,6 +119,12 @@ public enum CommandFactory {
         @Override
         public ActionCommand createCommand() {
             return new NewCardPageCommand();
+        }
+    },
+    BLOCKCARD {
+        @Override
+        public ActionCommand createCommand() {
+            return new BlockCardCommand();
         }
     };
 
