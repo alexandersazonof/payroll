@@ -18,4 +18,5 @@ public interface CardDAO<Card> extends CrudDAO<Card> {
 
     boolean isBlock (int idCard) throws DAOException;
     boolean blockCard (int idCard) throws DAOException;
+    boolean clearCard (int idCard) throws DAOException;
 }

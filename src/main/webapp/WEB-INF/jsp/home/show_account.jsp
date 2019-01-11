@@ -82,6 +82,8 @@
 </c:forEach>
 
 
+
+
 <jsp:include page="../template/footer.jsp" />
 
 </body>

@@ -21,21 +21,24 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class BlockCardCommand implements ActionCommand {
-    private static final Logger LOG = LogManager.getLogger(BlockCardCommand.class);
+public class UnBlockCardCommand implements ActionCommand {
+    private static final Logger LOG = LogManager.getLogger(UnBlockCardCommand.class);
     private static final String SELECTED_LANGUAGE_REQUEST_ATTR = "selectedLanguage";
 
-    private static final String ACTION_BLOCK = "Block card : ";
+
+    private static final String ACTION_BLOCK = "Unblock card : ";
 
     private static final String REDIRECT_PAGE_AFTER_UNAVTARIZED_ACCESS = "/controller?command=mainPage&useraccess=true";
     private static final String REDIRECT_PAGE_INCORRECT_QUERY = "/controller?command=mainPage&wrongquery=true";
     private static final String REDIRECT_PAGE_AFTER_SUCCESS = "/controller?command=showcardpage&cid=";
+
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws CommandException, IOException {
         QueryUtil.saveCurrentQueryToSession(request);
         String languageId = LanguageUtil.getLanguageId(request);
         request.setAttribute(SELECTED_LANGUAGE_REQUEST_ATTR, languageId);
+
 
         try {
             User user = (User)request.getSession().getAttribute("user");
@@ -50,7 +53,7 @@ public class BlockCardCommand implements ActionCommand {
 
             String cardNumber = request.getParameter("card");
             Card card = concreteCardService.getCardByNumber(cardNumber);
-            concreteCardService.blockCard(card);
+            concreteCardService.unBlockCard(card);
             concreteCardService.doOperation(ACTION_BLOCK + cardNumber , bankAccountNumber, user.getId());
 
             response.sendRedirect(REDIRECT_PAGE_AFTER_SUCCESS+card.getId());
@@ -63,6 +66,5 @@ public class BlockCardCommand implements ActionCommand {
         } catch (ServiceException e) {
             throw new CommandException(e.getMessage(), e);
         }
-
     }
 }

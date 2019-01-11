@@ -192,6 +192,32 @@ public class ConcreteCardService implements AbstractCardService {
     }
 
     @Override
+    public boolean unBlockCard(Card card) throws ServiceException {
+        if (card == null) {
+            throw new ServiceQueryException("Incorrect query");
+        }
+
+        DaoFactory daoFactory = DaoFactory.getInstance();
+        SqlCardDAO cardDAO = daoFactory.getCardDAO();
+        SqlOperationDAO operationDAO = daoFactory.getOperationDAO();
+
+        try {
+            boolean nowStatus = cardDAO.isBlock(card.getId());
+            if (nowStatus == false) {
+                throw new ServiceQueryException("Incorrect query");
+            }
+
+            cardDAO.clearCard(card.getId());
+
+        } catch (DAOException e) {
+            throw new ServiceException(e.getMessage(), e);
+        }
+
+
+        return false;
+    }
+
+    @Override
     public boolean doOperation(String action, String accountNumber, int userId) throws ServiceException {
         Operation operation = Creator.takeOperation(action, accountNumber, userId);
         DaoFactory daoFactory = DaoFactory.getInstance();

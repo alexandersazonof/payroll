@@ -48,10 +48,10 @@
                 <div class="col-sm-1">
                     <c:choose>
                         <c:when test="${status == true}">
-                            <a href="/controller?command=blockcard&account=${account.getNumber()}&card=${card.getNumber()}"><img src="../img/block.png" width="25" height="25"></a>
+                            <a href="/controller?command=blockcard&account=${account.getNumber()}&card=${card.getNumber()}" id="block"><img src="../img/block.png" width="25" height="25"></a>
                         </c:when>
                         <c:otherwise>
-                            <img src="../img/unblock.png" width="25" height="25">
+                            <a href="/controller?command=unblockcard&account=${account.getNumber()}&card=${card.getNumber()}" id="unblock"><img src="../img/unblock.png" width="25" height="25"></a>
                         </c:otherwise>
                     </c:choose>
 
@@ -93,6 +93,29 @@
 
     </div>
 </div>
+
+<script src="../js/bootbox.min.js"></script>
+<script type="text/javascript">
+    $('#block').click(function(e) {
+        e.preventDefault();
+        var msg = 'Заблокировать счёт ?';
+        bootbox.confirm(msg, function(result) {
+            if (result) {
+                location.href = "/controller?command=blockcard&account=${account.getNumber()}&card=${card.getNumber()}";
+            }
+        });
+    });
+    $('#unblock').click(function(e) {
+        e.preventDefault();
+        var msg = 'Разблокировать счёт ?';
+        bootbox.confirm(msg, function(result) {
+            if (result) {
+                location.href = "/controller?command=unblockcard&account=${account.getNumber()}&card=${card.getNumber()}";
+            }
+        });
+    });
+</script>
+
 
 <jsp:include page="../template/footer.jsp" />
 </body>
