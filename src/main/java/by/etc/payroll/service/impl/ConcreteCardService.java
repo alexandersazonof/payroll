@@ -230,4 +230,13 @@ public class ConcreteCardService implements AbstractCardService {
         }
         return true;
     }
+
+    @Override
+    public boolean deleteCard(Card card, BankAccount bankAccount, Operation operation) throws ServiceException {
+        try {
+            return DaoFactory.getInstance().getCardDAO().deleteCard(card, bankAccount, operation);
+        } catch (DAOException e) {
+            throw new ServiceException(e.getMessage(), e);
+        }
+    }
 }

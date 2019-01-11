@@ -55,6 +55,14 @@
             </button>
         </div>
     </c:when>
+    <c:when test="${param.scdrop != null}">
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            Карта успешно удалена , <strong>деньги переведены на счёт</strong>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    </c:when>
 </c:choose>
 
 

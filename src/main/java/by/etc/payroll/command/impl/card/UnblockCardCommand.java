@@ -21,8 +21,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class UnBlockCardCommand implements ActionCommand {
-    private static final Logger LOG = LogManager.getLogger(UnBlockCardCommand.class);
+public class UnblockCardCommand implements ActionCommand {
+    private static final Logger LOG = LogManager.getLogger(UnblockCardCommand.class);
     private static final String SELECTED_LANGUAGE_REQUEST_ATTR = "selectedLanguage";
 
 

@@ -1,5 +1,6 @@
 package by.etc.payroll.dao;
 
+import by.etc.payroll.bean.BankAccount;
 import by.etc.payroll.bean.Card;
 import by.etc.payroll.bean.Operation;
 import by.etc.payroll.bean.UserData;
@@ -19,4 +20,6 @@ public interface CardDAO<Card> extends CrudDAO<Card> {
     boolean isBlock (int idCard) throws DAOException;
     boolean blockCard (int idCard) throws DAOException;
     boolean clearCard (int idCard) throws DAOException;
+
+    boolean deleteCard (Card card , BankAccount bankAccount, Operation operation) throws DAOException;
 }

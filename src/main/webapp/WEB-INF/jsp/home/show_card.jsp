@@ -43,7 +43,7 @@
                     </c:choose>
                 </div>
                 <div class="col-sm-1">
-                    <img src="../img/delete.png" width="25" height="25">
+                    <a href="/controller?command=deletecard&cid=${card.getId()}" id="delete"><img src="../img/delete.png" width="25" height="25"></a>
                 </div>
                 <div class="col-sm-1">
                     <c:choose>
@@ -98,7 +98,7 @@
 <script type="text/javascript">
     $('#block').click(function(e) {
         e.preventDefault();
-        var msg = 'Заблокировать счёт ?';
+        var msg = 'Заблокировать карту ?';
         bootbox.confirm(msg, function(result) {
             if (result) {
                 location.href = "/controller?command=blockcard&account=${account.getNumber()}&card=${card.getNumber()}";
@@ -107,10 +107,19 @@
     });
     $('#unblock').click(function(e) {
         e.preventDefault();
-        var msg = 'Разблокировать счёт ?';
+        var msg = 'Разблокировать карту ?';
         bootbox.confirm(msg, function(result) {
             if (result) {
                 location.href = "/controller?command=unblockcard&account=${account.getNumber()}&card=${card.getNumber()}";
+            }
+        });
+    });
+    $('#delete').click(function(e) {
+        e.preventDefault();
+        var msg = 'Удалить карту ?';
+        bootbox.confirm(msg, function(result) {
+            if (result) {
+                location.href = "/controller?command=deletecard&cid=${card.getId()}";
             }
         });
     });

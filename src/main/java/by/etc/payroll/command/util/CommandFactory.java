@@ -127,7 +127,13 @@ public enum CommandFactory {
     UNBLOCKCARD {
         @Override
         public ActionCommand createCommand() {
-            return new UnBlockCardCommand();
+            return new UnblockCardCommand();
+        }
+    },
+    DELETECARD {
+        @Override
+        public ActionCommand createCommand() {
+            return new DeleteCardCommand();
         }
     };
 

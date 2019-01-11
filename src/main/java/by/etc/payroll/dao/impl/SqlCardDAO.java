@@ -1,5 +1,6 @@
 package by.etc.payroll.dao.impl;
 
+import by.etc.payroll.bean.BankAccount;
 import by.etc.payroll.bean.Card;
 import by.etc.payroll.bean.Operation;
 import by.etc.payroll.bean.UserData;
@@ -33,6 +34,10 @@ public class SqlCardDAO implements CardDAO<Card>{
 
     private final String INSERT_BLOCK_CARD = "insert into block_cards (card_id) values (?)";
     private final String DELETE_FROM_BLOCK_CARD = "delete from block_cards where card_id = ?";
+
+    private final String DELETE_FROM_CARD_BY_ID = "delete from cards where id = ?";
+    private final String UPDATE_MONEY_IN_ACCOUNT_BY_ID = "update account set count = count + ? where id = ?";
+
 
     private final String CARD_ID = "id";
     private final String CARD_NUMBER= "number";
@@ -314,6 +319,51 @@ public class SqlCardDAO implements CardDAO<Card>{
         } catch (SQLException e) {
             throw new DAOException(e.getMessage(), e);
         }
+    }
+
+    @Override
+    public boolean deleteCard(Card card, BankAccount bankAccount, Operation operation) throws DAOException {
+        PreparedStatement statement = null;
+        try (Connection connection = ConnectionPool.getInstance().getConnection()) {
+
+            try {
+                connection.setAutoCommit(false);
+
+                statement = connection.prepareStatement(DELETE_FROM_CARD_BY_ID);
+                statement.setInt(1, card.getId());
+                statement.execute();
+
+                statement = connection.prepareStatement(UPDATE_MONEY_IN_ACCOUNT_BY_ID);
+                statement.setInt(1, card.getMoney());
+                statement.setInt(2, bankAccount.getId());
+                statement.execute();
+
+                statement = connection.prepareStatement(INSERT_INTO_OPERATION);
+                statement.setString(1, operation.getAction());
+                statement.setString(2, operation.getDate());
+                statement.setString(3, operation.getNumber());
+                statement.setInt(4, operation.getUserId());
+                statement.execute();
+
+                connection.commit();
+
+            } catch (SQLException e) {
+                connection.rollback();
+                throw new DAOException(e.getMessage(), e);
+            }
+
+
+
+        } catch (SQLException e) {
+            throw new DAOException(e.getMessage(), e);
+        } finally {
+            try {
+                statement.close();
+            } catch (SQLException e) {
+                throw new DAOException(e.getMessage(), e);
+            }
+        }
+        return false;
     }
 
 

@@ -1,9 +1,6 @@
 package by.etc.payroll.service;
 
-import by.etc.payroll.bean.Card;
-import by.etc.payroll.bean.Company;
-import by.etc.payroll.bean.Rate;
-import by.etc.payroll.bean.Valute;
+import by.etc.payroll.bean.*;
 import by.etc.payroll.service.exception.ServiceException;
 
 import java.util.List;
@@ -27,5 +24,5 @@ public interface AbstractCardService {
     boolean blockCard (Card card) throws ServiceException;
     boolean unBlockCard (Card card) throws ServiceException;
     boolean doOperation (String action, String accountNumber, int userId) throws ServiceException;
-
+    boolean deleteCard (Card card, BankAccount bankAccount, Operation operation) throws ServiceException;
 }
