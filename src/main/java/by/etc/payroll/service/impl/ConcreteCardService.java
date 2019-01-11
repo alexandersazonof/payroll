@@ -7,6 +7,7 @@ import by.etc.payroll.dao.impl.*;
 import by.etc.payroll.service.AbstractCardService;
 import by.etc.payroll.service.creator.Creator;
 import by.etc.payroll.service.exception.ServiceException;
+import by.etc.payroll.service.exception.ServiceWrongCardNumber;
 import by.etc.payroll.service.exception.ServiceWrongNameException;
 import by.etc.payroll.service.exception.ServiceWrongNumberException;
 import by.etc.payroll.service.util.Validator;
@@ -95,14 +96,58 @@ public class ConcreteCardService implements AbstractCardService {
     }
 
     @Override
+    public Rate getRateById(int id) throws ServiceException {
+        try {
+            return DaoFactory.getInstance().getRateDAO().find(id);
+        } catch (DAOException e) {
+            throw new ServiceException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public Valute getValuteById(String nameValute) throws ServiceException {
+        try {
+            DaoFactory daoFactory = DaoFactory.getInstance();
+            SqlValuteDAO valuteDAO = daoFactory.getValuteDAO();
+            int idValute = valuteDAO.getIdByName(nameValute);
+
+
+            return valuteDAO.find(idValute);
+        } catch (DAOException e) {
+            throw new ServiceException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public Company getCompanyById(int id) throws ServiceException {
+        try {
+            return DaoFactory.getInstance().getCompanyDAO().find(id);
+        } catch (DAOException e) {
+            throw new ServiceException(e.getMessage(), e);
+        }
+    }
+
+    @Override
     public Card getCard(String cardId) throws ServiceException {
         if (!Validator.validateString(cardId)) {
-            throw new ServiceWrongNumberException("Incorrect id");
+            throw new ServiceWrongCardNumber("Incorrect id");
         }
 
-        int id = Integer.valueOf(cardId);
+        try {
+            int id = Integer.valueOf(cardId);
+            DaoFactory daoFactory  = DaoFactory.getInstance();
+            SqlCardDAO cardDAO = daoFactory.getCardDAO();
 
+            Card card = cardDAO.find(id);
 
-        return null;
+            if (card == null) {
+                throw new ServiceWrongCardNumber("Incorrect id");
+            }
+
+            return card;
+
+        } catch (DAOException e) {
+            throw new ServiceException(e.getMessage(), e);
+        }
     }
 }

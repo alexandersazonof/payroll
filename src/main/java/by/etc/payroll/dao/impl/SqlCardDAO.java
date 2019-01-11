@@ -25,9 +25,11 @@ public class SqlCardDAO implements CardDAO<Card>{
     private final String SELECT_CARD_BY_NUMBER = "select * from cards where number = ?";
     private final String SELECT_VALUTE_BY_CARD_ID = "select * from valute where id = ?";
     private final String SELECT_VALUTE_BY_NAME = "select * from valute where name = ?";
+    private final String SELECT_CARD_BY_ID = "select * from cards where id = ?";
 
     private final String INSERT_USER_DATA = "insert into user_data (first_name, last_name, address, city, id_card) values (?, ?, ?, ?, ?)";
     private final String INSERT_CARD = "insert into cards (number, valid_thru, customer, company_id, id_account, rate_id, money, id_valute) values (?, ?, ?, ?, ?, ?, ?, ?)";
+
 
     private final String CARD_ID = "id";
     private final String CARD_NUMBER= "number";
@@ -55,6 +57,7 @@ public class SqlCardDAO implements CardDAO<Card>{
 
             resultSet = statement.executeQuery();
             while (resultSet.next()) {
+                int cardId = resultSet.getInt(CARD_ID);
                 String number = resultSet.getString(CARD_NUMBER);
                 String validThru = resultSet.getString(CARD_VALID_THRU);
                 String customer = resultSet.getString(CARD_CUSTOMER);
@@ -65,7 +68,7 @@ public class SqlCardDAO implements CardDAO<Card>{
 
                 String valute = getValute(resultSet.getInt(CARD_ID_VALUTE));
 
-                list.add(create(id, number,
+                list.add(create(cardId, number,
                         validThru, customer, company, accountId, rate, money, valute));
             }
 
@@ -245,8 +248,6 @@ public class SqlCardDAO implements CardDAO<Card>{
             try {
                 statement.close();
                 resultSet.close();
-                connection.close();
-
             } catch (SQLException e) {
                 throw new DAOException(e);
             }
@@ -262,7 +263,46 @@ public class SqlCardDAO implements CardDAO<Card>{
 
     @Override
     public Card find(int id) throws DAOException {
-        return null;
+        Card card = null;
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+        Connection connection = null;
+
+        try {
+            connection = ConnectionPool.getInstance().getConnection();
+            statement = connection.prepareStatement(SELECT_CARD_BY_ID);
+            statement.setInt(1, id);
+
+            resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+
+                String number = resultSet.getString(CARD_NUMBER);
+                String validThru = resultSet.getString(CARD_VALID_THRU);
+                String customer = resultSet.getString(CARD_CUSTOMER);
+                int company = resultSet.getInt(CARD_COMPANY);
+                int accountId = resultSet.getInt(CARD_ID_ACCOUNT);
+                int rate = resultSet.getInt(CARD_RATE);
+                int money = resultSet.getInt(CARD_MONEY);
+                String valute = getValute(resultSet.getInt(CARD_ID_VALUTE));
+
+                card = Creator.takeCard(id, number, validThru, customer, company, accountId, rate, money, valute);
+
+            }
+
+        } catch (SQLException e) {
+            LOG.error(e.getMessage(), e);
+            throw new DAOException(e.getMessage(),e);
+        } finally {
+            try {
+                statement.close();
+                resultSet.close();
+                connection.close();
+
+            } catch (SQLException e) {
+                throw new DAOException(e);
+            }
+        }
+        return card;
     }
 
     @Override

@@ -1,6 +1,7 @@
 package by.etc.payroll.dao.impl;
 
 import by.etc.payroll.bean.BankAccount;
+import by.etc.payroll.bean.Company;
 import by.etc.payroll.dao.BankAccountDAO;
 import by.etc.payroll.dao.exception.DAOException;
 import by.etc.payroll.dao.dbmanager.ConnectionPool;
@@ -21,6 +22,7 @@ public class SqlBankAccountDAO implements BankAccountDAO<BankAccount> {
     private final String UPDATE_BY_ID = "update account set Name = ? , Status = ? , Number = ? , Count = ?   where ID = ?";
     private final String INSERT_INTO = "insert into account (Name,Number,Status,Count,User_ID, Valute_ID) values (?, ?, ?, ?, ?, ?);";
     private final String DELETE_BY_NUMBER = "delete from account where Number = ?";
+    private final String SELECT_BY_ID = "select * from account where id = ?";
 
     private final String ACCOUNT_ID = "ID";
     private final String ACCOUNT_NAME = "Name";
@@ -68,7 +70,40 @@ public class SqlBankAccountDAO implements BankAccountDAO<BankAccount> {
 
     @Override
     public BankAccount find(int id) throws DAOException {
-        return null;
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+        BankAccount bankAccount = null;
+
+        try(Connection connection = ConnectionPool.getInstance().getConnection() ) {
+
+            statement = connection.prepareStatement(SELECT_BY_ID);
+            statement.setInt(1, id);
+
+            resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                String name = resultSet.getString(ACCOUNT_NAME);
+                String number = resultSet.getString(ACCOUNT_NUMBER);
+                boolean status = resultSet.getBoolean(ACCOUNT_STATUS);
+                int money = resultSet.getInt(ACCOUNT_COUNT);
+                int userId = resultSet.getInt(ACCOUNT_USER_ID);
+                int valuteId = resultSet.getInt(ACCOUNT_VALUTE_ID);
+
+                String valute = DaoFactory.getInstance().getCardDAO().getValute(valuteId);
+                bankAccount = Creator.takeBankAccount(id, name, number, status, userId, money, valute);
+            }
+
+        } catch (SQLException e) {
+            throw new DAOException(e.getMessage(),e);
+        } finally {
+            try {
+                statement.close();
+                resultSet.close();
+            } catch (SQLException e) {
+                throw new DAOException(e);
+            }
+        }
+        return bankAccount;
     }
 
     @Override

@@ -14,6 +14,10 @@ public interface AbstractCardService {
     List<Rate> getRate () throws ServiceException;
     List<Company> getCompany() throws ServiceException;
 
+    Rate getRateById (int id) throws ServiceException;
+    Valute getValuteById (String nameValute) throws ServiceException;
+    Company getCompanyById (int id) throws ServiceException;
+
 
     Card getCard (String id) throws ServiceException;
 }

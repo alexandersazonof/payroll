@@ -31,7 +31,25 @@
             </button>
         </div>
     </c:when>
+    <c:when test="${param.useraccess != null}">
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            Нет прав доступа
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    </c:when>
+    <c:when test="${param.incorrectcard != null}">
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            Некорректный ид карты , пожалуйсто обратитесь к администратору
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    </c:when>
 </c:choose>
+
+
 <div class="container">
     <div class="row">
         <div class="col">
@@ -53,7 +71,7 @@
             <c:forEach items="${item.getCardList()}" var="card">
                 <div class="row">
                     <div class="col">
-                        <a href="#"><img src="../img/${card.getCompany()}.png" width="30" height="25" data-toggle="tooltip" data-placement="top" title="${card.getNumber()}"></a>
+                        <a href="/controller?command=showcardpage&cid=${card.getId()}"><img src="../img/${card.getCompany()}.png" width="30" height="25" data-toggle="tooltip" data-placement="top" title="${card.getNumber()}"></a>
                     </div>
                     <div class="col">
                             ${card.getMoney()}
