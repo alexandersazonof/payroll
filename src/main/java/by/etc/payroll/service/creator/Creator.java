@@ -83,6 +83,7 @@ public class Creator {
     }
     public static Card takeCard (int id, String number, String date, String customer, int companyId, int accountId, int rateId, int money, String valute) {
         Card card = new Card();
+        card.setId(id);
         card.setNumber(number);
         card.setDate(date);
         card.setCustomer(customer);

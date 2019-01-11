@@ -45,8 +45,8 @@ public class Controller extends HttpServlet {
             command.execute(request, response);
 
 
-        } catch (CommandException exception) {
-
+        } catch (CommandException e) {
+            LOG.error(e.getMessage(), e);
             response.sendError(PAGE_NOT_FOUND_ERROR);
         }
 

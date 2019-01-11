@@ -12,5 +12,5 @@ public interface AbstractBankAccountService {
     boolean addCard (String name, String valute, User user) throws ServiceException;
     boolean updateNameAndStatusByNumber (String name, String status, String number) throws ServiceException;
     boolean deleteCard (String number, User user) throws ServiceException;
-
+    BankAccount getAccountById (int accountId) throws ServiceException;
 }

@@ -2,8 +2,7 @@ package by.etc.payroll.command.util;
 
 import by.etc.payroll.command.ActionCommand;
 import by.etc.payroll.command.impl.account.*;
-import by.etc.payroll.command.impl.card.NewCardCommand;
-import by.etc.payroll.command.impl.card.NewCardPageCommand;
+import by.etc.payroll.command.impl.card.*;
 import by.etc.payroll.command.impl.general.*;
 import by.etc.payroll.command.impl.transaction.HistoryTransactionPageCommand;
 import by.etc.payroll.command.impl.transaction.SendMoneyCommand;
@@ -29,8 +28,8 @@ public enum CommandFactory {
             return new SignUpCommand();
         }
     },
-    SHOWCARD {
-        public ActionCommand createCommand() {return new ShowAccountPageCommand(); }
+    SHOWCARDPAGE {
+        public ActionCommand createCommand() {return new ShowCardPageCommand(); }
     },
     EDITCARD {
         public ActionCommand createCommand() {return new EditAccountCommand(); }
@@ -117,6 +116,24 @@ public enum CommandFactory {
         @Override
         public ActionCommand createCommand() {
             return new NewCardPageCommand();
+        }
+    },
+    BLOCKCARD {
+        @Override
+        public ActionCommand createCommand() {
+            return new BlockCardCommand();
+        }
+    },
+    UNBLOCKCARD {
+        @Override
+        public ActionCommand createCommand() {
+            return new UnblockCardCommand();
+        }
+    },
+    DELETECARD {
+        @Override
+        public ActionCommand createCommand() {
+            return new DeleteCardCommand();
         }
     };
 

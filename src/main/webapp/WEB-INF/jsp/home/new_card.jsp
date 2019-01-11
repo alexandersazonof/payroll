@@ -76,14 +76,6 @@
             </select>
         </div>
         <div class="form-group col-md-4">
-            <label >Valute</label>
-            <select class="form-control" name="valute">
-                <c:forEach items="${listValute}" var = "itema">
-                    <option>${itema.name}</option>
-                </c:forEach>
-            </select>
-        </div>
-        <div class="form-group col-md-4">
             <label for="inputRate">Rate</label>
             <select id="inputRate" class="form-control" name="rate">
                 <c:forEach items="${listRate}" var = "itemsa">

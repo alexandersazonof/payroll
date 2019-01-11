@@ -78,14 +78,13 @@ public class NewCardCommand implements ActionCommand {
 
             String bankAccount = request.getParameter("account");
             String rate = request.getParameter("rate");
-            String valute = request.getParameter("valute");
 
 
             ServiceFactory serviceFactory = ServiceFactory.getInstance();
 
             AbstractCardService cardService = serviceFactory.getCardService();
 
-            cardService.addCard(firstName, lastName, address, city, bankAccount, rate, valute, company, user.getId());
+            cardService.addCard(firstName, lastName, address, city, bankAccount, rate, company, user.getId());
             response.sendRedirect(SUCCESS_NEW_CARD);
 
         } catch (ServiceUnauthorizedAccessException e) {

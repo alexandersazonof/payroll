@@ -73,9 +73,7 @@
     <button type="submit" id="myButton" class="btn btn-dark">${addButton}</button>
 </form>
 
-<script src="../../../js/bootbox.min.js">
-
-</script>
+<script src="../js/bootbox.min.js"></script>
 <script type="text/javascript">
     $('#myButton').click(function(e) {
         e.preventDefault();
@@ -88,7 +86,6 @@
     });
 </script>
 
-<br><br><br><br><br><br><br><br><br><br><br><br><br>
 
 
 <jsp:include page="../template/footer.jsp" />

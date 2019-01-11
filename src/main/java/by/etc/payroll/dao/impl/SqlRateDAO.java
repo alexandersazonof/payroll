@@ -20,6 +20,7 @@ public class SqlRateDAO implements RateDAO {
 
     private static final String SELECT_ALL_FROM_RATE = "select * from rate";
     private static final String SELECT_BY_NAME = "select * from rate where name = ?";
+    private static final String SELECT_BY_ID = "select * from rate where id = ?";
 
     private static final String FIELD_RATE_ID = "id";
     private static final String FIELD_VATE_NAME = "name";
@@ -99,7 +100,32 @@ public class SqlRateDAO implements RateDAO {
 
     @Override
     public Rate find(int id) throws DAOException {
-        return null;
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+        Rate rate = null;
+
+        try(Connection connection = ConnectionPool.getInstance().getConnection() ) {
+
+            statement = connection.prepareStatement(SELECT_BY_ID);
+            statement.setInt(1, id);
+
+            resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                rate = Creator.takeRate(id, resultSet.getString(FIELD_VATE_NAME), resultSet.getString(FIELD_RATE_DESCRIPTION));
+            }
+
+        } catch (SQLException e) {
+            throw new DAOException(e.getMessage(),e);
+        } finally {
+            try {
+                statement.close();
+                resultSet.close();
+            } catch (SQLException e) {
+                throw new DAOException(e);
+            }
+        }
+        return rate;
     }
 
     @Override

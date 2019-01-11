@@ -2,7 +2,6 @@ package by.etc.payroll.command.impl.card;
 
 import by.etc.payroll.bean.*;
 import by.etc.payroll.command.ActionCommand;
-import by.etc.payroll.command.impl.account.NewAccountPageCommand;
 import by.etc.payroll.command.util.LanguageUtil;
 import by.etc.payroll.command.util.QueryUtil;
 import by.etc.payroll.controller.exception.CommandException;
@@ -44,10 +43,10 @@ public class NewCardPageCommand implements ActionCommand {
             ConcreteCardService concreteCardService = serviceFactory.getCardService();
             ConcreteBankAccountService bankAccountService = serviceFactory.getBankAccountService();
 
-            List<Rate> listRate =  concreteCardService.getRate();
-            List<Valute> listValute = concreteCardService.getValute();
+            List<Rate> listRate =  concreteCardService.getAllRate();
+            List<Valute> listValute = concreteCardService.getAllValute();
             List<BankAccount> listBankAccount = bankAccountService.getCardsByUserID(user);
-            List<Company> listCompany = concreteCardService.getCompany();
+            List<Company> listCompany = concreteCardService.getAllCompany();
 
 
             request.setAttribute("listRate", listRate);

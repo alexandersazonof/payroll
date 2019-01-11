@@ -167,5 +167,13 @@ public class ConcreteBankAccountService implements AbstractBankAccountService {
         }
     }
 
+    @Override
+    public BankAccount getAccountById(int accountId) throws ServiceException {
+        try {
+            return DaoFactory.getInstance().getBankAccountDAO().find(accountId);
+        } catch (DAOException e) {
+            throw new ServiceException(e.getMessage(), e);
+        }
+    }
 }
 

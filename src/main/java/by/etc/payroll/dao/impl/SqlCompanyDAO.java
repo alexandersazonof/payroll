@@ -17,6 +17,7 @@ import java.util.List;
 public class SqlCompanyDAO implements CompanyDAO {
     private static final String SELECT_ALL_FROM_COMPANY = "select * from company";
     private static final String SELECT_BY_NAME = "select * from company where name = ?";
+    private static final String SELECT_BY_ID = "select * from company where id = ?";
 
     private static final String FIELD_ID = "id";
     private static final String FIELD_NAME = "name";
@@ -93,7 +94,32 @@ public class SqlCompanyDAO implements CompanyDAO {
 
     @Override
     public Company find(int id) throws DAOException {
-        return null;
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+        Company company = null;
+
+        try(Connection connection = ConnectionPool.getInstance().getConnection() ) {
+
+            statement = connection.prepareStatement(SELECT_BY_ID);
+            statement.setInt(1, id);
+
+            resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                company = Creator.takeCompany(id, resultSet.getString(FIELD_NAME));
+            }
+
+        } catch (SQLException e) {
+            throw new DAOException(e.getMessage(),e);
+        } finally {
+            try {
+                statement.close();
+                resultSet.close();
+            } catch (SQLException e) {
+                throw new DAOException(e);
+            }
+        }
+        return company;
     }
 
     @Override
