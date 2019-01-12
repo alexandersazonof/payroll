@@ -1,6 +1,7 @@
 package by.etc.payroll.service.impl;
 
 import by.etc.payroll.bean.*;
+import by.etc.payroll.command.util.UserUtil;
 import by.etc.payroll.dao.exception.DAOException;
 import by.etc.payroll.dao.factory.DaoFactory;
 import by.etc.payroll.dao.impl.*;
@@ -8,15 +9,15 @@ import by.etc.payroll.service.AbstractCardService;
 import by.etc.payroll.service.creator.Creator;
 import by.etc.payroll.service.exception.*;
 import by.etc.payroll.service.util.Validator;
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.List;
+import java.util.*;
 
 public class ConcreteCardService implements AbstractCardService {
     private final String ACTION_OPERATION = "Add new card : ";
+    private final String ACTION_SEND_MONEY_FROM = "Send money from : ";
+    private final String ACTION_GET_MONEY_TO = "Get money to : ";
 
 
     @Override
@@ -81,6 +82,7 @@ public class ConcreteCardService implements AbstractCardService {
             throw new ServiceException(e.getMessage(), e);
         }
     }
+
 
     @Override
     public List<Company> getAllCompany() throws ServiceException {
@@ -238,5 +240,83 @@ public class ConcreteCardService implements AbstractCardService {
         } catch (DAOException e) {
             throw new ServiceException(e.getMessage(), e);
         }
+    }
+
+    @Override
+    public List<Card> getAllCardByUser(User user) throws ServiceException {
+        UserUtil.isUser(user);
+        DaoFactory daoFactory = DaoFactory.getInstance();
+        SqlBankAccountDAO bankAccountDAO = daoFactory.getBankAccountDAO();
+        SqlCardDAO cardDAO = daoFactory.getCardDAO();
+        List<Card> cardList = new ArrayList<>();
+
+        try {
+            List<BankAccount> bankAccountList = bankAccountDAO.getAllByUserID(user.getId());
+
+
+            for (BankAccount b :bankAccountList) {
+                List<Card> tempCardList = cardDAO.getAllByAccountId(b.getId());
+                cardList.addAll(tempCardList);
+            }
+        } catch (DAOException e) {
+            throw new ServiceException(e.getMessage(), e);
+        }
+        return cardList;
+    }
+
+    @Override
+    public boolean sendMoney(User user, String fromNumber, String toNumber, String money, String password) throws ServiceException {
+        UserUtil.isUser(user);
+
+        DaoFactory daoFactory = DaoFactory.getInstance();
+        SqlUserDAO userDAO = daoFactory.getUserDAO();
+        SqlCardDAO cardDAO = daoFactory.getCardDAO();
+
+        try {
+            User userWithPassword = userDAO.findByLogin(user.getLogin());
+            if (!BCrypt.checkpw(password, userWithPassword.getPassword())) {
+                throw new ServiceWrongPasswordException("Incorrect password");
+            }
+
+            Card fromCard = cardDAO.getByCardNumber(fromNumber);
+            Card toCard = cardDAO.getByCardNumber(toNumber);
+
+            if (fromCard == null || toCard == null) {
+                throw new ServiceWrongCardNumber("Incorrect card number");
+            }
+
+
+            int count = 0;
+            try {
+                count = Integer.parseInt(money);
+            } catch (NumberFormatException e) {
+                throw new ServiceWrongCountException(e.getMessage(), e);
+            }
+
+            if (fromCard.getMoney() < count) {
+                throw new ServiceWrongCountException("Incorrect count");
+            }
+
+            cardDAO.transefreMoney(fromCard, toCard, count);
+
+            SqlBankAccountDAO bankAccountDAO = daoFactory.getBankAccountDAO();
+
+            BankAccount fromBankAccount = bankAccountDAO.find(fromCard.getIdAccount());
+            BankAccount toBankAccount = bankAccountDAO.find(toCard.getIdAccount());
+
+            SqlOperationDAO operationDAO = daoFactory.getOperationDAO();
+
+            Operation fromCardOperation = Creator.takeOperation(ACTION_SEND_MONEY_FROM + fromCard.getNumber() + " " + money + " " + fromCard.getValute(),
+                    fromBankAccount.getNumber(), user.getId());
+            Operation toCardOperation = Creator.takeOperation(ACTION_GET_MONEY_TO + toCard.getNumber() + " " + money + " " + toCard.getValute(),
+                    toBankAccount.getNumber(), toBankAccount.getUserId());
+
+            operationDAO.insert(fromCardOperation);
+            operationDAO.insert(toCardOperation);
+
+        } catch (DAOException e) {
+            throw new ServiceException(e.getMessage(), e);
+        }
+        return true;
     }
 }

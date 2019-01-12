@@ -63,7 +63,16 @@
             </button>
         </div>
     </c:when>
+    <c:when test="${param.sctran != null}">
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            Перевод прошёл успешно
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    </c:when>
 </c:choose>
+
 
 
 <div class="container">

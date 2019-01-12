@@ -1,6 +1,10 @@
 package by.etc.payroll.bean;
 
-public class Rate {
+import java.io.Serializable;
+
+public class Rate implements Serializable {
+    private static final long serialVersionUID = 18821428093041L;
+
     private int id;
     private String name;
     private String description;

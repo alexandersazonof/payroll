@@ -124,6 +124,14 @@ public class Creator {
         return userData;
     }
 
+    public static Transfer takeTransfer (int fromCardId, int toCardId, int money) {
+        Transfer transfer = new Transfer();
+        transfer.setFromCardId(fromCardId);
+        transfer.setToCardId(toCardId);
+        transfer.setMoney(money);
+        return transfer;
+    }
+
     public static Valute takeValute (int id, String name) {
         return new Valute (id, name);
     }

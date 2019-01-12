@@ -7,6 +7,7 @@ import by.etc.payroll.bean.UserData;
 import by.etc.payroll.dao.CardDAO;
 import by.etc.payroll.dao.dbmanager.ConnectionPool;
 import by.etc.payroll.dao.exception.DAOException;
+import by.etc.payroll.dao.factory.DaoFactory;
 import by.etc.payroll.service.creator.Creator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -38,6 +39,8 @@ public class SqlCardDAO implements CardDAO<Card>{
     private final String DELETE_FROM_CARD_BY_ID = "delete from cards where id = ?";
     private final String UPDATE_MONEY_IN_ACCOUNT_BY_ID = "update account set count = count + ? where id = ?";
 
+    private final String SELECT_COURSE_FROM_EXACHANGE_RATE = "select course from exachange_rates where from_valute_id = ? and to_valute_id = ?";
+    private final String UPDATE_MONEY_IN_CARD_BY_ID = "update cards set money = money + ? where id = ?";
 
     private final String CARD_ID = "id";
     private final String CARD_NUMBER= "number";
@@ -364,6 +367,75 @@ public class SqlCardDAO implements CardDAO<Card>{
             }
         }
         return false;
+    }
+
+    @Override
+    public boolean transefreMoney(Card fromNumber, Card toNumber, int money) throws DAOException {
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+        float course = 1;
+
+        int fromCardValuteId = getValute(fromNumber.getValute());
+        int toCardValuteId = getValute(toNumber.getValute());
+
+        try (Connection connection = ConnectionPool.getInstance().getConnection()) {
+            connection.setAutoCommit(false);
+
+            try {
+                if (fromCardValuteId != toCardValuteId) {
+                    statement = connection.prepareStatement(SELECT_COURSE_FROM_EXACHANGE_RATE);
+
+                    statement.setInt(1, fromCardValuteId);
+                    statement.setInt(2, toCardValuteId);
+                    resultSet = statement.executeQuery();
+                    resultSet.next();
+                    course = resultSet.getFloat(1);
+                    statement.close();
+                    resultSet.close();
+                }
+
+                statement = connection.prepareStatement(UPDATE_MONEY_IN_CARD_BY_ID);
+
+                statement.setInt(1, money * (-1));
+                statement.setInt(2, fromNumber.getId());
+                statement.execute();
+                statement.close();
+
+                statement = connection.prepareStatement(UPDATE_MONEY_IN_ACCOUNT_BY_ID);
+                statement.setInt(1, money * (-1));
+                statement.setInt(2, fromNumber.getIdAccount());
+                statement.execute();
+                statement.close();
+
+                int moneyByCourse = (int)(money * course);
+                statement = connection.prepareStatement(UPDATE_MONEY_IN_CARD_BY_ID);
+                statement.setInt(1, moneyByCourse);
+                statement.setInt(2, toNumber.getId());
+                statement.execute();
+                statement.close();
+
+                statement = connection.prepareStatement(UPDATE_MONEY_IN_ACCOUNT_BY_ID);
+                statement.setInt(1, moneyByCourse);
+                statement.setInt(2, toNumber.getIdAccount());
+                statement.execute();
+
+                connection.commit();
+
+            } catch (SQLException e) {
+                connection.rollback();
+                throw new DAOException(e.getMessage(), e);
+            } finally {
+                try {
+                    statement.close();
+                } catch (SQLException e) {
+                    throw new DAOException(e.getMessage(), e);
+                }
+            }
+
+        } catch (SQLException e) {
+            throw new DAOException(e.getMessage(), e);
+        }
+        return true;
     }
 
 
