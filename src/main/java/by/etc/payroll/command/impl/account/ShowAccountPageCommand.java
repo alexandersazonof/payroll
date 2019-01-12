@@ -1,10 +1,15 @@
 package by.etc.payroll.command.impl.account;
 
 import by.etc.payroll.bean.BankAccount;
+import by.etc.payroll.bean.Card;
+import by.etc.payroll.bean.Operation;
 import by.etc.payroll.bean.User;
 import by.etc.payroll.command.ActionCommand;
 import by.etc.payroll.command.util.LanguageUtil;
 import by.etc.payroll.command.util.QueryUtil;
+import by.etc.payroll.command.util.UserUtil;
+import by.etc.payroll.service.AbstractCardService;
+import by.etc.payroll.service.exception.ServiceQueryException;
 import by.etc.payroll.service.exception.ServiceUnauthorizedAccessException;
 import by.etc.payroll.service.factory.ServiceFactory;
 import by.etc.payroll.util.Attributes;
@@ -23,7 +28,9 @@ import java.util.List;
 public class ShowAccountPageCommand implements ActionCommand {
     private Logger LOG = LogManager.getLogger(ShowAccountPageCommand.class);
     private static final String JSP_PAGE_PATH = "WEB-INF/jsp/home/show_account.jsp";
-    private static final String REDIRECT_PAGE_ERROR_ACCESS = "/controller?command=loginpage&";
+    private static final String REDIRECT_PAGE_AFTER_UNAVTARIZED_ACCESS = "/controller?command=mainPage&useraccess=true";
+    private static final String REDIRECT_PAGE_INCORRECT_QUERY = "/controller?command=mainPage&wrongquery=true";
+
 
     private static final String SELECTED_LANGUAGE_REQUEST_ATTR = "selectedLanguage";
 
@@ -40,29 +47,39 @@ public class ShowAccountPageCommand implements ActionCommand {
             request.setAttribute(SELECTED_LANGUAGE_REQUEST_ATTR, languageId);
 
 
-
             User user = (User) request.getSession().getAttribute(Attributes.FIELD_USER);
+            String bankAccountNumber = request.getParameter("number");
 
             ServiceFactory serviceFactory = ServiceFactory.getInstance();
             AbstractBankAccountService bankAccountService = serviceFactory.getBankAccountService();
+            AbstractCardService cardService = serviceFactory.getCardService();
 
-            List<BankAccount> listBankAccount = bankAccountService.getCardsByUserID(user);
+
+            BankAccount bankAccount = bankAccountService.getCardByNumber(bankAccountNumber);
+            UserUtil.isAccountOfUser(user, bankAccount);
+
+            int totalMoney = bankAccount.getCountOfMoney();
+
+            for (Card card :bankAccount.getCardList()) {
+                totalMoney += card.getMoney();
+            }
+            List<Operation> operationList = cardService.getAllOperationByNumber(bankAccountNumber);
+
+            request.setAttribute("totalMoney", totalMoney);
+            request.setAttribute("operationList", operationList);
+            request.setAttribute("bankAccount", bankAccount);
 
 
-            request.setAttribute(LIST_CARDS_REQUEST_ATTRIBUTE, listBankAccount);
             request.getRequestDispatcher(JSP_PAGE_PATH).forward(request, response);
-
+        } catch (ServiceQueryException e) {
+            LOG.error("Incorrect query");
+            response.sendRedirect(REDIRECT_PAGE_INCORRECT_QUERY);
         } catch (ServiceUnauthorizedAccessException e) {
-
             LOG.error(e.getMessage(), e);
-
-            response.sendRedirect(REDIRECT_PAGE_ERROR_ACCESS);
+            response.sendRedirect(REDIRECT_PAGE_AFTER_UNAVTARIZED_ACCESS);
         } catch (ServiceException e) {
             throw new CommandException(e.getMessage(), e);
         } catch (ServletException e) {
-            LOG.error(e.getMessage(), e);
-            throw new CommandException(e.getMessage(), e);
-        } catch (IOException e) {
             LOG.error(e.getMessage(), e);
             throw new CommandException(e.getMessage(), e);
         }

@@ -89,7 +89,7 @@
     <li class="list-group-item">
         <div class="row">
             <div class="col">
-                <a href="/controller?command=editcard&Number=${item.getNumber()}">${item.getName()}</a>
+                <a href="/controller?command=showaccount&number=${item.getNumber()}">${item.getName()}</a>
             </div>
 
             <div class="col">

@@ -1,17 +1,16 @@
 package by.etc.payroll.service.impl;
 
 import by.etc.payroll.bean.BankAccount;
+import by.etc.payroll.bean.Card;
 import by.etc.payroll.bean.User;
 import by.etc.payroll.dao.factory.DaoFactory;
 import by.etc.payroll.dao.exception.DAOException;
 import by.etc.payroll.dao.impl.SqlBankAccountDAO;
+import by.etc.payroll.dao.impl.SqlCardDAO;
 import by.etc.payroll.dao.impl.SqlUserDAO;
 import by.etc.payroll.service.creator.Creator;
-import by.etc.payroll.service.exception.ServiceException;
+import by.etc.payroll.service.exception.*;
 import by.etc.payroll.service.AbstractBankAccountService;
-import by.etc.payroll.service.exception.ServiceUnauthorizedAccessException;
-import by.etc.payroll.service.exception.ServiceWrongNameException;
-import by.etc.payroll.service.exception.ServiceWrongNumberException;
 import by.etc.payroll.service.util.EventLog;
 import by.etc.payroll.service.util.Validator;
 import by.etc.payroll.util.Roles;
@@ -52,12 +51,11 @@ public class ConcreteBankAccountService implements AbstractBankAccountService {
     @Override
     public BankAccount getCardByNumber(String number) throws ServiceException {
 
-        BankAccount bankAccount = null;
+        BankAccount bankAccount = new BankAccount();
         try {
 
             if (!Validator.validateString(number)) {
-
-                throw new ServiceWrongNumberException("Incorrect number");
+                throw new ServiceQueryException("Incorrect number");
             }
 
 
@@ -66,8 +64,13 @@ public class ConcreteBankAccountService implements AbstractBankAccountService {
             bankAccount = bankAccountDAO.getByNumber(number);
 
             if (bankAccount == null) {
-                throw new ServiceException();
+                throw new ServiceQueryException("Incorrect number");
             }
+
+            SqlCardDAO cardDAO = daoFactory.getCardDAO();
+            List<Card> cardList = cardDAO.getAllByAccountId(bankAccount.getId());
+
+            bankAccount.setCardList(cardList);
 
         } catch (DAOException e) {
             throw new ServiceException(e);

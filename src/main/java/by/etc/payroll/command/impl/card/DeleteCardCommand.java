@@ -56,6 +56,8 @@ public class DeleteCardCommand implements ActionCommand {
 
             concreteCardService.deleteCard(card, bankAccount, operation);
 
+            request.getSession().invalidate();
+            request.getSession().setAttribute("user", user);
             response.sendRedirect(REDIRECT_AFTER_SUCCESS);
         } catch (ServiceUnauthorizedAccessException e) {
             LOG.error("Incorrect access", e);

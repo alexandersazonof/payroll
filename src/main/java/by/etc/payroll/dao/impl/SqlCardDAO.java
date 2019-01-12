@@ -198,6 +198,7 @@ public class SqlCardDAO implements CardDAO<Card>{
                 statement.setString(3, userData.getAddress());
                 statement.setString(4, userData.getCity());
                 statement.setInt(5, card.getId());
+                statement.execute();
 
 
                 statement = connection.prepareStatement(INSERT_INTO_OPERATION);

@@ -10,6 +10,8 @@ public interface AbstractCardService {
     List<Valute> getAllValute() throws ServiceException;
     List<Rate> getAllRate() throws ServiceException;
     List<Company> getAllCompany() throws ServiceException;
+    List<Operation> getAllOperationByNumber(String number) throws ServiceException;
+
 
     Rate getRateById (int id) throws ServiceException;
     Valute getValuteById (String nameValute) throws ServiceException;
@@ -29,4 +31,5 @@ public interface AbstractCardService {
     List<Card> getAllCardByUser(User user) throws ServiceException;
 
     boolean sendMoney(User user, String fromNumber, String toNumber, String money, String password) throws ServiceException;
+
 }

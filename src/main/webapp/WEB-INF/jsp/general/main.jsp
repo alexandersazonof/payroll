@@ -1,10 +1,3 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: alexander
-  Date: 12/4/18
-  Time: 12:16 PM
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page language="java" contentType="text/html; charset=utf-8"
          pageEncoding="utf-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
@@ -20,9 +13,13 @@
     <title>${siteName}</title>
 
 </head>
-    <body>
-    <c:redirect url = "/controller?command=mainpage"/>
+<body>
 
-    </body>
-</html>
+<jsp:include page="../template/general_header.jsp" />
+<jsp:include page="../template/general_content.jsp" />
+
+<jsp:include page="../template/footer.jsp" />
+</body>
+
+
 

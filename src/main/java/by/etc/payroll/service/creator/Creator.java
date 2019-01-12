@@ -68,6 +68,18 @@ public class Creator {
         return operation;
     }
 
+    public static Operation takeOperation (int id, String action, String number,String date, int userId) {
+        Operation operation = new Operation();
+
+        operation.setId(id);
+        operation.setAction(action);
+        operation.setNumber(number);
+        operation.setUserId(userId);
+        operation.setDate(date);
+
+        return operation;
+    }
+
     public static Card takeCard (String number, String date, String customer, int companyId, int accountId, int rateId, int money, String valute) {
         Card card = new Card();
         card.setNumber(number);

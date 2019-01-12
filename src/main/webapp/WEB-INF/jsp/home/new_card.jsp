@@ -34,6 +34,14 @@
             </button>
         </div>
     </c:when>
+    <c:when test="${param.block != null}">
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            Счёт заблокирован
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    </c:when>
 </c:choose>
 
 <form method="post" action="/controller">

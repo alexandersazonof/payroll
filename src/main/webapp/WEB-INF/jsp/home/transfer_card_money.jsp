@@ -38,6 +38,14 @@
             </button>
         </div>
     </c:when>
+    <c:when test="${param.wrongBlock != null}">
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            Карта №${param.wrongBlock} заблокирована
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    </c:when>
 </c:choose>
 <form method="post" action="/controller" id="form">
     <input type="hidden" name="command" value="sendcardmoney">

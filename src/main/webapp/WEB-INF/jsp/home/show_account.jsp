@@ -40,49 +40,71 @@
 <body>
 <%@ include file="../template/user_header.jsp" %>
 
-<c:forEach items="${listAccount}" var="item">
-    <ul class="list-group list-group-flush">
-        <li class="list-group-item">
-
-            <form action="/controller" method="post">
-                <input type="hidden" name="command" value="editcard" />
-                <div class="form-group row">
-                    <label for="name" class="col-sm-2 col-form-label" >${name} </label>
-                    <div class="col-sm-10">
-                        <input type="text" id="name" readonly class="form-control-plaintext" name="Name" value="<c:out value="${item.getName()}"/>">
-                    </div>
+<div class="container">
+    <div class="text-center">
+        <h1><strong>Account : </strong>${bankAccount.getName()}</h1>
+    </div>
+    <div class="row">
+        <div class="col-sm-6">
+            <h2 class="text-center">Account history</h2>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Action</th>
+                     <th scope="col">Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <c:forEach items="${operationList}" var="item" >
+                    <tr>
+                        <th scope="row">${operationList.indexOf(item)+1}</th>
+                        <td>${item.getAction()}</td>
+                        <td>${item.getDate()}</td>
+                    </tr>
+                    </c:forEach>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-sm-6">
+            <div class="form-group row">
+                <label for="accountNumber" class="col-sm-2 col-form-label">Account number:</label>
+                <div class="col-sm-4">
+                    <input type="text" readonly class="form-control-plaintext" id="accountNumber" value="${bankAccount.getNumber()}" name="accountNumber">
                 </div>
-                <div class="form-group row">
-                    <label for="number" class="col-sm-2 col-form-label">${number} </label>
-                    <div class="col-sm-10">
-                        <input type="text" id="number" readonly class="form-control-plaintext" name="Number" value="<c:out value="${item.getNumber()}"/>">
-                    </div>
+            </div>
+            <div class="form-group row">
+                <label for="accountName" class="col-sm-2 col-form-label">Account name:</label>
+                <div class="col-sm-4">
+                    <input type="text" readonly class="form-control-plaintext" id="accountName" value="${bankAccount.getName()}" name="accountName">
                 </div>
-                <div class="form-group row">
-                    <label for="count" class="col-sm-2 col-form-label">${count} </label>
-                    <div class="col-sm-10">
-                        <input type="text" id="count" readonly class="form-control-plaintext" name="Count" value="<c:out value="${item.getCountOfMoney()} BYN"/>">
+            </div>
+            <div class="form-group row">
+                <label for="accountName" class="col-sm-2 col-form-label">Cards :</label>
+                    <div class="from-group">
+                    <c:forEach items="${bankAccount.getCardList()}" var="item">
+                        <div class="list-group">
+                             <a href="/controller?command=showcardpage&cid=${item.getId()}" class="list-group-item list-group-item-light"><img src="../img/${item.getCompany()}.png" width="30" height="25">${item.getNumber()}</a>
+                        </div>
+                    </c:forEach>
                     </div>
+            </div>
+            <div class="form-group row">
+                <label for="freeMoney" class="col-sm-2 col-form-label">Free money:</label>
+                <div class="col-sm-4">
+                    <input type="text" readonly class="form-control-plaintext" id="freeMoney" value="${bankAccount.getCountOfMoney()} ${bankAccount.getValute()}" name="accountCount">
                 </div>
-                <p/>
-                <c:set var = "blockStatus" scope = "session" value = "${item.isStatus()}"/>
-                <c:if test = "${blockStatus == false}">
-                    <div class="alert alert-danger" role="alert">
-                        ${block}
-                    </div>
-                </c:if>
-                <div class="col-sm-10">
-                    <button type="submit" class="btn btn-dark">${edit}</button>
-                    <button type="button" class="btn btn-danger" onClick='location.href="/controller?command=deleteaccount&Number=${item.getNumber()}"'>${delete}</button>
+            </div>
+            <div class="form-group row">
+                <label for="allMoney" class="col-sm-2 col-form-label">Total money:</label>
+                <div class="col-sm-4">
+                    <input type="text" readonly class="form-control-plaintext" id="allMoney" value="${totalMoney} ${bankAccount.getValute()}" name="totalMoney">
                 </div>
+            </div>
+        </div>
 
-            </form>
-        </li>
-    </ul>
-</c:forEach>
-
-
-
+    </div>
+</div>
 
 <jsp:include page="../template/footer.jsp" />
 

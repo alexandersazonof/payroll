@@ -155,6 +155,12 @@ public enum CommandFactory {
         public ActionCommand createCommand() {
             return new NewAccountCommand();
         }
+    },
+    SHOWACCOUNT {
+        @Override
+        public ActionCommand createCommand() {
+            return new ShowAccountPageCommand();
+        }
     };
 
     public abstract ActionCommand createCommand();

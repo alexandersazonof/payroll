@@ -27,6 +27,8 @@ public class SendCardMoneyCommand implements ActionCommand {
     private static final String WRONG_PASSWORD = "wrongPassword";
     private static final String WRONG_NUMBER = "wrongNumber";
     private static final String WRONG_COUNT = "wrongCount";
+    private static final String WRONG_BLOCK = "wrongBlock";
+
     private static final String TO_CARD_NUMBER_REQUSET_ATTR = "toCard";
     private static final String COUNT_REQUSET_ATTR = "count";
 
@@ -50,9 +52,13 @@ public class SendCardMoneyCommand implements ActionCommand {
         ConcreteCardService concreteCardService = serviceFactory.getCardService();
 
         try {
-            concreteCardService.sendMoney(user, fromCard, toCard, count, password);
 
+            concreteCardService.sendMoney(user, fromCard, toCard, count, password);
             response.sendRedirect(REDIRECT_AFTER_SUCCESS);
+
+        } catch (ServiceBlockAccountException e) {
+            LOG.error("Block : " + e.getMessage(), e);
+            response.sendRedirect(makeErrorRedirectStringForBlock(WRONG_BLOCK, e.getMessage(), toCard, count));
         } catch (ServiceWrongPasswordException e) {
             LOG.error("Incorrect password", e);
             response.sendRedirect(makeErrorRedirectString(WRONG_PASSWORD, toCard, count));
@@ -76,6 +82,26 @@ public class SendCardMoneyCommand implements ActionCommand {
         parameters.append(errorName);
         parameters.append(EQ);
         parameters.append(true);
+        parameters.append(AMP);
+        parameters.append(TO_CARD_NUMBER_REQUSET_ATTR);
+        parameters.append(EQ);
+        parameters.append(toCard);
+        parameters.append(AMP);
+        parameters.append(COUNT_REQUSET_ATTR);
+        parameters.append(EQ);
+        parameters.append(count);
+
+        return parameters.toString();
+
+    }
+
+    private String makeErrorRedirectStringForBlock(String errorName, String blockNumber, String toCard, String count) {
+
+        StringBuilder parameters = new StringBuilder();
+        parameters.append(REDIRECT_WRONG_VALUE);
+        parameters.append(errorName);
+        parameters.append(EQ);
+        parameters.append(blockNumber);
         parameters.append(AMP);
         parameters.append(TO_CARD_NUMBER_REQUSET_ATTR);
         parameters.append(EQ);
