@@ -22,4 +22,6 @@ public interface CardDAO<Card> extends CrudDAO<Card> {
     boolean clearCard (int idCard) throws DAOException;
 
     boolean deleteCard (Card card , BankAccount bankAccount, Operation operation) throws DAOException;
+
+    boolean transefreMoney (Card fromNumber, Card toNumber, int money) throws DAOException;
 }

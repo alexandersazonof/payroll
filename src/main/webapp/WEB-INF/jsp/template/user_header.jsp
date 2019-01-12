@@ -42,7 +42,7 @@
                 <a class="nav-link" href="/controller?command=showcard">${showCard}</a>
             </li>
             <li class="nav-item active">
-                <a class="nav-link" href="/controller?command=transfer">${transfer}</a>
+                <a class="nav-link" href="/controller?command=transfermoney">${transfer}</a>
             </li>
             <li class="nav-item active">
                 <a class="nav-link" href="/controller?command=historypage">${history}</a>

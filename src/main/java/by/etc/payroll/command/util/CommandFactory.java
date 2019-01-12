@@ -7,6 +7,7 @@ import by.etc.payroll.command.impl.general.*;
 import by.etc.payroll.command.impl.transaction.HistoryTransactionPageCommand;
 import by.etc.payroll.command.impl.transaction.SendMoneyCommand;
 import by.etc.payroll.command.impl.transaction.TransferMoneyCommand;
+import by.etc.payroll.command.impl.transfer.SendCardMoneyCommand;
 import by.etc.payroll.command.impl.transfer.TransferMoneyCardCommand;
 import by.etc.payroll.command.impl.user.EditUserCommand;
 import by.etc.payroll.command.impl.user.EditUserPageCommand;
@@ -140,6 +141,11 @@ public enum CommandFactory {
         @Override
         public ActionCommand createCommand() {
             return new TransferMoneyCardCommand();
+        }
+    }, SENDCARDMONEY {
+        @Override
+        public ActionCommand createCommand() {
+            return new SendCardMoneyCommand();
         }
     };
 

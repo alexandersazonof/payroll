@@ -13,6 +13,12 @@ public class Transfer implements Serializable {
     public Transfer() {
     }
 
+    public Transfer(int fromCardId, int toCardId, int money) {
+        this.fromCardId = fromCardId;
+        this.toCardId = toCardId;
+        this.money = money;
+    }
+
     public Transfer(int id, int fromCardId, int toCardId, int money) {
         this.id = id;
         this.fromCardId = fromCardId;
