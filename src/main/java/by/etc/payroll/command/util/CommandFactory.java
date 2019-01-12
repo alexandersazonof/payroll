@@ -137,15 +137,23 @@ public enum CommandFactory {
         public ActionCommand createCommand() {
             return new DeleteCardCommand();
         }
-    }, TRANSFERMONEY {
+    },
+    TRANSFERMONEY {
         @Override
         public ActionCommand createCommand() {
             return new TransferMoneyCardCommand();
         }
-    }, SENDCARDMONEY {
+    },
+    SENDCARDMONEY {
         @Override
         public ActionCommand createCommand() {
             return new SendCardMoneyCommand();
+        }
+    },
+    NEWACCOUNT {
+        @Override
+        public ActionCommand createCommand() {
+            return new NewAccountCommand();
         }
     };
 

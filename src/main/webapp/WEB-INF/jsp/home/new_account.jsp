@@ -42,35 +42,42 @@
 
 
 <%@ include file="../template/user_header.jsp" %>
-
+<c:choose>
+    <c:when test="${param.wrongName != null}">
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            Некоректоное название
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    </c:when>
+</c:choose>
 <form action="/controller" method="post" name="createForm" id="createForm" class="createForm">
-    <input type="hidden" name="command" value="newcard" />
-
-    <div class="form-row">
-        <div class="col-xl-5">
-            <label for="exampleName">${cardName}</label>
-            <input type="text" class="form-control" id="exampleName" name="Name"  value="${param.name}">
-            <c:set var = "wrongName" scope = "session" value = "${param.wrongName}"/>
-            <c:if test = "${wrongName != null}">
-
-
-                <div class="alert alert-danger" role="alert">
-                    <strong >${errorName}</strong>
+    <input type="hidden" name="command" value="newaccount" />
+    <div class="text-center">
+        <div class="container">
+            <h1>Create new account</h1>
+            <hr>
+            <div class="form-group row">
+                <label for="exampleName" class="col-sm-2 col-form-label">${cardName} :</label>
+                <div class="col-sm-6">
+                    <input type="text" class="form-control" id="exampleName" name="Name"  value="${param.name}">
                 </div>
-            </c:if>
+            </div>
+
+        <div class="form-group row">
+            <label for="exampleFormControlSelect1" class="col-sm-2 col-form-label">Valute :</label>
+                <div class="col-sm-6">
+                    <select class="form-control" id="exampleFormControlSelect1" name="valute">
+                        <c:forEach items="${valuteList}" var = "item">
+                            <option>${item.getName()}</option>
+                        </c:forEach>
+                    </select>
+                </div>
+        </div>
+        <button type="submit" id="myButton" class="btn btn-dark">${addButton}</button>
         </div>
     </div>
-        <div class="form-row">
-            <div class="col-xl-5">
-            <label for="exampleFormControlSelect1">Valute</label>
-            <select class="form-control" id="exampleFormControlSelect1" name="valute">
-                <option>BYN</option>
-                <option>EUR</option>
-                <option>USD</option>
-            </select>
-        </div>
-    </div>
-    <button type="submit" id="myButton" class="btn btn-dark">${addButton}</button>
 </form>
 
 <script src="../js/bootbox.min.js"></script>
