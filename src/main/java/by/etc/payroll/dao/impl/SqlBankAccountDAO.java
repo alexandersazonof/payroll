@@ -217,6 +217,8 @@ public class SqlBankAccountDAO implements BankAccountDAO<BankAccount> {
         PreparedStatement statement = null;
         ResultSet resultSet = null;
 
+        DaoFactory daoFactory = DaoFactory.getInstance();
+        SqlCardDAO cardDAO = daoFactory.getCardDAO();
         try(Connection connection = ConnectionPool.getInstance().getConnection() ) {
 
             statement = connection.prepareStatement(SELECT_BY_NUMBER);
@@ -232,8 +234,10 @@ public class SqlBankAccountDAO implements BankAccountDAO<BankAccount> {
                 boolean status = resultSet.getBoolean(ACCOUNT_STATUS);
                 int count = resultSet.getInt(ACCOUNT_COUNT);
                 int userId = resultSet.getInt(ACCOUNT_USER_ID);
+                int valuteId = resultSet.getInt(ACCOUNT_VALUTE_ID);
 
-                bankAccount = create(accountId,name,number,status,count,userId);
+                String valute = cardDAO.getValute(valuteId);
+                bankAccount = Creator.takeBankAccount(accountId,name,number,status,userId, count, valute);
             }
 
         } catch (SQLException e) {

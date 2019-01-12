@@ -25,4 +25,6 @@ public interface AbstractCardService {
     boolean unBlockCard (Card card) throws ServiceException;
     boolean doOperation (String action, String accountNumber, int userId) throws ServiceException;
     boolean deleteCard (Card card, BankAccount bankAccount, Operation operation) throws ServiceException;
+
+    List<Card> getAllCardByUser(User user) throws ServiceException;
 }

@@ -1,6 +1,7 @@
 package by.etc.payroll.service.impl;
 
 import by.etc.payroll.bean.*;
+import by.etc.payroll.command.util.UserUtil;
 import by.etc.payroll.dao.exception.DAOException;
 import by.etc.payroll.dao.factory.DaoFactory;
 import by.etc.payroll.dao.impl.*;
@@ -10,10 +11,7 @@ import by.etc.payroll.service.exception.*;
 import by.etc.payroll.service.util.Validator;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.List;
+import java.util.*;
 
 public class ConcreteCardService implements AbstractCardService {
     private final String ACTION_OPERATION = "Add new card : ";
@@ -239,5 +237,27 @@ public class ConcreteCardService implements AbstractCardService {
         } catch (DAOException e) {
             throw new ServiceException(e.getMessage(), e);
         }
+    }
+
+    @Override
+    public List<Card> getAllCardByUser(User user) throws ServiceException {
+        UserUtil.isUser(user);
+        DaoFactory daoFactory = DaoFactory.getInstance();
+        SqlBankAccountDAO bankAccountDAO = daoFactory.getBankAccountDAO();
+        SqlCardDAO cardDAO = daoFactory.getCardDAO();
+        List<Card> cardList = new ArrayList<>();
+
+        try {
+            List<BankAccount> bankAccountList = bankAccountDAO.getAllByUserID(user.getId());
+
+
+            for (BankAccount b :bankAccountList) {
+                List<Card> tempCardList = cardDAO.getAllByAccountId(b.getId());
+                cardList.addAll(tempCardList);
+            }
+        } catch (DAOException e) {
+            throw new ServiceException(e.getMessage(), e);
+        }
+        return cardList;
     }
 }

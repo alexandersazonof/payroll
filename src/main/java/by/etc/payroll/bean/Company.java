@@ -1,6 +1,9 @@
 package by.etc.payroll.bean;
 
-public class Company {
+import java.io.Serializable;
+
+public class Company  implements Serializable {
+    private static final long serialVersionUID = 18821428093041L;
     private int id;
     private String name;
 
