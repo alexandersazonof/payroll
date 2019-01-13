@@ -6,7 +6,7 @@ import by.etc.payroll.service.exception.ServiceWrongEmailException;
 import by.etc.payroll.service.exception.ServiceWrongLoginException;
 import by.etc.payroll.service.exception.ServiceWrongPasswordException;
 import by.etc.payroll.service.factory.ServiceFactory;
-import by.etc.payroll.util.Attributes;
+import by.etc.payroll.command.util.Attributes;
 import by.etc.payroll.controller.exception.CommandException;
 import by.etc.payroll.service.exception.ServiceException;
 import by.etc.payroll.service.impl.ConcreteUserService;

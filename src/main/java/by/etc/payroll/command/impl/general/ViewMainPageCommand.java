@@ -20,7 +20,7 @@ public class ViewMainPageCommand implements ActionCommand {
     private static final String SELECTED_LANGUAGE_REQUEST_ATTR = "selectedLanguage";
 
     private static final String USER_PAGE_PATH = "/controller?command=usermainpage";
-    private static final String JSP_PAGE_PATH = "index.jsp";
+    private static final String JSP_PAGE_PATH = "WEB-INF/jsp/general/main.jsp";
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws CommandException, IOException {

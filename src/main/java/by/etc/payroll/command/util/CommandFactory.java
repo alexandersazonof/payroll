@@ -4,10 +4,9 @@ import by.etc.payroll.command.ActionCommand;
 import by.etc.payroll.command.impl.account.*;
 import by.etc.payroll.command.impl.card.*;
 import by.etc.payroll.command.impl.general.*;
-import by.etc.payroll.command.impl.transaction.HistoryTransactionPageCommand;
-import by.etc.payroll.command.impl.transaction.SendMoneyCommand;
-import by.etc.payroll.command.impl.transaction.TransferMoneyCommand;
+import by.etc.payroll.command.impl.transfer.SendAccountMoneyCommand;
 import by.etc.payroll.command.impl.transfer.SendCardMoneyCommand;
+import by.etc.payroll.command.impl.transfer.TransferAccountMoneyPageCommand;
 import by.etc.payroll.command.impl.transfer.TransferMoneyCardCommand;
 import by.etc.payroll.command.impl.user.EditUserCommand;
 import by.etc.payroll.command.impl.user.EditUserPageCommand;
@@ -33,23 +32,8 @@ public enum CommandFactory {
     SHOWCARDPAGE {
         public ActionCommand createCommand() {return new ShowCardPageCommand(); }
     },
-    EDITCARD {
-        public ActionCommand createCommand() {return new EditAccountCommand(); }
-    },
-    SAVECARD {
-        public ActionCommand createCommand() {return new SaveAccountCommand(); }
-    },
     NEWCARD {
         public ActionCommand createCommand() {return new NewCardCommand(); }
-    },
-    TRANSFER {
-        public ActionCommand createCommand() {return new TransferMoneyCommand();}
-    },
-    SENDMONEY {
-        public ActionCommand createCommand() {return new SendMoneyCommand();}
-    },
-    DELETEACCOUNT {
-        public ActionCommand createCommand() {return new DeleteAccountCommand();}
     },
     CHANGELANGUAGE {
         public ActionCommand createCommand() {return new ChangeLanguageCommand();}
@@ -82,18 +66,6 @@ public enum CommandFactory {
         @Override
         public ActionCommand createCommand() {
             return new ErrorCommand();
-        }
-    },
-    EDITCARDPAGE {
-        @Override
-        public ActionCommand createCommand() {
-            return new EditAccountPageCommand();
-        }
-    },
-    HISTORYPAGE {
-        @Override
-        public ActionCommand createCommand() {
-            return new HistoryTransactionPageCommand();
         }
     },
     EDITUSERPAGE {
@@ -137,15 +109,59 @@ public enum CommandFactory {
         public ActionCommand createCommand() {
             return new DeleteCardCommand();
         }
-    }, TRANSFERMONEY {
+    },
+    TRANSFERMONEY {
         @Override
         public ActionCommand createCommand() {
             return new TransferMoneyCardCommand();
         }
-    }, SENDCARDMONEY {
+    },
+    SENDCARDMONEY {
         @Override
         public ActionCommand createCommand() {
             return new SendCardMoneyCommand();
+        }
+    },
+    NEWACCOUNT {
+        @Override
+        public ActionCommand createCommand() {
+            return new NewAccountCommand();
+        }
+    },
+    SHOWACCOUNT {
+        @Override
+        public ActionCommand createCommand() {
+            return new ShowAccountPageCommand();
+        }
+    },
+    BLOCKACCOUNT {
+        @Override
+        public ActionCommand createCommand() {
+            return new BlockAccountCommand();
+        }
+    },
+    UNBLOCKACCOUNT {
+        @Override
+        public ActionCommand createCommand() {
+            return new UnBlockAccount();
+        }
+    },
+    DELETEACCOUNT {
+        @Override
+        public ActionCommand createCommand() {
+            return new DeleteAccountCommand();
+        }
+    },
+    TRANSFERACCOUNTMONEY {
+        @Override
+        public ActionCommand createCommand() {
+            return new TransferAccountMoneyPageCommand();
+        }
+    },
+    SENDACCOUNTMONEY {
+        @Override
+        public ActionCommand createCommand() {
+            return new SendAccountMoneyCommand();
         }
     };
 

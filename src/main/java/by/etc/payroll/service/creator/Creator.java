@@ -20,6 +20,13 @@ public class Creator {
 
     private final static String FORMAT = "yyyy-MM-dd";
 
+    public static Application takeApplication (String action, int accountId) {
+        Application application = new Application();
+        application.setAction(action);
+        application.setAccountId(accountId);
+        return application;
+    }
+
     public static BankAccount takeBankAccount (String name, String number, boolean status, int userId, int money,
                                                String valute) {
         BankAccount bankAccount = new BankAccount();
@@ -64,6 +71,18 @@ public class Creator {
         operation.setUserId(id);
         SimpleDateFormat dmyFormat = new SimpleDateFormat(FORMAT);
         operation.setDate(dmyFormat.format(new Date()));
+
+        return operation;
+    }
+
+    public static Operation takeOperation (int id, String action, String number,String date, int userId) {
+        Operation operation = new Operation();
+
+        operation.setId(id);
+        operation.setAction(action);
+        operation.setNumber(number);
+        operation.setUserId(userId);
+        operation.setDate(date);
 
         return operation;
     }

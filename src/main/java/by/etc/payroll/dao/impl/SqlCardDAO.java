@@ -198,6 +198,7 @@ public class SqlCardDAO implements CardDAO<Card>{
                 statement.setString(3, userData.getAddress());
                 statement.setString(4, userData.getCity());
                 statement.setInt(5, card.getId());
+                statement.execute();
 
 
                 statement = connection.prepareStatement(INSERT_INTO_OPERATION);
@@ -401,11 +402,6 @@ public class SqlCardDAO implements CardDAO<Card>{
                 statement.execute();
                 statement.close();
 
-                statement = connection.prepareStatement(UPDATE_MONEY_IN_ACCOUNT_BY_ID);
-                statement.setInt(1, money * (-1));
-                statement.setInt(2, fromNumber.getIdAccount());
-                statement.execute();
-                statement.close();
 
                 int moneyByCourse = (int)(money * course);
                 statement = connection.prepareStatement(UPDATE_MONEY_IN_CARD_BY_ID);
@@ -414,10 +410,6 @@ public class SqlCardDAO implements CardDAO<Card>{
                 statement.execute();
                 statement.close();
 
-                statement = connection.prepareStatement(UPDATE_MONEY_IN_ACCOUNT_BY_ID);
-                statement.setInt(1, moneyByCourse);
-                statement.setInt(2, toNumber.getIdAccount());
-                statement.execute();
 
                 connection.commit();
 
@@ -495,6 +487,23 @@ public class SqlCardDAO implements CardDAO<Card>{
 
     @Override
     public boolean delete(Card card) throws DAOException {
+        PreparedStatement statement = null;
+
+        try (Connection connection = ConnectionPool.getInstance().getConnection()) {
+            statement = connection.prepareStatement(DELETE_FROM_CARD_BY_ID);
+            statement.setInt(1, card.getId());
+            statement.execute();
+
+
+        } catch (SQLException e) {
+            throw new DAOException(e.getMessage(), e);
+        } finally {
+            try {
+                statement.close();
+            } catch (SQLException e) {
+                throw new DAOException(e.getMessage(), e);
+            }
+        }
         return false;
     }
 

@@ -14,14 +14,38 @@
 </head>
 <body>
 <%@ include file="../template/user_header.jsp" %>
-
+<c:choose>
+    <c:when test="${param.blockaccount != null}">
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            Нельзя разблокировать карту , потому что заблокирован счёт
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    </c:when>
+    <c:when test="${param.unblocksuccess != null}">
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            Карта успешно разблокирована
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    </c:when>
+    <c:when test="${param.blocksuccess != null}">
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            Карта успешно зблокирована
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    </c:when>
+</c:choose>
 <h1 class="text-center">Card №${card.getNumber()}</h1>
 <hr>
 <div class="container">
     <div class="row">
         <div class="col-sm-6">
             <img src="../img/${company.getName()}${rate.getName()}.png" width="300" height="150">
-
         </div>
         <div class="col-sm-6">
             <div class="form-group row">
@@ -30,10 +54,9 @@
                     <input type="text" readonly class="form-control-plaintext" id="card" value="${card.getNumber()}" name="card">
                 </div>
                 <div class="col-sm-1">
-                    <img src="../img/${company.getName()}.png" width="30" height="25">
+                    <img src="../img/${company.getId()}.png" width="30" height="25">
                 </div>
                 <div class="col-sm-2">
-
                     <c:choose>
                         <c:when test = "${status == true}">
                             <span class="badge badge-success">Active</span>
@@ -55,7 +78,6 @@
                             <a href="/controller?command=unblockcard&account=${account.getNumber()}&card=${card.getNumber()}" id="unblock"><img src="../img/unblock.png" width="25" height="25"></a>
                         </c:otherwise>
                     </c:choose>
-
                 </div>
             </div>
             <div class="form-group row">
@@ -85,13 +107,10 @@
             <div class="form-group row">
                 <label for="account" class="col-sm-2 col-form-label">Number account:</label>
                 <div class="col-sm-4">
-                    <input type="text" readonly class="form-control-plaintext" id="account" value="${account.getNumber()}" name="account">
+                    <kbd><a id="account" href="/controller?command=showaccount&number=${account.getNumber()}">${account.getNumber()}</a></kbd>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="row">
-
     </div>
 </div>
 
@@ -111,7 +130,7 @@
         var msg = 'Разблокировать карту ?';
         bootbox.confirm(msg, function(result) {
             if (result) {
-                location.href = "/controller?command=unblockcard&account=${account.getNumber()}&card=${card.getNumber()}";
+                location.href = "/controller?command=unblockcard&account=${account.getNumber()}&card=${card.getNumber()}&cid=${card.getId()}";
             }
         });
     });

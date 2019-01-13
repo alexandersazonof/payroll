@@ -71,6 +71,22 @@
             </button>
         </div>
     </c:when>
+    <c:when test="${param.successdelete != null}">
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            Аккаунт успешно удалён
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    </c:when>
+    <c:when test="${param.sucmonacc != null}">
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            Деньги успешно переведены
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    </c:when>
 </c:choose>
 
 
@@ -89,7 +105,7 @@
     <li class="list-group-item">
         <div class="row">
             <div class="col">
-                <a href="/controller?command=editcard&Number=${item.getNumber()}">${item.getName()}</a>
+                <a href="/controller?command=showaccount&number=${item.getNumber()}">${item.getName()}</a>
             </div>
 
             <div class="col">

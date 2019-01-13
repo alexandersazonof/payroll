@@ -3,13 +3,12 @@ package by.etc.payroll.command.impl.card;
 import by.etc.payroll.bean.User;
 import by.etc.payroll.command.ActionCommand;
 import by.etc.payroll.command.util.LanguageUtil;
+import by.etc.payroll.command.util.Message;
+import by.etc.payroll.command.util.Pages;
 import by.etc.payroll.command.util.QueryUtil;
 import by.etc.payroll.controller.exception.CommandException;
 import by.etc.payroll.service.AbstractCardService;
-import by.etc.payroll.service.exception.ServiceException;
-import by.etc.payroll.service.exception.ServiceUnauthorizedAccessException;
-import by.etc.payroll.service.exception.ServiceWrongBoxException;
-import by.etc.payroll.service.exception.ServiceWrongNameException;
+import by.etc.payroll.service.exception.*;
 import by.etc.payroll.service.factory.ServiceFactory;
 import by.etc.payroll.service.util.Validator;
 import org.apache.logging.log4j.LogManager;
@@ -25,8 +24,6 @@ import java.util.GregorianCalendar;
 
 public class NewCardCommand implements ActionCommand {
     private Logger LOG = LogManager.getLogger(NewCardCommand.class);
-    private static final String REDIRECT_PAGE_AFTER_UNAVTARIZED_ACCESS = "/controller?commad=loginpage";
-
     private static final String SELECTED_LANGUAGE_REQUEST_ATTR = "selectedLanguage";
 
 
@@ -36,6 +33,7 @@ public class NewCardCommand implements ActionCommand {
 
     private static final String WRONG_CHECKBOX = "msgbox";
     private static final String WRONG_VALUE = "msgvalue";
+    private static final String WRONG_BLOCK = "block";
 
     private static final String FIRST_NAME_REQUEST_ATTR = "firstName";
     private static final String LAST_NAME_REQUEST_ATTR = "lastName";
@@ -68,10 +66,6 @@ public class NewCardCommand implements ActionCommand {
         }
 
 
-
-
-
-
             if (request.getParameter("rules") == null) {
                 throw new ServiceWrongBoxException("False box");
             }
@@ -87,15 +81,17 @@ public class NewCardCommand implements ActionCommand {
             cardService.addCard(firstName, lastName, address, city, bankAccount, rate, company, user.getId());
             response.sendRedirect(SUCCESS_NEW_CARD);
 
+        }catch (ServiceBlockAccountException e){
+            LOG.error(Message.ALERT_ACCOUNT_IS_BLOCK, e);
+            response.sendRedirect(makeErrorRedirectString(WRONG_BLOCK, firstName, lastName, address, city));
         } catch (ServiceUnauthorizedAccessException e) {
-            LOG.error("Incorrect access", e);
-            response.sendRedirect(REDIRECT_PAGE_AFTER_UNAVTARIZED_ACCESS);
+            LOG.error(Message.INCORRECT_ACCESS, e);
+            response.sendRedirect(Pages.REDIRECT_PAGE_AFTER_INCORRECT_ACCESS);
         } catch (ServiceWrongBoxException e) {
-
-            LOG.error("False box", e);
+            LOG.error(Message.TOUCH_BOX, e);
             response.sendRedirect(makeErrorRedirectString(WRONG_CHECKBOX, firstName, lastName, address, city));
         } catch (ServiceWrongNameException e) {
-            LOG.error("Incorrect value", e);
+            LOG.error(Message.INCORRECT_VALUE, e);
             response.sendRedirect(makeErrorRedirectString(WRONG_VALUE, firstName, lastName, address, city));
         } catch (ServiceException e) {
             throw new CommandException(e.getMessage(), e);

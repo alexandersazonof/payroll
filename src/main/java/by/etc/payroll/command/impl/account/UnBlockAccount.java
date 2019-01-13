@@ -1,17 +1,14 @@
 package by.etc.payroll.command.impl.account;
 
-import by.etc.payroll.bean.BankAccount;
 import by.etc.payroll.bean.User;
 import by.etc.payroll.command.ActionCommand;
-import by.etc.payroll.command.util.*;
+import by.etc.payroll.command.util.LanguageUtil;
+import by.etc.payroll.command.util.QueryUtil;
 import by.etc.payroll.controller.exception.CommandException;
-import by.etc.payroll.dao.factory.DaoFactory;
-import by.etc.payroll.dao.impl.SqlBankAccountDAO;
 import by.etc.payroll.service.AbstractBankAccountService;
 import by.etc.payroll.service.exception.ServiceException;
 import by.etc.payroll.service.exception.ServiceQueryException;
 import by.etc.payroll.service.exception.ServiceUnauthorizedAccessException;
-import by.etc.payroll.service.exception.ServiceWrongCountException;
 import by.etc.payroll.service.factory.ServiceFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -20,10 +17,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class DeleteAccountCommand implements ActionCommand {
-    private static final Logger LOG = LogManager.getLogger(DeleteAccountCommand.class);
+public class UnBlockAccount implements ActionCommand {
+    private static final Logger LOG = LogManager.getLogger(UnBlockAccount.class);
     private static final String SELECTED_LANGUAGE_REQUEST_ATTR = "selectedLanguage";
 
+
+    private static final String REDIRECT_PAGE_AFTER_UNAVTARIZED_ACCESS = "/controller?command=mainPage&useraccess=true";
+    private static final String REDIRECT_PAGE_INCORRECT_QUERY = "/controller?command=mainPage&wrongquery=true";
+    private static final String REDIRECT_PAGE_AFTER_SUCCESS = "/controller?command=showaccount&number=%s&sucunblock=true";
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws CommandException, IOException {
@@ -31,27 +32,22 @@ public class DeleteAccountCommand implements ActionCommand {
         String languageId = LanguageUtil.getLanguageId(request);
         request.setAttribute(SELECTED_LANGUAGE_REQUEST_ATTR, languageId);
 
-        User user = (User)request.getSession().getAttribute(Attributes.SESSION_FIELD_ROLE_USER);
-        String accountNumber = request.getParameter(Attributes.REQUEST_ACCOUNT_NUMBER);
+        User user = (User)request.getSession().getAttribute("user");
+        String bankAccountNumber = request.getParameter("accountNumber");
 
         ServiceFactory serviceFactory = ServiceFactory.getInstance();
         AbstractBankAccountService bankAccountService = serviceFactory.getBankAccountService();
 
         try {
-            BankAccount bankAccount = bankAccountService.getCardByNumber(accountNumber);
+            bankAccountService.unBlockAccount(bankAccountNumber, user);
 
-            bankAccountService.deleteBankAccount(bankAccount, user);
-
-            response.sendRedirect(Pages.REDIRECT_DELETE_ACCOUNT_SUCCESS);
-        } catch (ServiceWrongCountException e) {
-            LOG.error(Message.INCORRECT_MONEY, e);
-            response.sendRedirect(String.format(Pages.REDIRECT_DELETE_ACCOUNT_INCORRECT_MONEY, accountNumber));
-        } catch (ServiceQueryException e) {
-            LOG.error(Message.INCORRECT_QUERY, e);
-            response.sendRedirect(Pages.REDIRECT_PAGE_INCORRECT_QUERY);
+            response.sendRedirect(String.format(REDIRECT_PAGE_AFTER_SUCCESS, bankAccountNumber));
         } catch (ServiceUnauthorizedAccessException e) {
-            LOG.error(Message.INCORRECT_ACCESS);
-            response.sendRedirect(Pages.REDIRECT_PAGE_AFTER_INCORRECT_ACCESS);
+            LOG.error("Incorrect access", e);
+            response.sendRedirect(REDIRECT_PAGE_AFTER_UNAVTARIZED_ACCESS);
+        } catch (ServiceQueryException e) {
+            LOG.error("Incorrect query", e);
+            response.sendRedirect(REDIRECT_PAGE_INCORRECT_QUERY);
         } catch (ServiceException e) {
             throw new CommandException(e.getMessage(), e);
         }

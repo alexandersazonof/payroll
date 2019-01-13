@@ -36,6 +36,10 @@ public class ConcreteCardService implements AbstractCardService {
 
         try {
             BankAccount bankAccount = bankAccountDAO.getByNumber(account);
+
+            if (!bankAccount.isStatus()) {
+                throw new ServiceBlockAccountException("Account block");
+            }
             int idBankAccount = bankAccount.getId();
             int idRate = rateDAO.getIdByName(rate);
 
@@ -88,6 +92,15 @@ public class ConcreteCardService implements AbstractCardService {
     public List<Company> getAllCompany() throws ServiceException {
         try {
             return DaoFactory.getInstance().getCompanyDAO().getAll();
+        } catch (DAOException e) {
+            throw new ServiceException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public List<Operation> getAllOperationByNumber(String number) throws ServiceException {
+        try {
+            return DaoFactory.getInstance().getOperationDAO().getAllByNumber(number);
         } catch (DAOException e) {
             throw new ServiceException(e.getMessage(), e);
         }
@@ -280,6 +293,13 @@ public class ConcreteCardService implements AbstractCardService {
 
             Card fromCard = cardDAO.getByCardNumber(fromNumber);
             Card toCard = cardDAO.getByCardNumber(toNumber);
+
+            if (cardDAO.isBlock(fromCard.getId())) {
+                throw new ServiceBlockAccountException(fromCard.getNumber());
+            }
+            if (cardDAO.isBlock(toCard.getId())) {
+                throw new ServiceBlockAccountException(toCard.getNumber());
+            }
 
             if (fromCard == null || toCard == null) {
                 throw new ServiceWrongCardNumber("Incorrect card number");

@@ -8,13 +8,13 @@ public class DaoFactory {
 
     private SqlUserDAO userDAO = new SqlUserDAO();
     private SqlBankAccountDAO bankAccountDAO = new SqlBankAccountDAO();
-    private SqlTransactionDAO transactionDAO = new SqlTransactionDAO();
     private SqlCardDAO cardDAO = new SqlCardDAO();
     private SqlOperationDAO operationDAO = new SqlOperationDAO();
     private SqlRateDAO rateDAO = new SqlRateDAO();
     private SqlValuteDAO valuteDAO = new SqlValuteDAO();
     private SqlCompanyDAO companyDAO = new SqlCompanyDAO();
     private SqlUserDataDAO userDataDAO = new SqlUserDataDAO();
+    private SqlApplicationDAO applicationDAO = new SqlApplicationDAO();
 
     private DaoFactory(){}
 
@@ -31,10 +31,6 @@ public class DaoFactory {
 
     public SqlBankAccountDAO getBankAccountDAO() {
         return bankAccountDAO;
-    }
-
-    public SqlTransactionDAO getTransactionDAO() {
-        return transactionDAO;
     }
 
     public SqlCardDAO getCardDAO() {
@@ -60,4 +56,6 @@ public class DaoFactory {
     public SqlUserDataDAO getUserDataDAO() {
         return userDataDAO;
     }
+
+    public SqlApplicationDAO getApplicationDAO() {return applicationDAO; }
 }

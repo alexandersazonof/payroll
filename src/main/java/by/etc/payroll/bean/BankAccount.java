@@ -28,6 +28,7 @@ public class BankAccount implements Serializable {
         this.userId = userId;
     }
 
+
     public String getValute() {
         return valute;
     }
