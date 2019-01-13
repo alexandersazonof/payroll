@@ -12,7 +12,7 @@ import by.etc.payroll.service.AbstractCardService;
 import by.etc.payroll.service.exception.ServiceQueryException;
 import by.etc.payroll.service.exception.ServiceUnauthorizedAccessException;
 import by.etc.payroll.service.factory.ServiceFactory;
-import by.etc.payroll.util.Attributes;
+import by.etc.payroll.command.util.Attributes;
 import by.etc.payroll.controller.exception.CommandException;
 import by.etc.payroll.service.exception.ServiceException;
 import by.etc.payroll.service.AbstractBankAccountService;

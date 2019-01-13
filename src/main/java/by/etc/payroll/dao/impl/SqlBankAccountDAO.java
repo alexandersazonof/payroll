@@ -55,14 +55,12 @@ public class SqlBankAccountDAO implements BankAccountDAO<BankAccount> {
             return statement.execute();
 
         } catch (SQLException e) {
-            LOG.error(e.getMessage(), e);
             throw new DAOException(e.getMessage(),e);
         } finally {
             try {
                 statement.close();
 
             } catch (SQLException e) {
-                LOG.error(e.getMessage(),e);
                 throw new DAOException(e);
             }
         }

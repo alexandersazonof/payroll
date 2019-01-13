@@ -3,6 +3,8 @@ package by.etc.payroll.command.impl.card;
 import by.etc.payroll.bean.User;
 import by.etc.payroll.command.ActionCommand;
 import by.etc.payroll.command.util.LanguageUtil;
+import by.etc.payroll.command.util.Message;
+import by.etc.payroll.command.util.Pages;
 import by.etc.payroll.command.util.QueryUtil;
 import by.etc.payroll.controller.exception.CommandException;
 import by.etc.payroll.service.AbstractCardService;
@@ -22,8 +24,6 @@ import java.util.GregorianCalendar;
 
 public class NewCardCommand implements ActionCommand {
     private Logger LOG = LogManager.getLogger(NewCardCommand.class);
-    private static final String REDIRECT_PAGE_AFTER_UNAVTARIZED_ACCESS = "/controller?command=mainPage&useraccess=true";
-
     private static final String SELECTED_LANGUAGE_REQUEST_ATTR = "selectedLanguage";
 
 
@@ -82,16 +82,16 @@ public class NewCardCommand implements ActionCommand {
             response.sendRedirect(SUCCESS_NEW_CARD);
 
         }catch (ServiceBlockAccountException e){
-            LOG.error("Account is blocking", e);
+            LOG.error(Message.ALERT_ACCOUNT_IS_BLOCK, e);
             response.sendRedirect(makeErrorRedirectString(WRONG_BLOCK, firstName, lastName, address, city));
         } catch (ServiceUnauthorizedAccessException e) {
-            LOG.error("Incorrect access", e);
-            response.sendRedirect(REDIRECT_PAGE_AFTER_UNAVTARIZED_ACCESS);
+            LOG.error(Message.INCORRECT_ACCESS, e);
+            response.sendRedirect(Pages.REDIRECT_PAGE_AFTER_INCORRECT_ACCESS);
         } catch (ServiceWrongBoxException e) {
-            LOG.error("False box", e);
+            LOG.error(Message.TOUCH_BOX, e);
             response.sendRedirect(makeErrorRedirectString(WRONG_CHECKBOX, firstName, lastName, address, city));
         } catch (ServiceWrongNameException e) {
-            LOG.error("Incorrect value", e);
+            LOG.error(Message.INCORRECT_VALUE, e);
             response.sendRedirect(makeErrorRedirectString(WRONG_VALUE, firstName, lastName, address, city));
         } catch (ServiceException e) {
             throw new CommandException(e.getMessage(), e);

@@ -2,7 +2,6 @@ package by.etc.payroll.command.impl.user;
 
 import by.etc.payroll.bean.User;
 import by.etc.payroll.command.ActionCommand;
-import by.etc.payroll.command.impl.transaction.HistoryTransactionPageCommand;
 import by.etc.payroll.command.util.LanguageUtil;
 import by.etc.payroll.command.util.QueryUtil;
 import by.etc.payroll.controller.exception.CommandException;

@@ -4,9 +4,7 @@ import by.etc.payroll.bean.BankAccount;
 import by.etc.payroll.bean.Card;
 import by.etc.payroll.bean.User;
 import by.etc.payroll.command.ActionCommand;
-import by.etc.payroll.command.util.LanguageUtil;
-import by.etc.payroll.command.util.QueryUtil;
-import by.etc.payroll.command.util.UserUtil;
+import by.etc.payroll.command.util.*;
 import by.etc.payroll.controller.exception.CommandException;
 import by.etc.payroll.service.exception.ServiceException;
 import by.etc.payroll.service.exception.ServiceQueryException;
@@ -55,11 +53,11 @@ public class BlockCardCommand implements ActionCommand {
 
             response.sendRedirect(String.format(REDIRECT_PAGE_AFTER_SUCCESS, card.getId()));
         } catch (ServiceQueryException e) {
-            LOG.error("Incorrect query", e);
-            response.sendRedirect(REDIRECT_PAGE_INCORRECT_QUERY);
+            LOG.error(Message.INCORRECT_QUERY, e);
+            response.sendRedirect(Pages.REDIRECT_PAGE_INCORRECT_QUERY);
         } catch (ServiceUnauthorizedAccessException e) {
-            LOG.error("Incorrect access", e);
-            response.sendRedirect(REDIRECT_PAGE_AFTER_UNAVTARIZED_ACCESS);
+            LOG.error(Message.INCORRECT_ACCESS, e);
+            response.sendRedirect(Pages.REDIRECT_PAGE_AFTER_INCORRECT_ACCESS);
         } catch (ServiceException e) {
             throw new CommandException(e.getMessage(), e);
         }

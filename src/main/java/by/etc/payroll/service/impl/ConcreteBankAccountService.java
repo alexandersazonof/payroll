@@ -1,6 +1,7 @@
 package by.etc.payroll.service.impl;
 
 import by.etc.payroll.bean.*;
+import by.etc.payroll.command.util.Message;
 import by.etc.payroll.command.util.UserUtil;
 import by.etc.payroll.dao.factory.DaoFactory;
 import by.etc.payroll.dao.exception.DAOException;
@@ -25,8 +26,8 @@ public class ConcreteBankAccountService implements AbstractBankAccountService {
     private final String ACTION_BLOCK_ACCOUNT = "Block account";
     private final String ACTION_UNBLOCK_ACCOUNT = "Application send to Admin";
     private final String APPLICATION_FOR_UNBLOCK = "Unblock my account";
+    private final String ACTION_DELETE_ACCOUNT = "Delete account";
 
-            ;
     private final int COUNT = 0;
 
 
@@ -86,9 +87,7 @@ public class ConcreteBankAccountService implements AbstractBankAccountService {
     public boolean addCard(String name, String valute, User user) throws ServiceException {
 
 
-        if (!Validator.validateUser(user)) {
-            throw new ServiceUnauthorizedAccessException();
-        }
+        UserUtil.isUser(user);
         if (!Validator.validateString(name)) {
             throw new ServiceWrongNameException("Incorrect name");
         }
@@ -109,6 +108,7 @@ public class ConcreteBankAccountService implements AbstractBankAccountService {
             BankAccount bankAccount = Creator.takeBankAccount(name, number, status, user.getId(), count, valute);
             bankAccountDAO.insert(bankAccount);
 
+            System.out.println(bankAccount);
             EventLog.write("New account", number, user.getId());
         } catch (DAOException e) {
             throw new ServiceException(e);
@@ -117,62 +117,6 @@ public class ConcreteBankAccountService implements AbstractBankAccountService {
         return false;
     }
 
-    @Override
-    public boolean updateNameAndStatusByNumber(String name, String status, String number) throws ServiceException {
-
-        try {
-
-            DaoFactory daoFactory = DaoFactory.getInstance();
-            SqlBankAccountDAO bankAccountDAO = daoFactory.getBankAccountDAO();
-            boolean upStatus = status.equalsIgnoreCase(STATUS) ? true : false;
-
-            BankAccount bankAccount = bankAccountDAO.getByNumber(number);
-            if (bankAccount == null || !Validator.validateString(name)) {
-
-                throw new ServiceWrongNameException("Incorrect number");
-            }
-
-            bankAccount.setName(name);
-            bankAccount.setStatus(upStatus);
-
-            return bankAccountDAO.update(bankAccount);
-
-        } catch (DAOException e) {
-
-            throw new ServiceException(e.getMessage(), e);
-
-        }
-    }
-
-    @Override
-    public boolean deleteCard(String number, User user) throws ServiceException {
-        if (user == null || !user.getRole().equalsIgnoreCase(Roles.USER)) {
-            throw new ServiceUnauthorizedAccessException();
-        }
-
-        DaoFactory daoFactory = DaoFactory.getInstance();
-        SqlBankAccountDAO bankAccountDAO = daoFactory.getBankAccountDAO();
-        SqlUserDAO userDAO = daoFactory.getUserDAO();
-
-
-        if (!Validator.validateNumber(number)) {
-            throw new ServiceException();
-        }
-
-        try {
-            BankAccount bankAccount = bankAccountDAO.getByNumber(number);
-            user = userDAO.findByLogin(user.getLogin());
-
-            if (user.getId() != bankAccount.getUserId()) {
-                throw new ServiceException();
-            }
-
-            return bankAccountDAO.delete(bankAccount);
-
-        } catch (DAOException e) {
-            throw new ServiceException(e.getMessage(), e);
-        }
-    }
 
     @Override
     public BankAccount getAccountById(int accountId) throws ServiceException {
@@ -252,6 +196,44 @@ public class ConcreteBankAccountService implements AbstractBankAccountService {
             throw new ServiceException(e.getMessage(), e);
         }
 
+        return false;
+    }
+
+    @Override
+    public boolean deleteBankAccount(BankAccount bankAccount, User user) throws ServiceException {
+        UserUtil.isAccountOfUser(user, bankAccount);
+
+        if (bankAccount.getCountOfMoney() > 0) {
+            throw new ServiceWrongCountException(Message.INCORRECT_MONEY);
+        }
+
+        DaoFactory daoFactory = DaoFactory.getInstance();
+        SqlCardDAO cardDAO = daoFactory.getCardDAO();
+        SqlBankAccountDAO bankAccountDAO = daoFactory.getBankAccountDAO();
+        SqlOperationDAO operationDAO = daoFactory.getOperationDAO();
+
+        try {
+
+            for (Card card :bankAccount.getCardList()) {
+                System.out.println(card);
+                if (card.getMoney() > 0) {
+                    throw new ServiceWrongCountException(Message.INCORRECT_MONEY);
+                }
+            }
+
+            bankAccountDAO.delete(bankAccount);
+
+            for (Card card : bankAccount.getCardList()) {
+                cardDAO.delete(card);
+            }
+
+            Operation operation = Creator.takeOperation(ACTION_DELETE_ACCOUNT, bankAccount.getNumber(), user.getId());
+            operationDAO.insert(operation);
+
+
+        } catch (DAOException e) {
+            throw new ServiceException(e.getMessage(), e);
+        }
         return false;
     }
 }

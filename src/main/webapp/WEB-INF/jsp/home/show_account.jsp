@@ -57,7 +57,16 @@
             </button>
         </div>
     </c:when>
+    <c:when test="${param.incmoney != null}">
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            На счёту не должно быть денег
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    </c:when>
 </c:choose>
+
 
 <div class="container">
     <div class="text-center">
@@ -183,7 +192,15 @@
             }
         });
     });
-
+    $('#delete').click(function(e) {
+        e.preventDefault();
+        var msg = 'Удалить счёт ?';
+        bootbox.confirm(msg, function(result) {
+            if (result) {
+                location.href = "/controller?command=DELETEACCOUNT&accountNumber=${bankAccount.getNumber()}";
+            }
+        });
+    });
 
 
 </script>

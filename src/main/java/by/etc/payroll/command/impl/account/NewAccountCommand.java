@@ -1,14 +1,11 @@
 package by.etc.payroll.command.impl.account;
 
 import by.etc.payroll.bean.User;
-import by.etc.payroll.bean.Valute;
 import by.etc.payroll.command.ActionCommand;
 import by.etc.payroll.service.exception.ServiceUnauthorizedAccessException;
 import by.etc.payroll.service.exception.ServiceWrongNameException;
-import by.etc.payroll.service.exception.ServiceWrongNumberException;
 import by.etc.payroll.service.factory.ServiceFactory;
-import by.etc.payroll.service.impl.ConcreteCardService;
-import by.etc.payroll.util.Attributes;
+import by.etc.payroll.command.util.Attributes;
 import by.etc.payroll.controller.exception.CommandException;
 import by.etc.payroll.service.exception.ServiceException;
 import by.etc.payroll.service.AbstractBankAccountService;
@@ -19,7 +16,6 @@ import org.apache.logging.log4j.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.List;
 
 public class NewAccountCommand implements ActionCommand {
     private AbstractBankAccountService service = new ConcreteBankAccountService();
