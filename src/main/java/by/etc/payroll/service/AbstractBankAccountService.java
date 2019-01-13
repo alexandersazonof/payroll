@@ -16,6 +16,7 @@ public interface AbstractBankAccountService {
     boolean blockAccount (String bankAccountNumber, User user) throws ServiceException;
     boolean unBlockAccount (String bankAccountNumber, User user) throws ServiceException;
     boolean deleteBankAccount (BankAccount bankAccount ,User user) throws ServiceException;
+    boolean sendMoney (User user, String accountNumber, String cardNumber, String money) throws ServiceException;
 
     List<Operation> searchByWord (String number, String keyWord) throws ServiceException;
 }

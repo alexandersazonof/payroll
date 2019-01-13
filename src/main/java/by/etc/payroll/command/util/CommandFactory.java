@@ -4,7 +4,9 @@ import by.etc.payroll.command.ActionCommand;
 import by.etc.payroll.command.impl.account.*;
 import by.etc.payroll.command.impl.card.*;
 import by.etc.payroll.command.impl.general.*;
+import by.etc.payroll.command.impl.transfer.SendAccountMoneyCommand;
 import by.etc.payroll.command.impl.transfer.SendCardMoneyCommand;
+import by.etc.payroll.command.impl.transfer.TransferAccountMoneyPageCommand;
 import by.etc.payroll.command.impl.transfer.TransferMoneyCardCommand;
 import by.etc.payroll.command.impl.user.EditUserCommand;
 import by.etc.payroll.command.impl.user.EditUserPageCommand;
@@ -148,6 +150,18 @@ public enum CommandFactory {
         @Override
         public ActionCommand createCommand() {
             return new DeleteAccountCommand();
+        }
+    },
+    TRANSFERACCOUNTMONEY {
+        @Override
+        public ActionCommand createCommand() {
+            return new TransferAccountMoneyPageCommand();
+        }
+    },
+    SENDACCOUNTMONEY {
+        @Override
+        public ActionCommand createCommand() {
+            return new SendAccountMoneyCommand();
         }
     };
 

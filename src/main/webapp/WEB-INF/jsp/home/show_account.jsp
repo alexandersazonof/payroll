@@ -157,7 +157,9 @@
             <div class="form-group row">
                 <label for="freeMoney" class="col-sm-2 col-form-label">Free money:</label>
                 <div class="col-sm-4">
-                    <input type="text" readonly class="form-control-plaintext" id="freeMoney" value="${bankAccount.getCountOfMoney()} ${bankAccount.getValute()}" name="accountCount">
+                    <a href="/controller?command=TRANSFERACCOUNTMONEY&accountNumber=${bankAccount.getNumber()}" id="freeMoney">
+                        ${bankAccount.getCountOfMoney()}  ${bankAccount.getValute()}
+                    </a>
                 </div>
             </div>
             <div class="form-group row">

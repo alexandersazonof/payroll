@@ -79,6 +79,14 @@
             </button>
         </div>
     </c:when>
+    <c:when test="${param.sucmonacc != null}">
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            Деньги успешно переведены
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    </c:when>
 </c:choose>
 
 

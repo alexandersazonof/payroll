@@ -19,9 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ConcreteBankAccountService implements AbstractBankAccountService {
-    private static Logger LOG = LogManager.getLogger(ConcreteBankAccountService.class);
-
-    private final String STATUS = "unlock";
     private final boolean BLOCK_ACCOUNT = false;
     private final String ACTION_BLOCK_ACCOUNT = "Block account";
     private final String ACTION_UNBLOCK_ACCOUNT = "Application send to Admin";
@@ -231,6 +228,42 @@ public class ConcreteBankAccountService implements AbstractBankAccountService {
             operationDAO.insert(operation);
 
 
+        } catch (DAOException e) {
+            throw new ServiceException(e.getMessage(), e);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean sendMoney(User user, String accountNumber, String cardNumber, String money) throws ServiceException {
+        DaoFactory daoFactory = DaoFactory.getInstance();
+        SqlBankAccountDAO bankAccountDAO = daoFactory.getBankAccountDAO();
+        SqlCardDAO cardDAO = daoFactory.getCardDAO();
+        try {
+            BankAccount bankAccount = bankAccountDAO.getByNumber(accountNumber);
+
+            if (bankAccount == null) {
+                throw new ServiceQueryException(Message.INCORRECT_QUERY);
+            }
+            UserUtil.isAccountOfUser(user, bankAccount);
+
+            Card card = cardDAO.getByCardNumber(cardNumber);
+
+            if (card == null) {
+                throw new ServiceQueryException(Message.INCORRECT_QUERY);
+            }
+
+            int accountMoney = Integer.valueOf(money);
+
+            if (accountMoney > bankAccount.getCountOfMoney() || accountMoney < 0) {
+                throw new ServiceWrongCountException(Message.INCORRECT_MONEY);
+            }
+
+
+            bankAccountDAO.sendMoney(bankAccount, card, accountMoney);
+
+        } catch (NumberFormatException e) {
+            throw new ServiceWrongCountException(Message.INCORRECT_MONEY);
         } catch (DAOException e) {
             throw new ServiceException(e.getMessage(), e);
         }

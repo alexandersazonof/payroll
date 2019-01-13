@@ -402,11 +402,6 @@ public class SqlCardDAO implements CardDAO<Card>{
                 statement.execute();
                 statement.close();
 
-                statement = connection.prepareStatement(UPDATE_MONEY_IN_ACCOUNT_BY_ID);
-                statement.setInt(1, money * (-1));
-                statement.setInt(2, fromNumber.getIdAccount());
-                statement.execute();
-                statement.close();
 
                 int moneyByCourse = (int)(money * course);
                 statement = connection.prepareStatement(UPDATE_MONEY_IN_CARD_BY_ID);
@@ -415,10 +410,6 @@ public class SqlCardDAO implements CardDAO<Card>{
                 statement.execute();
                 statement.close();
 
-                statement = connection.prepareStatement(UPDATE_MONEY_IN_ACCOUNT_BY_ID);
-                statement.setInt(1, moneyByCourse);
-                statement.setInt(2, toNumber.getIdAccount());
-                statement.execute();
 
                 connection.commit();
 
