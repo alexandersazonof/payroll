@@ -1,6 +1,7 @@
 package by.etc.payroll.service;
 
 import by.etc.payroll.bean.BankAccount;
+import by.etc.payroll.bean.Operation;
 import by.etc.payroll.bean.User;
 import by.etc.payroll.service.exception.ServiceException;
 
@@ -15,4 +16,6 @@ public interface AbstractBankAccountService {
     boolean blockAccount (String bankAccountNumber, User user) throws ServiceException;
     boolean unBlockAccount (String bankAccountNumber, User user) throws ServiceException;
     boolean deleteBankAccount (BankAccount bankAccount ,User user) throws ServiceException;
+
+    List<Operation> searchByWord (String number, String keyWord) throws ServiceException;
 }

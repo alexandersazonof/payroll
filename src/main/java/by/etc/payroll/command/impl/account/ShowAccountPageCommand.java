@@ -63,7 +63,10 @@ public class ShowAccountPageCommand implements ActionCommand {
             for (Card card :bankAccount.getCardList()) {
                 totalMoney += card.getMoney();
             }
-            List<Operation> operationList = cardService.getAllOperationByNumber(bankAccountNumber);
+
+            String searchKey = request.getParameter(Attributes.REQUEST_SEARCH);
+
+            List<Operation> operationList = bankAccountService.searchByWord(bankAccountNumber, searchKey);
 
             request.setAttribute("totalMoney", totalMoney);
             request.setAttribute("operationList", operationList);

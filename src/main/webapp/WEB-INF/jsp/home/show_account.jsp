@@ -79,9 +79,9 @@
             <div class="form-group row">
             <div class="col-sm-6">
                 <div class="input-group mb-3">
-                    <input type="text" class="form-control" placeholder="Search by action..." aria-label="Recipient's username" aria-describedby="button-addon2">
+                    <input type="text" name="keyWord" id="keyWord" class="form-control" placeholder="Search by action..." aria-label="Recipient's username" aria-describedby="search">
                     <div class="input-group-append">
-                        <button class="btn btn-outline-secondary" type="button" id="button-addon2">Search</button>
+                        <button class="btn btn-outline-secondary" type="button" id="search">Search</button>
                     </div>
                 </div>
             </div>
@@ -200,6 +200,11 @@
                 location.href = "/controller?command=DELETEACCOUNT&accountNumber=${bankAccount.getNumber()}";
             }
         });
+    });
+    $('#search').click(function(e) {
+        e.preventDefault();
+        var key = document.getElementById("keyWord").value;
+        location.href = "/controller?command=showaccount&number=${bankAccount.getNumber()}&search=" + key;
     });
 
 

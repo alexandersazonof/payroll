@@ -236,5 +236,27 @@ public class ConcreteBankAccountService implements AbstractBankAccountService {
         }
         return false;
     }
+
+    @Override
+    public List<Operation> searchByWord(String accountNumber, String keyWord) throws ServiceException {
+
+        List<Operation> operationList = new ArrayList<>();
+        DaoFactory daoFactory = DaoFactory.getInstance();
+
+        SqlOperationDAO operationDAO = daoFactory.getOperationDAO();
+
+
+        try {
+            if (!Validator.validateString(keyWord)) {
+                operationList = operationDAO.getAllByNumber(accountNumber);
+            } else {
+                operationList = operationDAO.getAllByNumberAndKeyWord(accountNumber, keyWord);
+
+            }
+        } catch (DAOException e) {
+            throw new ServiceException(e.getMessage(), e);
+        }
+        return operationList;
+    }
 }
 

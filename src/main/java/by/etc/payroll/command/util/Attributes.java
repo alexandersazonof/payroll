@@ -14,4 +14,5 @@ public interface Attributes {
 
     String SESSION_FIELD_ROLE_USER = "user";
     String REQUEST_ACCOUNT_NUMBER = "accountNumber";
+    String REQUEST_SEARCH = "search";
 }
