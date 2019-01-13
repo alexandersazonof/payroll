@@ -15,6 +15,7 @@ public class DaoFactory {
     private SqlValuteDAO valuteDAO = new SqlValuteDAO();
     private SqlCompanyDAO companyDAO = new SqlCompanyDAO();
     private SqlUserDataDAO userDataDAO = new SqlUserDataDAO();
+    private SqlApplicationDAO applicationDAO = new SqlApplicationDAO();
 
     private DaoFactory(){}
 
@@ -60,4 +61,6 @@ public class DaoFactory {
     public SqlUserDataDAO getUserDataDAO() {
         return userDataDAO;
     }
+
+    public SqlApplicationDAO getApplicationDAO() {return applicationDAO; }
 }

@@ -167,6 +167,12 @@ public enum CommandFactory {
         public ActionCommand createCommand() {
             return new BlockAccountCommand();
         }
+    },
+    UNBLOCKACCOUNT {
+        @Override
+        public ActionCommand createCommand() {
+            return new UnBlockAccount();
+        }
     };
 
     public abstract ActionCommand createCommand();

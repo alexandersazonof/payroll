@@ -2,7 +2,6 @@ package by.etc.payroll.command.impl.account;
 
 import by.etc.payroll.bean.User;
 import by.etc.payroll.command.ActionCommand;
-import by.etc.payroll.command.impl.card.BlockCardCommand;
 import by.etc.payroll.command.util.LanguageUtil;
 import by.etc.payroll.command.util.QueryUtil;
 import by.etc.payroll.controller.exception.CommandException;
@@ -18,14 +17,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class BlockAccountCommand implements ActionCommand {
-    private static final Logger LOG = LogManager.getLogger(BlockAccountCommand.class);
+public class UnBlockAccount implements ActionCommand {
+    private static final Logger LOG = LogManager.getLogger(UnBlockAccount.class);
     private static final String SELECTED_LANGUAGE_REQUEST_ATTR = "selectedLanguage";
 
 
     private static final String REDIRECT_PAGE_AFTER_UNAVTARIZED_ACCESS = "/controller?command=mainPage&useraccess=true";
     private static final String REDIRECT_PAGE_INCORRECT_QUERY = "/controller?command=mainPage&wrongquery=true";
-    private static final String REDIRECT_PAGE_AFTER_SUCCESS = "/controller?command=showaccount&number=%s&sucblock=true";
+    private static final String REDIRECT_PAGE_AFTER_SUCCESS = "/controller?command=showaccount&number=%s&sucunblock=true";
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws CommandException, IOException {
@@ -40,18 +39,17 @@ public class BlockAccountCommand implements ActionCommand {
         AbstractBankAccountService bankAccountService = serviceFactory.getBankAccountService();
 
         try {
-            bankAccountService.blockAccount(bankAccountNumber, user);
+            bankAccountService.unBlockAccount(bankAccountNumber, user);
+
             response.sendRedirect(String.format(REDIRECT_PAGE_AFTER_SUCCESS, bankAccountNumber));
-        } catch (ServiceQueryException e) {
-            LOG.error("Incorrect query", e);
-            response.sendRedirect(REDIRECT_PAGE_INCORRECT_QUERY);
         } catch (ServiceUnauthorizedAccessException e) {
             LOG.error("Incorrect access", e);
             response.sendRedirect(REDIRECT_PAGE_AFTER_UNAVTARIZED_ACCESS);
+        } catch (ServiceQueryException e) {
+            LOG.error("Incorrect query", e);
+            response.sendRedirect(REDIRECT_PAGE_INCORRECT_QUERY);
         } catch (ServiceException e) {
             throw new CommandException(e.getMessage(), e);
         }
-
-
     }
 }

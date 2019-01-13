@@ -15,4 +15,5 @@ public interface AbstractBankAccountService {
     BankAccount getAccountById (int accountId) throws ServiceException;
 
     boolean blockAccount (String bankAccountNumber, User user) throws ServiceException;
+    boolean unBlockAccount (String bankAccountNumber, User user) throws ServiceException;
 }

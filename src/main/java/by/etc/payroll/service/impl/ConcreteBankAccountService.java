@@ -4,10 +4,7 @@ import by.etc.payroll.bean.*;
 import by.etc.payroll.command.util.UserUtil;
 import by.etc.payroll.dao.factory.DaoFactory;
 import by.etc.payroll.dao.exception.DAOException;
-import by.etc.payroll.dao.impl.SqlBankAccountDAO;
-import by.etc.payroll.dao.impl.SqlCardDAO;
-import by.etc.payroll.dao.impl.SqlOperationDAO;
-import by.etc.payroll.dao.impl.SqlUserDAO;
+import by.etc.payroll.dao.impl.*;
 import by.etc.payroll.service.creator.Creator;
 import by.etc.payroll.service.exception.*;
 import by.etc.payroll.service.AbstractBankAccountService;
@@ -26,6 +23,8 @@ public class ConcreteBankAccountService implements AbstractBankAccountService {
     private final String STATUS = "unlock";
     private final boolean BLOCK_ACCOUNT = false;
     private final String ACTION_BLOCK_ACCOUNT = "Block account";
+    private final String ACTION_UNBLOCK_ACCOUNT = "Application send to Admin";
+    private final String APPLICATION_FOR_UNBLOCK = "Unblock my account";
 
             ;
     private final int COUNT = 0;
@@ -217,6 +216,38 @@ public class ConcreteBankAccountService implements AbstractBankAccountService {
             Operation operation = Creator.takeOperation(ACTION_BLOCK_ACCOUNT, bankAccountNumber, user.getId());
             operationDAO.insert(operation);
 
+        } catch (DAOException e) {
+            throw new ServiceException(e.getMessage(), e);
+        }
+
+        return false;
+    }
+
+    @Override
+    public boolean unBlockAccount(String bankAccountNumber, User user) throws ServiceException {
+        if (!Validator.validateString(bankAccountNumber)) {
+            throw new ServiceQueryException("Incorrect number");
+        }
+
+        DaoFactory daoFactory = DaoFactory.getInstance();
+        SqlBankAccountDAO bankAccountDAO = daoFactory.getBankAccountDAO();
+        SqlOperationDAO operationDAO = daoFactory.getOperationDAO();
+        SqlApplicationDAO applicationDAO = daoFactory.getApplicationDAO();
+
+        try {
+            BankAccount bankAccount = bankAccountDAO.getByNumber(bankAccountNumber);
+
+            if (bankAccount == null) {
+                throw new ServiceQueryException("Incorrect number");
+            }
+
+            UserUtil.isAccountOfUser(user, bankAccount);
+
+            Application application = Creator.takeApplication(APPLICATION_FOR_UNBLOCK, bankAccount.getId());
+            applicationDAO.insert(application);
+
+            Operation operation = Creator.takeOperation(ACTION_UNBLOCK_ACCOUNT, bankAccountNumber, user.getId());
+            operationDAO.insert(operation);
         } catch (DAOException e) {
             throw new ServiceException(e.getMessage(), e);
         }

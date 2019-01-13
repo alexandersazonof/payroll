@@ -49,7 +49,16 @@
             </button>
         </div>
     </c:when>
+    <c:when test="${param.sucunblock != null}">
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            Заявка отправленна администратору
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    </c:when>
 </c:choose>
+
 <div class="container">
     <div class="text-center">
         <h1><strong>Account : </strong>${bankAccount.getName()}</h1>
@@ -164,6 +173,18 @@
             }
         });
     });
+
+    $('#unblock').click(function(e) {
+        e.preventDefault();
+        var msg = 'Заблокировать счёт ?';
+        bootbox.confirm(msg, function(result) {
+            if (result) {
+                location.href = "/controller?command=UNBLOCKACCOUNT&accountNumber=${bankAccount.getNumber()}";
+            }
+        });
+    });
+
+
 
 </script>
 
