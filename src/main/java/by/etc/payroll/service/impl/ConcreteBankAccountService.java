@@ -1,12 +1,12 @@
 package by.etc.payroll.service.impl;
 
-import by.etc.payroll.bean.BankAccount;
-import by.etc.payroll.bean.Card;
-import by.etc.payroll.bean.User;
+import by.etc.payroll.bean.*;
+import by.etc.payroll.command.util.UserUtil;
 import by.etc.payroll.dao.factory.DaoFactory;
 import by.etc.payroll.dao.exception.DAOException;
 import by.etc.payroll.dao.impl.SqlBankAccountDAO;
 import by.etc.payroll.dao.impl.SqlCardDAO;
+import by.etc.payroll.dao.impl.SqlOperationDAO;
 import by.etc.payroll.dao.impl.SqlUserDAO;
 import by.etc.payroll.service.creator.Creator;
 import by.etc.payroll.service.exception.*;
@@ -22,7 +22,12 @@ import java.util.List;
 
 public class ConcreteBankAccountService implements AbstractBankAccountService {
     private static Logger LOG = LogManager.getLogger(ConcreteBankAccountService.class);
+
     private final String STATUS = "unlock";
+    private final boolean BLOCK_ACCOUNT = false;
+    private final String ACTION_BLOCK_ACCOUNT = "Block account";
+
+            ;
     private final int COUNT = 0;
 
 
@@ -177,6 +182,46 @@ public class ConcreteBankAccountService implements AbstractBankAccountService {
         } catch (DAOException e) {
             throw new ServiceException(e.getMessage(), e);
         }
+    }
+
+    @Override
+    public boolean blockAccount(String bankAccountNumber, User user) throws ServiceException {
+        if (!Validator.validateString(bankAccountNumber)) {
+            throw new ServiceQueryException("Incorrect number");
+        }
+
+        DaoFactory daoFactory = DaoFactory.getInstance();
+        SqlBankAccountDAO bankAccountDAO = daoFactory.getBankAccountDAO();
+        SqlCardDAO cardDAO = daoFactory.getCardDAO();
+        SqlOperationDAO operationDAO = daoFactory.getOperationDAO();
+        try {
+            BankAccount bankAccount = bankAccountDAO.getByNumber(bankAccountNumber);
+
+            if (bankAccount == null) {
+                throw new ServiceQueryException("Incorrect number");
+            }
+
+            UserUtil.isAccountOfUser(user, bankAccount);
+
+            bankAccount.setStatus(BLOCK_ACCOUNT);
+            bankAccountDAO.update(bankAccount);
+
+            List<Card> cardList = cardDAO.getAllByAccountId(bankAccount.getId());
+
+            for (Card card :cardList) {
+                if (!cardDAO.isBlock(card.getId())) {
+                    cardDAO.blockCard(card.getId());
+                }
+            }
+
+            Operation operation = Creator.takeOperation(ACTION_BLOCK_ACCOUNT, bankAccountNumber, user.getId());
+            operationDAO.insert(operation);
+
+        } catch (DAOException e) {
+            throw new ServiceException(e.getMessage(), e);
+        }
+
+        return false;
     }
 }
 

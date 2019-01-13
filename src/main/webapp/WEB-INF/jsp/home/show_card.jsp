@@ -32,7 +32,6 @@
                     <img src="../img/${company.getId()}.png" width="30" height="25">
                 </div>
                 <div class="col-sm-2">
-
                     <c:choose>
                         <c:when test = "${status == true}">
                             <span class="badge badge-success">Active</span>
@@ -54,7 +53,6 @@
                             <a href="/controller?command=unblockcard&account=${account.getNumber()}&card=${card.getNumber()}" id="unblock"><img src="../img/unblock.png" width="25" height="25"></a>
                         </c:otherwise>
                     </c:choose>
-
                 </div>
             </div>
             <div class="form-group row">

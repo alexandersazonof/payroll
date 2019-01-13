@@ -40,13 +40,37 @@
 <body>
 <%@ include file="../template/user_header.jsp" %>
 
+<c:choose>
+    <c:when test="${param.sucblock != null}">
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            Аккаунт и все карты заблокированы
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    </c:when>
+</c:choose>
 <div class="container">
     <div class="text-center">
         <h1><strong>Account : </strong>${bankAccount.getName()}</h1>
+        <hr>
     </div>
     <div class="row">
         <div class="col-sm-6">
             <h2 class="text-center">Account history</h2>
+            <div class="form-group row">
+            <div class="col-sm-6">
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" placeholder="Search by action..." aria-label="Recipient's username" aria-describedby="button-addon2">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary" type="button" id="button-addon2">Search</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-2">
+                <a href="#" id="export"><img src="../img/export.png" width="25" height="25" data-toggle="tooltip" data-placement="top" title="Export to PDF"></a>
+            </div>
+            </div>
             <table class="table table-striped">
                 <thead>
                     <tr>
@@ -71,6 +95,29 @@
                 <label for="accountNumber" class="col-sm-2 col-form-label">Account number:</label>
                 <div class="col-sm-4">
                     <input type="text" readonly class="form-control-plaintext" id="accountNumber" value="${bankAccount.getNumber()}" name="accountNumber">
+                </div>
+                <div class="col-sm-2">
+                    <c:choose>
+                        <c:when test = "${bankAccount.isStatus() == true}">
+                            <span class="badge badge-success">Active</span>
+                        </c:when>
+                        <c:otherwise>
+                            <span class="badge badge-danger">Blocking</span>
+                        </c:otherwise>
+                    </c:choose>
+                </div>
+                <div class="col-sm-1">
+                    <a href="#" id="delete"><img src="../img/delete.png" width="25" height="25"></a>
+                </div>
+                <div class="col-sm-1">
+                    <c:choose>
+                        <c:when test="${bankAccount.isStatus() == true}">
+                            <a href="#" id="block"><img src="../img/block.png" width="25" height="25"></a>
+                        </c:when>
+                        <c:otherwise>
+                            <a href="#" id="unblock"><img src="../img/unblock.png" width="25" height="25"></a>
+                        </c:otherwise>
+                    </c:choose>
                 </div>
             </div>
             <div class="form-group row">
@@ -105,6 +152,20 @@
 
     </div>
 </div>
+
+<script src="../js/bootbox.min.js"></script>
+<script type="text/javascript">
+    $('#block').click(function(e) {
+        e.preventDefault();
+        var msg = 'Заблокировать счёт ?';
+        bootbox.confirm(msg, function(result) {
+            if (result) {
+                location.href = "/controller?command=BLOCKACCOUNT&accountNumber=${bankAccount.getNumber()}";
+            }
+        });
+    });
+
+</script>
 
 <jsp:include page="../template/footer.jsp" />
 
