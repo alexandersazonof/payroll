@@ -4,6 +4,7 @@ import by.etc.payroll.bean.User;
 import by.etc.payroll.dao.UserDAO;
 import by.etc.payroll.dao.exception.DAOException;
 import by.etc.payroll.dao.dbmanager.ConnectionPool;
+import by.etc.payroll.service.creator.Creator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -11,8 +12,12 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SqlUserDAO implements UserDAO<User> {
+
+    private final String SELECT_ALL_USER = "select * from user where role = 'Guest'";
     private final String SELECT_BY_LOGIN = "select * from user where Login = ?";
     private final String INSERT_USER = "insert into user (Login,password,email,LastName,FirstName,Role) values(?,?,?,?,?,?);";
     private final String SELECT_BY_EMAIL = "select * from user where email = ?";
@@ -22,7 +27,44 @@ public class SqlUserDAO implements UserDAO<User> {
     private final String UPDATE_USER = "update user set Login = ? , Password = ? , LastName = ? , FirstName = ? , email = ? where ID = ?";
 
 
+    private final String FIELD_USER_ID = "ID";
+    private final String FIELD_USER_LOGIN = "Login";
+    private final String FIELD_USER_PASSWORD = "Password";
+    private final String FIELD_USER_LAST_NAME  = "LastName";
+    private final String FIELD_USER_FIRST_NAME = "FirstName";
+    private final String FIELD_USER_ROLE = "Role";
+    private final String FIELD_USER_EMAIL = "email";
+
     private Logger LOG = LogManager.getLogger(SqlUserDAO.class);
+
+    @Override
+    public List<User> getAllUserWithoutPassword() throws DAOException {
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+        List<User> userList = new ArrayList<>();
+
+        try (Connection connection = ConnectionPool.getInstance().getConnection()){
+            statement = connection.prepareStatement(SELECT_ALL_USER);
+            resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                int id = resultSet.getInt(FIELD_USER_ID);
+                String login = resultSet.getString(FIELD_USER_LOGIN);
+                String lastName = resultSet.getString(FIELD_USER_LAST_NAME);
+                String firstName = resultSet.getString(FIELD_USER_FIRST_NAME);
+                String role = resultSet.getString(FIELD_USER_ROLE);
+                String email = resultSet.getString(FIELD_USER_EMAIL);
+
+                User user = Creator.takeUserWithoutPassword(id, login, lastName, firstName, role, email);
+
+                userList.add(user);
+            }
+
+        } catch (SQLException e) {
+            throw new DAOException(e.getMessage(), e);
+        }
+        return userList;
+    }
 
     @Override
     public User findByLogin(String login) throws DAOException{

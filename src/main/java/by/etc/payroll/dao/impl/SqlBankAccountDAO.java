@@ -19,6 +19,7 @@ import java.util.List;
 public class SqlBankAccountDAO implements BankAccountDAO<BankAccount> {
     private Logger LOG = LogManager.getLogger(SqlBankAccountDAO.class);
 
+    private final String SELECT_ALL = "select * from account";
     private final String SELECT_BY_USER_ID = "select * from account where User_ID = ?";
     private final String SELECT_BY_NUMBER = "select * from account where Number = ?";
     private final String UPDATE_BY_ID = "update account set Name = ? , Status = ? , Number = ? , Count = ?   where ID = ?";
@@ -171,6 +172,37 @@ public class SqlBankAccountDAO implements BankAccountDAO<BankAccount> {
                 throw new DAOException(e);
             }
         }
+    }
+
+    @Override
+    public List<BankAccount> getAll() throws DAOException {
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+        List<BankAccount> bankAccountList = new ArrayList<>();
+
+        try (Connection connection = ConnectionPool.getInstance().getConnection()){
+            statement = connection.prepareStatement(SELECT_ALL);
+            resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                int id = resultSet.getInt(ACCOUNT_ID);
+                String name = resultSet.getString(ACCOUNT_NAME);
+                String number = resultSet.getString(ACCOUNT_NUMBER);
+                boolean status = resultSet.getBoolean(ACCOUNT_STATUS);
+                int money = resultSet.getInt(ACCOUNT_COUNT);
+                int userId = resultSet.getInt(ACCOUNT_USER_ID);
+                int valuteId = resultSet.getInt(ACCOUNT_VALUTE_ID);
+
+                String valute = DaoFactory.getInstance().getCardDAO().getValute(valuteId);
+                BankAccount bankAccount = Creator.takeBankAccount(id, name, number, status, userId, money, valute);
+                bankAccountList.add(bankAccount);
+            }
+
+        } catch (SQLException e) {
+            throw new DAOException(e.getMessage(), e);
+        }
+
+        return bankAccountList;
     }
 
     @Override

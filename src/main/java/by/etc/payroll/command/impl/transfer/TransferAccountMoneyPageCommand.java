@@ -43,6 +43,8 @@ public class TransferAccountMoneyPageCommand implements ActionCommand {
 
         try {
             BankAccount bankAccount = bankAccountService.getCardByNumber(bankAccountNumber);
+
+            UserUtil.isOnlyUser(user, bankAccount);
             List<Card> cardList =cardService.getAllCardByUser(user);
 
             request.setAttribute(Attributes.REQUEST_CARD_LIST, cardList);

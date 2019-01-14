@@ -13,9 +13,11 @@ public interface Attributes {
 
 
     String SESSION_FIELD_ROLE_USER = "user";
+
     String REQUEST_ACCOUNT_NUMBER = "accountNumber";
     String REQUEST_SEARCH = "search";
     String REQUEST_CARD_LIST = "cardList";
     String REQUEST_CARD_NUMBER = "cardNumber";
     String REQUEST_MONEY = "money";
+    String REQUEST_USER_WITH_BANK_ACCOUNT_LIST = "userWithBankAccountList";
 }

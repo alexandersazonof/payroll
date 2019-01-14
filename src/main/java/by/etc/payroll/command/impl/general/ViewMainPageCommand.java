@@ -3,6 +3,7 @@ package by.etc.payroll.command.impl.general;
 import by.etc.payroll.bean.User;
 import by.etc.payroll.command.ActionCommand;
 import by.etc.payroll.command.util.LanguageUtil;
+import by.etc.payroll.command.util.Pages;
 import by.etc.payroll.command.util.QueryUtil;
 import by.etc.payroll.controller.exception.CommandException;
 import by.etc.payroll.util.Roles;
@@ -31,8 +32,10 @@ public class ViewMainPageCommand implements ActionCommand {
         try {
             User user = (User) request.getSession().getAttribute("user");
 
-            if (user == null || !user.getRole().equalsIgnoreCase(Roles.USER)) {
+            if (user == null) {
                 request.getRequestDispatcher(JSP_PAGE_PATH).forward(request, response);
+            } else if (user.getRole().equalsIgnoreCase(Roles.ADMIN)) {
+                request.getRequestDispatcher(Pages.REDIRECT_ADMIN_PAGE_COMMAND).forward(request, response);
             } else {
                 request.getRequestDispatcher(USER_PAGE_PATH).forward(request, response);
             }

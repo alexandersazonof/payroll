@@ -3,9 +3,7 @@ package by.etc.payroll.service.creator;
 import by.etc.payroll.bean.*;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
+import java.util.*;
 
 public class Creator {
 
@@ -19,6 +17,48 @@ public class Creator {
     private final static int CARD_TERM_YEAR = 2;
 
     private final static String FORMAT = "yyyy-MM-dd";
+
+    public static List<UserWithBankAccount> takeUserWithBankAccount (List<User> userList, List<BankAccount> bankAccountList) {
+        List<UserWithBankAccount> userWithBankAccountList = new ArrayList<>();
+
+        for (User user :userList) {
+            UserWithBankAccount userWithBankAccount = new UserWithBankAccount(user);
+            List<BankAccount> tempBankAccount = new ArrayList<>();
+
+            for (BankAccount bankAccount :bankAccountList) {
+                if (user.getId() == bankAccount.getUserId()) {
+                    int totalMoney = bankAccount.getCountOfMoney();
+
+                    if (bankAccount.getCardList() != null) {
+                        for (Card card :bankAccount.getCardList()) {
+                            totalMoney += card.getMoney();
+                        }
+                    }
+
+
+                    bankAccount.setCountOfMoney(totalMoney);
+                    tempBankAccount.add(bankAccount);
+                }
+            }
+            userWithBankAccount.setBankAccountList(tempBankAccount);
+
+            userWithBankAccountList.add(userWithBankAccount);
+        }
+
+        return userWithBankAccountList;
+    }
+
+    public static User takeUserWithoutPassword (int id, String login, String lastName, String firstName, String role, String email) {
+        User user = new User();
+        user.setId(id);
+        user.setRole(role);
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
+        user.setLogin(login);
+        user.setEmail(email);
+
+        return user;
+    }
 
     public static Application takeApplication (String action, int accountId) {
         Application application = new Application();

@@ -9,6 +9,7 @@ import java.util.List;
 
 public interface BankAccountDAO<BankAccount> extends CrudDAO<BankAccount> {
 
+    List<BankAccount> getAll () throws DAOException;
     List<BankAccount> getAllByUserID  (int id) throws DAOException;
     BankAccount getByNumber (String Number) throws DAOException;
 

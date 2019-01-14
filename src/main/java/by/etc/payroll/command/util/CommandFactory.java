@@ -2,6 +2,7 @@ package by.etc.payroll.command.util;
 
 import by.etc.payroll.command.ActionCommand;
 import by.etc.payroll.command.impl.account.*;
+import by.etc.payroll.command.impl.admin.AdminMainPageCommand;
 import by.etc.payroll.command.impl.card.*;
 import by.etc.payroll.command.impl.general.*;
 import by.etc.payroll.command.impl.transfer.SendAccountMoneyCommand;
@@ -162,6 +163,12 @@ public enum CommandFactory {
         @Override
         public ActionCommand createCommand() {
             return new SendAccountMoneyCommand();
+        }
+    },
+    ADMINPAGE {
+        @Override
+        public ActionCommand createCommand() {
+            return new AdminMainPageCommand();
         }
     };
 
