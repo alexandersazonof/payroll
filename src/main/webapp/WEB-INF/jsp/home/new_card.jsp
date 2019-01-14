@@ -15,7 +15,7 @@
 
 </head>
 <body>
-<%@ include file="../template/user_header.jsp" %>
+<jsp:include page="../template/header.jsp"/>
 
 <c:choose>
     <c:when test="${param.msgbox != null}">

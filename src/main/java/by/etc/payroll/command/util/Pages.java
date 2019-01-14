@@ -7,6 +7,13 @@ public interface Pages {
 
     String JSP_TRANSFER_ACCOUNT_MONEY = "WEB-INF/jsp/home/transfer_account_money.jsp";
     String JSP_ADMIN_MAIN_PAGE = "WEB-INF/jsp/admin/admin_panel.jsp";
+    String JSP_ADMIN_OPERATION_PAGE = "WEB-INF/jsp/admin/operation_history.jsp";
+
+    String JSP_ADMIN_RATES = "WEB-INF/jsp/admin/rates.jsp";
+    String REDIRACT_ADMIN_RATES = "/controller?command=RATEPAGE";
+
+    String JSP_ADMIN_EDIT_RATE = "WEB-INF/jsp/admin/edit_rate.jsp";
+    String REDIRECT_ADMIN_PAGE_EDIT_INCORRECT_VALUE = "/controller?command=EDITRATEPAGE&incnamerate=true";
 
     String REDIRECT_ADMIN_PAGE_COMMAND = "/controller?command=ADMINPAGE";
 

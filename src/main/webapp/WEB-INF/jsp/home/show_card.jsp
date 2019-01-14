@@ -13,33 +13,8 @@
     <title>Title</title>
 </head>
 <body>
-<%@ include file="../template/user_header.jsp" %>
-<c:choose>
-    <c:when test="${param.blockaccount != null}">
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            Нельзя разблокировать карту , потому что заблокирован счёт
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-    </c:when>
-    <c:when test="${param.unblocksuccess != null}">
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            Карта успешно разблокирована
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-    </c:when>
-    <c:when test="${param.blocksuccess != null}">
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            Карта успешно зблокирована
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-    </c:when>
-</c:choose>
+<jsp:include page="../template/header.jsp"/>
+
 <h1 class="text-center">Card №${card.getNumber()}</h1>
 <hr>
 <div class="container">

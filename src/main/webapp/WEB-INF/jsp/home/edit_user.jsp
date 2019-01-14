@@ -37,7 +37,7 @@
 <c:set var="wrongPasswordConfirm" scope="session" value="${param.wrongPasswordConfirm}"/>
 <c:set var="wrongEmail" scope="session" value="${param.wrongEmail}"/>
 
-<%@ include file="../template/user_header.jsp" %>
+<jsp:include page="../template/header.jsp"/>
 
 
 

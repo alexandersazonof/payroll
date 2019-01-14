@@ -1,9 +1,6 @@
 package by.etc.payroll.dao.impl;
 
-import by.etc.payroll.bean.BankAccount;
-import by.etc.payroll.bean.Card;
-import by.etc.payroll.bean.Operation;
-import by.etc.payroll.bean.UserData;
+import by.etc.payroll.bean.*;
 import by.etc.payroll.dao.CardDAO;
 import by.etc.payroll.dao.dbmanager.ConnectionPool;
 import by.etc.payroll.dao.exception.DAOException;
@@ -41,6 +38,8 @@ public class SqlCardDAO implements CardDAO<Card>{
 
     private final String SELECT_COURSE_FROM_EXACHANGE_RATE = "select course from exachange_rates where from_valute_id = ? and to_valute_id = ?";
     private final String UPDATE_MONEY_IN_CARD_BY_ID = "update cards set money = money + ? where id = ?";
+    private final String SELECT_ALL_FROM_TRANSFER = "select * from transfer";
+
 
     private final String CARD_ID = "id";
     private final String CARD_NUMBER= "number";
@@ -51,6 +50,11 @@ public class SqlCardDAO implements CardDAO<Card>{
     private final String CARD_RATE = "rate_id";
     private final String CARD_MONEY = "money";
     private final String CARD_ID_VALUTE = "id_valute";
+
+    private final String TRANSFER_ID = "id";
+    private final String TRANSFER_FROM_CARD = "from_card_id";
+    private final String TRANSFER_TO_CARD = "to_card_id";
+    private final String TRANSFER_MONEY = "money";
 
     private final String VALUTE_NAME = "name";
     private final String VALUTE_ID = "id";
@@ -428,6 +432,39 @@ public class SqlCardDAO implements CardDAO<Card>{
             throw new DAOException(e.getMessage(), e);
         }
         return true;
+    }
+
+    @Override
+    public List<Transfer> getAllTransfer() throws DAOException {
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+        List<Transfer> transferList = new ArrayList<>();
+
+        try (Connection connection = ConnectionPool.getInstance().getConnection()){
+            statement = connection.prepareStatement(SELECT_ALL_FROM_TRANSFER);
+            resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                int id = resultSet.getInt(TRANSFER_ID);
+                int fromCard = resultSet.getInt(TRANSFER_FROM_CARD);
+                int toCard = resultSet.getInt(TRANSFER_TO_CARD);
+                int money = resultSet.getInt(TRANSFER_MONEY);
+
+                Transfer transfer = Creator.takeTransfer(id, fromCard, toCard, money);
+                transferList.add(transfer);
+            }
+
+        } catch (SQLException e) {
+            throw new DAOException(e.getMessage(), e);
+        } finally {
+            try {
+                statement.close();
+            } catch (SQLException e) {
+                throw new DAOException(e.getMessage(), e);
+            }
+        }
+
+        return transferList;
     }
 
 

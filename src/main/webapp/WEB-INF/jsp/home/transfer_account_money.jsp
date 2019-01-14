@@ -12,17 +12,8 @@
     <title>Title</title>
 </head>
 <body>
-<%@ include file="../template/user_header.jsp" %>
-<c:choose>
-    <c:when test="${param.wrongcount != null}">
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            Не правильное количество денег
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-    </c:when>
-</c:choose>
+<jsp:include page="../template/header.jsp"/>
+
 
 <form action="/controller" method="post" name="createForm" id="createForm" class="createForm">
 <input type="hidden" name="command" value="sendaccountmoney">

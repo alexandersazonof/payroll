@@ -13,7 +13,7 @@
 <body>
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <a class="navbar-brand" href="/controller?command=mainPage">
-        <img src="../../../img/logo.png" width="30" height="30" class="d-inline-block align-top" alt="">
+        <img src="../img/logo.png" width="30" height="30" class="d-inline-block align-top" alt="">
         Future bank
     </a>
     <div class="collapse navbar-collapse" id="navbarNav">
@@ -22,10 +22,10 @@
                 <a class="nav-link" href="/controller?command=newcardpage">Valutes</a>
             </li>
             <li class="nav-item active">
-                <a class="nav-link" href="/controller?command=showaccountpage">Rates</a>
+                <a class="nav-link" href="/controller?command=RATEPAGE">Rates</a>
             </li>
             <li class="nav-item active">
-                <a class="nav-link" href="/controller?command=transfermoney">Operation</a>
+                <a class="nav-link" href="/controller?command=HISTORYTRANSFER">Operation</a>
             </li>
         </ul>
     </div>

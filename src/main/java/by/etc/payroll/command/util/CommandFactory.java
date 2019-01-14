@@ -2,7 +2,7 @@ package by.etc.payroll.command.util;
 
 import by.etc.payroll.command.ActionCommand;
 import by.etc.payroll.command.impl.account.*;
-import by.etc.payroll.command.impl.admin.AdminMainPageCommand;
+import by.etc.payroll.command.impl.admin.*;
 import by.etc.payroll.command.impl.card.*;
 import by.etc.payroll.command.impl.general.*;
 import by.etc.payroll.command.impl.transfer.SendAccountMoneyCommand;
@@ -169,6 +169,36 @@ public enum CommandFactory {
         @Override
         public ActionCommand createCommand() {
             return new AdminMainPageCommand();
+        }
+    },
+    HISTORYTRANSFER {
+        @Override
+        public ActionCommand createCommand() {
+            return new HistoryTransferPageCommand();
+        }
+    },
+    RATEPAGE {
+        @Override
+        public ActionCommand createCommand() {
+            return new RatesPageCommand();
+        }
+    },
+    EDITRATEPAGE {
+        @Override
+        public ActionCommand createCommand() {
+            return new EditRatePageCommand();
+        }
+    },
+    SAVERATE {
+        @Override
+        public ActionCommand createCommand() {
+            return new SaveRateCommand();
+        }
+    },
+    NEWRATEPAGE {
+        @Override
+        public ActionCommand createCommand() {
+            return new NewRatePageCommand();
         }
     };
 

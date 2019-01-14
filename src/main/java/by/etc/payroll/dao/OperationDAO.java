@@ -8,4 +8,5 @@ import java.util.List;
 public interface OperationDAO extends CrudDAO<Operation> {
     List<Operation> getAllByNumber (String number) throws DAOException;
     List<Operation> getAllByNumberAndKeyWord (String number, String keyWord) throws DAOException;
+    List<Operation> getAll()throws DAOException;
 }

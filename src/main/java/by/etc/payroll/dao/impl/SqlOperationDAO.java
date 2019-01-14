@@ -15,9 +15,11 @@ import java.util.Date;
 import java.util.List;
 
 public class SqlOperationDAO implements OperationDAO{
+
     private final String INSERT_INTO = "insert into operation (action, date, account_number, user_id) values (?, ?, ?, ?);";
     private final String SELECT_BY_ACCOUNT_NUMBER = "select * from operation where account_number = ?";
     private final String SELECT_BY_ACCOUNT_NUMBER_AND_KEY_WORD = "select * from operation where action LIKE ? and account_number = ?";
+    private final String SELECT_ALL_OPERATION = "select * from operation";
 
     private final String OPERATION_ID = "id";
     private final String OPERATION_ACTION = "action";
@@ -127,6 +129,40 @@ public class SqlOperationDAO implements OperationDAO{
                 throw new DAOException(e.getMessage(), e);
             }
         }
+        return operationList;
+    }
+
+    @Override
+    public List<Operation> getAll() throws DAOException {
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+        List<Operation> operationList = new ArrayList<>();
+
+        try (Connection connection = ConnectionPool.getInstance().getConnection()) {
+            statement = connection.prepareStatement(SELECT_ALL_OPERATION);
+            resultSet = statement.executeQuery();
+
+            while(resultSet.next()) {
+                int id = resultSet.getInt(OPERATION_ID);
+                String action = resultSet.getString(OPERATION_ACTION);
+                String number = resultSet.getString(OPERATION_NUMBER);
+                String date = resultSet.getString(OPERATION_DATE);
+                int userId = resultSet.getInt(OPERATIN_USER_ID);
+
+                Operation operation = Creator.takeOperation(id, action, number, date, userId);
+                operationList.add(operation);
+            }
+
+        } catch (SQLException e) {
+            throw new DAOException(e.getMessage(), e);
+        } finally {
+            try {
+                statement.close();
+            } catch (SQLException e) {
+                throw new DAOException(e.getMessage(), e);
+            }
+        }
+
         return operationList;
     }
 }

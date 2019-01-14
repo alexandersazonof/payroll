@@ -23,49 +23,12 @@
 <head>
     <title>${title}</title>
 
-    <link rel="stylesheet" href="../../../css/index.css">
-
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css"
-          integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-            crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"
-            integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh"
-            crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"
-            integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ"
-            crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="../css/index.css">
 </head>
 <body>
-<%@ include file="../template/user_header.jsp" %>
+<jsp:include page="../template/header.jsp"/>
 
-<c:choose>
-    <c:when test="${param.sucblock != null}">
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            Аккаунт и все карты заблокированы
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-    </c:when>
-    <c:when test="${param.sucunblock != null}">
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            Заявка отправленна администратору
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-    </c:when>
-    <c:when test="${param.incmoney != null}">
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            На счёту не должно быть денег
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-    </c:when>
-</c:choose>
+
 
 
 <div class="container">

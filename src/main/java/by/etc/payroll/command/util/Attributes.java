@@ -20,4 +20,9 @@ public interface Attributes {
     String REQUEST_CARD_NUMBER = "cardNumber";
     String REQUEST_MONEY = "money";
     String REQUEST_USER_WITH_BANK_ACCOUNT_LIST = "userWithBankAccountList";
+    String REQUEST_OPERATION_LIST = "operationList";
+    String REQUEST_RATE_LIST = "rateList";
+    String REQUEST_RATE_NAME = "name";
+    String REQUEST_RATE_DESCRIPTION = "description";
+    String REQUEST_RATE = "rate";
 }

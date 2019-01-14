@@ -1,14 +1,10 @@
 package by.etc.payroll.dao.impl;
 
-import by.etc.payroll.bean.Rate;
-import by.etc.payroll.bean.Transaction;
 import by.etc.payroll.bean.Valute;
 import by.etc.payroll.dao.ValuteDAO;
 import by.etc.payroll.dao.dbmanager.ConnectionPool;
 import by.etc.payroll.dao.exception.DAOException;
 import by.etc.payroll.service.creator.Creator;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

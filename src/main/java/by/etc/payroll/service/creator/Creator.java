@@ -183,6 +183,16 @@ public class Creator {
         return userData;
     }
 
+
+    public static Transfer takeTransfer (int id, int fromCardId, int toCardId, int money) {
+        Transfer transfer = new Transfer();
+        transfer.setId(id);
+        transfer.setFromCardId(fromCardId);
+        transfer.setToCardId(toCardId);
+        transfer.setMoney(money);
+        return transfer;
+    }
+
     public static Transfer takeTransfer (int fromCardId, int toCardId, int money) {
         Transfer transfer = new Transfer();
         transfer.setFromCardId(fromCardId);
