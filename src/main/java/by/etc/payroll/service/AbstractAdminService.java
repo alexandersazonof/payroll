@@ -13,5 +13,6 @@ public interface AbstractAdminService {
 
     Rate checkRate (String name, String description) throws ServiceException;
     boolean updateRate (String name, String description) throws ServiceException;
-
+    boolean addRate (String name, String description) throws ServiceException;
+    boolean deleteRate (String name) throws ServiceException;
 }

@@ -4,18 +4,22 @@ import by.etc.payroll.bean.User;
 import by.etc.payroll.command.ActionCommand;
 import by.etc.payroll.command.util.*;
 import by.etc.payroll.controller.exception.CommandException;
+import by.etc.payroll.service.AbstractAdminService;
+import by.etc.payroll.service.exception.ServiceException;
 import by.etc.payroll.service.exception.ServiceUnauthorizedAccessException;
+import by.etc.payroll.service.exception.ServiceWrongNameException;
+import by.etc.payroll.service.factory.ServiceFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class NewRatePageCommand implements ActionCommand {
-    private static final Logger LOG = LogManager.getLogger(NewRatePageCommand.class);
+public class AddRateCommand implements ActionCommand {
+    private static final Logger LOG = LogManager.getLogger(AddRateCommand.class);
     private static final String SELECTED_LANGUAGE_REQUEST_ATTR = "selectedLanguage";
+
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws CommandException, IOException {
@@ -24,18 +28,25 @@ public class NewRatePageCommand implements ActionCommand {
         request.setAttribute(SELECTED_LANGUAGE_REQUEST_ATTR, languageId);
 
         User user = (User)request.getSession().getAttribute(Attributes.SESSION_FIELD_ROLE_USER);
+        String name = request.getParameter(Attributes.REQUEST_RATE_NAME);
+        String description = request.getParameter(Attributes.REQUEST_RATE_DESCRIPTION);
+
+        ServiceFactory serviceFactory = ServiceFactory.getInstance();
+        AbstractAdminService adminService = serviceFactory.getAdminService();
 
         try {
             UserUtil.isAdmin(user);
 
-            request.getRequestDispatcher(Pages.JSP_ADMIN_NEW_RATE).forward(request, response);
+            adminService.addRate(name, description);
+            response.sendRedirect(Pages.REDIRACT_ADMIN_AFTER_SUCCESS_ADD);
         } catch (ServiceUnauthorizedAccessException e) {
             LOG.error(Message.INCORRECT_ACCESS);
             response.sendRedirect(Pages.REDIRECT_PAGE_AFTER_INCORRECT_ACCESS);
-        } catch (ServletException e) {
+        } catch (ServiceWrongNameException e) {
+            LOG.error(Message.INCORRECT_VALUE, e);
+            response.sendRedirect(Pages.REDIRECT_ADMIN_NEW_RATE_INCORRECT_VALUE);
+        } catch (ServiceException e) {
             throw new CommandException(e.getMessage(), e);
         }
-
-
     }
 }

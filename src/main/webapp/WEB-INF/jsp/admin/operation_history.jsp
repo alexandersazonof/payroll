@@ -15,7 +15,6 @@
 <jsp:include page="../template/header.jsp"/>
 <div class="text-center">
     <h1>Operation list</h1>
-    <hr>
 </div>
 
 <table class="table table-striped">

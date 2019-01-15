@@ -48,6 +48,13 @@ public class Creator {
         return userWithBankAccountList;
     }
 
+    public static Rate takeRate (String name, String description) {
+        Rate rate = new Rate();
+        rate.setName(name);
+        rate.setDescription(description);
+        return rate;
+    }
+
     public static User takeUserWithoutPassword (int id, String login, String lastName, String firstName, String role, String email) {
         User user = new User();
         user.setId(id);

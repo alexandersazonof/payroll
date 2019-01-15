@@ -8,6 +8,7 @@ import by.etc.payroll.dao.impl.SqlBankAccountDAO;
 import by.etc.payroll.dao.impl.SqlCardDAO;
 import by.etc.payroll.dao.impl.SqlRateDAO;
 import by.etc.payroll.service.AbstractAdminService;
+import by.etc.payroll.service.creator.Creator;
 import by.etc.payroll.service.exception.ServiceException;
 import by.etc.payroll.service.exception.ServiceQueryException;
 import by.etc.payroll.service.exception.ServiceWrongNameException;
@@ -85,6 +86,10 @@ public class ConcreteAdminService implements AbstractAdminService {
 
     @Override
     public boolean updateRate(String name, String description) throws ServiceException {
+        if (!Validator.validateString(name) || !Validator.validateString(description)) {
+            throw new ServiceWrongNameException(Message.INCORRECT_VALUE);
+        }
+
         DaoFactory daoFactory = DaoFactory.getInstance();
         SqlRateDAO rateDAO = daoFactory.getRateDAO();
 
@@ -106,5 +111,41 @@ public class ConcreteAdminService implements AbstractAdminService {
             throw new ServiceException(e.getMessage(), e);
         }
         return false;
+    }
+
+    @Override
+    public boolean addRate(String name, String description) throws ServiceException {
+        if (!Validator.validateString(name) || !Validator.validateString(description)) {
+            throw new ServiceWrongNameException(Message.INCORRECT_VALUE);
+        }
+
+        Rate rate = Creator.takeRate(name, description);
+
+        DaoFactory daoFactory = DaoFactory.getInstance();
+        SqlRateDAO rateDAO = daoFactory.getRateDAO();
+
+        try {
+            return rateDAO.insert(rate);
+        } catch (DAOException e) {
+            throw new SecurityException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public boolean deleteRate(String name) throws ServiceException {
+        if (!Validator.validateString(name)) {
+            throw new ServiceQueryException(Message.INCORRECT_QUERY);
+        }
+
+        DaoFactory daoFactory = DaoFactory.getInstance();
+        SqlRateDAO rateDAO = daoFactory.getRateDAO();
+
+        Rate rate = Creator.takeRate(name, "");
+
+        try {
+            return rateDAO.delete(rate);
+        } catch (DAOException e) {
+            throw new ServiceException(e.getMessage(), e);
+        }
     }
 }

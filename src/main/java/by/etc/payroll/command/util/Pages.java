@@ -12,8 +12,16 @@ public interface Pages {
     String JSP_ADMIN_RATES = "WEB-INF/jsp/admin/rates.jsp";
     String REDIRACT_ADMIN_RATES = "/controller?command=RATEPAGE";
 
+    String JSP_ADMIN_NEW_RATE = "WEB-INF/jsp/admin/new_rate.jsp";
+    String REDIRECT_ADMIN_NEW_RATE_INCORRECT_VALUE = "/controller?command=newratepage&incorrectvaluerate=true";
+    String REDIRACT_ADMIN_AFTER_SUCCESS_ADD = "/controller?command=RATEPAGE&successaddrate=ture";
+
+
     String JSP_ADMIN_EDIT_RATE = "WEB-INF/jsp/admin/edit_rate.jsp";
     String REDIRECT_ADMIN_PAGE_EDIT_INCORRECT_VALUE = "/controller?command=EDITRATEPAGE&incnamerate=true";
+    String REDIRECT_ADMIN_AFTER_SUCCESS_EDIT = "/controller?command=RATEPAGE&successeditrate=true";
+
+    String REDIRECT_ADMIN_AFTER_SUCCESS_DELETE = "/controller?command=RATEPAGE&successdeleterate=true";
 
     String REDIRECT_ADMIN_PAGE_COMMAND = "/controller?command=ADMINPAGE";
 

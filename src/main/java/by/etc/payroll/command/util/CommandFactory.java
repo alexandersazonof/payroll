@@ -200,6 +200,18 @@ public enum CommandFactory {
         public ActionCommand createCommand() {
             return new NewRatePageCommand();
         }
+    },
+    ADDRATE {
+        @Override
+        public ActionCommand createCommand() {
+            return new AddRateCommand();
+        }
+    },
+    DELETERATE {
+        @Override
+        public ActionCommand createCommand() {
+            return new DeleteRateCommand();
+        }
     };
 
     public abstract ActionCommand createCommand();

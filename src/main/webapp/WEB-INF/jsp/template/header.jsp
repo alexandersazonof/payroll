@@ -190,5 +190,37 @@
             </button>
         </div>
     </c:when>
+    <c:when test="${param.successaddrate != null}">
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            Успешно добавлен тариф
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    </c:when>
+    <c:when test="${param.incorrectvaluerate != null}">
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            Некоректоное значение
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    </c:when>
+    <c:when test="${param.successeditrate != null}">
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            Успешно изменён тариф
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    </c:when>
+    <c:when test="${param.successdeleterate != null}">
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            Успешно удалён тариф
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    </c:when>
 
 </c:choose>

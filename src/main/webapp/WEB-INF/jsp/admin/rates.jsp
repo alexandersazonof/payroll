@@ -20,7 +20,7 @@
                 <h2>Rates</h2>
             </div>
             <div class="col-sm-1">
-                <img src="../img/new.png" width="30" height="30" href="/controller?command=newratepage"/>
+                <a href="/controller?command=newratepage" id="new"><img src="../img/new.png" width="30" height="30" href="/controller?command=newratepage"/></a>
             </div>
             <hr>
         </div>
@@ -36,11 +36,14 @@
             </div>
             <div class="form-group row">
                 <label for="description" class="col-sm-7 col-form-label">Description: </label>
-                <div class="col-sm-4">
+                <div class="col-sm-3">
                     <input type="text" readonly id="field1" class="form-control-plaintext" id="description" name="description" value="${item.getDescription()}">
                 </div>
                 <div class="col-sm-1">
-                    <img src="../img/edit.svg" width="30" height="30" class="submitableimage">
+                    <a href="#" class="submitableimage"><img src="../img/edit.svg" width="30" height="30" ></a>
+                </div>
+                <div class="col-sm-1">
+                    <a href="/controller?command=DELETERATE&name=${item.getName()}" id="delete"><img src="../img/delete.png" width="30" height="30" ></a>
                 </div>
             </div>
             <hr>
@@ -48,6 +51,10 @@
         </c:forEach>
     </div>
 </div>
+
+<br><br>
+<script src="../js/bootbox.min.js"></script>
+
 <script>
     $('.submitableimage').click(function(){
         $('#myform').submit();

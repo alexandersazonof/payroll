@@ -40,7 +40,7 @@ public class SaveRateCommand implements ActionCommand {
             String description = request.getParameter(Attributes.REQUEST_RATE_DESCRIPTION);
 
             adminService.updateRate(name, description);
-            response.sendRedirect(Pages.REDIRACT_ADMIN_RATES);
+            response.sendRedirect(Pages.REDIRECT_ADMIN_AFTER_SUCCESS_EDIT);
         } catch (ServiceUnauthorizedAccessException e) {
             LOG.error(Message.INCORRECT_ACCESS, e);
             response.sendRedirect(Pages.REDIRECT_PAGE_AFTER_INCORRECT_ACCESS);

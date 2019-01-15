@@ -22,6 +22,8 @@ public class SqlRateDAO implements RateDAO {
     private static final String SELECT_BY_NAME = "select * from rate where name = ?";
     private static final String SELECT_BY_ID = "select * from rate where id = ?";
     private static final String UPDATE_BY_NAME = "update rate set name = ? , description = ? where name = ?";
+    private static final String INSERT_INTO = "insert into rate (name, description) values (?, ?)";
+    private static final String DELETE_BY_NAME = "delete from rate where name = ?";
 
 
     private static final String FIELD_RATE_ID = "id";
@@ -97,7 +99,23 @@ public class SqlRateDAO implements RateDAO {
 
     @Override
     public boolean insert(Rate rate) throws DAOException {
-        return false;
+        PreparedStatement statement = null;
+
+        try (Connection connection = ConnectionPool.getInstance().getConnection()){
+            statement = connection.prepareStatement(INSERT_INTO);
+            statement.setString(1, rate.getName());
+            statement.setString(2, rate.getDescription());
+
+            return statement.execute();
+        } catch (SQLException e) {
+            throw new DAOException(e.getMessage(), e);
+        } finally {
+            try {
+                statement.close();
+            } catch (SQLException e) {
+                throw new DAOException(e.getMessage(), e);
+            }
+        }
     }
 
     @Override
@@ -154,6 +172,14 @@ public class SqlRateDAO implements RateDAO {
 
     @Override
     public boolean delete(Rate rate) throws DAOException {
-        return false;
+        PreparedStatement statement = null;
+        try (Connection connection = ConnectionPool.getInstance().getConnection()) {
+            statement = connection.prepareStatement(DELETE_BY_NAME);
+            statement.setString(1, rate.getName());
+
+            return statement.execute();
+        } catch (SQLException e) {
+            throw new DAOException(e.getMessage(), e);
+        }
     }
 }
