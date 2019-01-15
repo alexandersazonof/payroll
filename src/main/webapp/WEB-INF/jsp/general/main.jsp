@@ -15,7 +15,7 @@
 </head>
 <body>
 
-<jsp:include page="../template/general_header.jsp" />
+<jsp:include page="../template/header.jsp"/>
 <jsp:include page="../template/general_content.jsp" />
 
 <jsp:include page="../template/footer.jsp" />

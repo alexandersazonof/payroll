@@ -1,9 +1,6 @@
 package by.etc.payroll.dao;
 
-import by.etc.payroll.bean.BankAccount;
-import by.etc.payroll.bean.Card;
-import by.etc.payroll.bean.Operation;
-import by.etc.payroll.bean.UserData;
+import by.etc.payroll.bean.*;
 import by.etc.payroll.dao.exception.DAOException;
 
 import java.util.List;
@@ -24,4 +21,5 @@ public interface CardDAO<Card> extends CrudDAO<Card> {
     boolean deleteCard (Card card , BankAccount bankAccount, Operation operation) throws DAOException;
 
     boolean transefreMoney (Card fromNumber, Card toNumber, int money) throws DAOException;
+    List<Transfer> getAllTransfer() throws DAOException;
 }

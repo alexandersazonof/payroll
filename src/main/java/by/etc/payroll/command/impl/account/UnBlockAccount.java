@@ -2,14 +2,18 @@ package by.etc.payroll.command.impl.account;
 
 import by.etc.payroll.bean.User;
 import by.etc.payroll.command.ActionCommand;
+import by.etc.payroll.command.util.Attributes;
 import by.etc.payroll.command.util.LanguageUtil;
+import by.etc.payroll.command.util.Pages;
 import by.etc.payroll.command.util.QueryUtil;
 import by.etc.payroll.controller.exception.CommandException;
+import by.etc.payroll.service.AbstractAdminService;
 import by.etc.payroll.service.AbstractBankAccountService;
 import by.etc.payroll.service.exception.ServiceException;
 import by.etc.payroll.service.exception.ServiceQueryException;
 import by.etc.payroll.service.exception.ServiceUnauthorizedAccessException;
 import by.etc.payroll.service.factory.ServiceFactory;
+import by.etc.payroll.util.Roles;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -37,11 +41,20 @@ public class UnBlockAccount implements ActionCommand {
 
         ServiceFactory serviceFactory = ServiceFactory.getInstance();
         AbstractBankAccountService bankAccountService = serviceFactory.getBankAccountService();
-
+        AbstractAdminService adminService = serviceFactory.getAdminService();
         try {
-            bankAccountService.unBlockAccount(bankAccountNumber, user);
+            if (user.getRole().equalsIgnoreCase(Roles.ADMIN)) {
+                adminService.unBlockAccount(bankAccountNumber);
 
-            response.sendRedirect(String.format(REDIRECT_PAGE_AFTER_SUCCESS, bankAccountNumber));
+
+                int applicationSize = adminService.getAllApplication().size();
+                request.getSession().setAttribute(Attributes.SESSION_FIELD_APPLICATION_SIZE, applicationSize);
+
+                response.sendRedirect(Pages.REDIRECT_ADMIN_UNBLOCK_ACCOUNT);
+            } else {
+                bankAccountService.unBlockAccount(bankAccountNumber, user);
+                response.sendRedirect(String.format(REDIRECT_PAGE_AFTER_SUCCESS, bankAccountNumber));
+            }
         } catch (ServiceUnauthorizedAccessException e) {
             LOG.error("Incorrect access", e);
             response.sendRedirect(REDIRECT_PAGE_AFTER_UNAVTARIZED_ACCESS);

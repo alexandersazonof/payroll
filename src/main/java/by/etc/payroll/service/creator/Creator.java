@@ -3,9 +3,7 @@ package by.etc.payroll.service.creator;
 import by.etc.payroll.bean.*;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
+import java.util.*;
 
 public class Creator {
 
@@ -20,11 +18,91 @@ public class Creator {
 
     private final static String FORMAT = "yyyy-MM-dd";
 
+    public static List<UserWithBankAccount> takeUserWithBankAccount (List<User> userList, List<BankAccount> bankAccountList) {
+        List<UserWithBankAccount> userWithBankAccountList = new ArrayList<>();
+
+        for (User user :userList) {
+            UserWithBankAccount userWithBankAccount = new UserWithBankAccount(user);
+            List<BankAccount> tempBankAccount = new ArrayList<>();
+
+            for (BankAccount bankAccount :bankAccountList) {
+                if (user.getId() == bankAccount.getUserId()) {
+                    int totalMoney = bankAccount.getCountOfMoney();
+
+                    if (bankAccount.getCardList() != null) {
+                        for (Card card :bankAccount.getCardList()) {
+                            totalMoney += card.getMoney();
+                        }
+                    }
+
+
+                    bankAccount.setCountOfMoney(totalMoney);
+                    tempBankAccount.add(bankAccount);
+                }
+            }
+            userWithBankAccount.setBankAccountList(tempBankAccount);
+
+            userWithBankAccountList.add(userWithBankAccount);
+        }
+
+        return userWithBankAccountList;
+    }
+
+    public static Rate takeRate (String name, String description) {
+        Rate rate = new Rate();
+        rate.setName(name);
+        rate.setDescription(description);
+        return rate;
+    }
+
+    public static User takeUserWithoutPassword (int id, String login, String lastName, String firstName, String role, String email) {
+        User user = new User();
+        user.setId(id);
+        user.setRole(role);
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
+        user.setLogin(login);
+        user.setEmail(email);
+
+        return user;
+    }
+
     public static Application takeApplication (String action, int accountId) {
         Application application = new Application();
         application.setAction(action);
         application.setAccountId(accountId);
         return application;
+    }
+
+    public static ExchangeRate takeExchangeRate (int id, int fromValuteId, int toValiteId, float course) {
+        ExchangeRate exchangeRate = new ExchangeRate();
+        exchangeRate.setId(id);
+        exchangeRate.setFromValuteId(fromValuteId);
+        exchangeRate.setToValuteId(toValiteId);
+        exchangeRate.setCourse(course);
+
+        return exchangeRate;
+    }
+
+    public static List<Cource> takeCourceList (List<Valute> valuteList, List<ExchangeRate> exchangeRateList) {
+        List<Cource> courceList = new ArrayList<>();
+
+        for (Valute valute :valuteList) {
+            Cource cource = new Cource();
+            int valuteId  = valute.getId();
+            List<ExchangeRate> listChange = new ArrayList<>();
+
+            for (ExchangeRate e :exchangeRateList) {
+                if (e.getFromValuteId() == valuteId) {
+                    listChange.add(e);
+                }
+            }
+            cource.setNameValute(valute.getName());
+            cource.setListExchenge(listChange);
+            courceList.add(cource);
+        }
+
+        return courceList;
     }
 
     public static BankAccount takeBankAccount (String name, String number, boolean status, int userId, int money,
@@ -141,6 +219,16 @@ public class Creator {
         userData.setCity(city);
         userData.setIdCard(idCard);
         return userData;
+    }
+
+
+    public static Transfer takeTransfer (int id, int fromCardId, int toCardId, int money) {
+        Transfer transfer = new Transfer();
+        transfer.setId(id);
+        transfer.setFromCardId(fromCardId);
+        transfer.setToCardId(toCardId);
+        transfer.setMoney(money);
+        return transfer;
     }
 
     public static Transfer takeTransfer (int fromCardId, int toCardId, int money) {

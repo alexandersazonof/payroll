@@ -12,41 +12,8 @@
     <title>Title</title>
 </head>
 <body>
-<%@ include file="../template/user_header.jsp" %>
-<c:choose>
-    <c:when test="${param.wrongPassword != null}">
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            Не правильный пароль
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-    </c:when>
-    <c:when test="${param.wrongNumber != null}">
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            Не правильный номер
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-    </c:when>
-    <c:when test="${param.wrongCount != null}">
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            Не верное значение money
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-    </c:when>
-    <c:when test="${param.wrongBlock != null}">
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            Карта №${param.wrongBlock} заблокирована
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-    </c:when>
-</c:choose>
+<jsp:include page="../template/header.jsp"/>
+
 <form method="post" action="/controller" id="form">
     <input type="hidden" name="command" value="sendcardmoney">
 <div class="container">

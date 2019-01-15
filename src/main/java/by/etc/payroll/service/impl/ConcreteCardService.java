@@ -1,6 +1,7 @@
 package by.etc.payroll.service.impl;
 
 import by.etc.payroll.bean.*;
+import by.etc.payroll.command.util.Message;
 import by.etc.payroll.command.util.UserUtil;
 import by.etc.payroll.dao.exception.DAOException;
 import by.etc.payroll.dao.factory.DaoFactory;
@@ -101,6 +102,74 @@ public class ConcreteCardService implements AbstractCardService {
     public List<Operation> getAllOperationByNumber(String number) throws ServiceException {
         try {
             return DaoFactory.getInstance().getOperationDAO().getAllByNumber(number);
+        } catch (DAOException e) {
+            throw new ServiceException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public List<ExchangeRate> getAllExchangeRate() throws ServiceException {
+        try {
+            return DaoFactory.getInstance().getValuteDAO().getAllExchangeRate();
+        } catch (DAOException e) {
+            throw new ServiceException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public ExchangeRate getExchangeRateById(String exchangeId) throws ServiceException {
+
+        try {
+            if (exchangeId == null) {
+                throw new ServiceQueryException(Message.INCORRECT_QUERY);
+            }
+
+            int id = Integer.valueOf(exchangeId);
+
+            DaoFactory daoFactory = DaoFactory.getInstance();
+            SqlValuteDAO valuteDAO = daoFactory.getValuteDAO();
+
+            return valuteDAO.getExchangeRateById(id);
+        } catch (NumberFormatException e) {
+            throw new ServiceQueryException(Message.INCORRECT_QUERY);
+        } catch (DAOException e) {
+            throw new ServiceException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public String getValuteNameById(int id) throws ServiceException {
+        try {
+            return DaoFactory.getInstance().getCardDAO().getValute(id);
+        } catch (DAOException e) {
+            throw new ServiceException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public boolean editValite(String exchangeId, String course) throws ServiceException {
+        if (!Validator.validateString(exchangeId) || !Validator.validateString(course)) {
+            throw new ServiceQueryException(Message.INCORRECT_QUERY);
+        }
+
+        DaoFactory daoFactory = DaoFactory.getInstance();
+        SqlValuteDAO valuteDAO = daoFactory.getValuteDAO();
+
+        try {
+            int id = Integer.valueOf(exchangeId);
+            float todayCourse = Float.valueOf(course);
+
+            ExchangeRate exchangeRate = valuteDAO.getExchangeRateById(id);
+
+            if (exchangeRate == null) {
+                throw new ServiceQueryException(Message.INCORRECT_QUERY);
+            }
+
+            exchangeRate.setCourse(todayCourse);
+            return valuteDAO.updateExchangeRateById(exchangeRate);
+
+        } catch (NumberFormatException e) {
+            throw new ServiceQueryException(Message.INCORRECT_QUERY);
         } catch (DAOException e) {
             throw new ServiceException(e.getMessage(), e);
         }

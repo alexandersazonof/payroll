@@ -1,29 +1,26 @@
-package by.etc.payroll.command.impl.transfer;
+package by.etc.payroll.command.impl.admin;
 
-import by.etc.payroll.bean.BankAccount;
-import by.etc.payroll.bean.Card;
+import by.etc.payroll.bean.Rate;
 import by.etc.payroll.bean.User;
 import by.etc.payroll.command.ActionCommand;
-import by.etc.payroll.command.impl.account.BlockAccountCommand;
 import by.etc.payroll.command.util.*;
 import by.etc.payroll.controller.exception.CommandException;
-import by.etc.payroll.service.AbstractBankAccountService;
-import by.etc.payroll.service.AbstractCardService;
+import by.etc.payroll.service.AbstractAdminService;
 import by.etc.payroll.service.exception.ServiceException;
 import by.etc.payroll.service.exception.ServiceQueryException;
 import by.etc.payroll.service.exception.ServiceUnauthorizedAccessException;
 import by.etc.payroll.service.factory.ServiceFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.w3c.dom.Attr;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.List;
 
-public class TransferAccountMoneyPageCommand implements ActionCommand {
-    private static final Logger LOG = LogManager.getLogger(TransferAccountMoneyPageCommand.class);
+public class EditRatePageCommand implements ActionCommand {
+    private static final Logger LOG = LogManager.getLogger(EditRatePageCommand.class);
     private static final String SELECTED_LANGUAGE_REQUEST_ATTR = "selectedLanguage";
 
 
@@ -33,24 +30,21 @@ public class TransferAccountMoneyPageCommand implements ActionCommand {
         String languageId = LanguageUtil.getLanguageId(request);
         request.setAttribute(SELECTED_LANGUAGE_REQUEST_ATTR, languageId);
 
-        User user = (User)request.getSession().getAttribute(Attributes.FIELD_USER);
-
-        String bankAccountNumber = request.getParameter(Attributes.REQUEST_ACCOUNT_NUMBER);
+        User admin = (User)request.getSession().getAttribute(Attributes.SESSION_FIELD_ROLE_USER);
 
         ServiceFactory serviceFactory = ServiceFactory.getInstance();
-        AbstractBankAccountService bankAccountService = serviceFactory.getBankAccountService();
-        AbstractCardService cardService = serviceFactory.getCardService();
+        AbstractAdminService adminService = serviceFactory.getAdminService();
 
         try {
-            BankAccount bankAccount = bankAccountService.getCardByNumber(bankAccountNumber);
+            UserUtil.isAdmin(admin);
+            String name = request.getParameter(Attributes.REQUEST_RATE_NAME);
+            String description = request.getParameter(Attributes.REQUEST_RATE_DESCRIPTION);
 
-            UserUtil.isOnlyUser(user, bankAccount);
-            List<Card> cardList =cardService.getAllCardByUser(user);
+            Rate rate = adminService.checkRate(name, description);
 
-            request.setAttribute(Attributes.REQUEST_CARD_LIST, cardList);
-            request.setAttribute(Attributes.REQUEST_ACCOUNT_NUMBER, bankAccount);
+            request.setAttribute(Attributes.REQUEST_RATE, rate);
+            request.getRequestDispatcher(Pages.JSP_ADMIN_EDIT_RATE).forward(request, response);
 
-            request.getRequestDispatcher(Pages.JSP_TRANSFER_ACCOUNT_MONEY).forward(request, response);
 
         } catch (ServiceQueryException e) {
           LOG.error(Message.INCORRECT_QUERY, e);
@@ -63,5 +57,6 @@ public class TransferAccountMoneyPageCommand implements ActionCommand {
         } catch (ServletException e) {
             throw new CommandException(e.getMessage(), e);
         }
+
     }
 }

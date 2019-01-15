@@ -13,81 +13,8 @@
     <title>Title</title>
 </head>
 <body>
-<jsp:include page="../template/user_header.jsp" />
-<c:choose>
-    <c:when test="${param.msg != null}">
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            Новый счёт успешно создан
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-    </c:when>
-    <c:when test="${param.successcard != null}">
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            Новая карта успешно создана
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-    </c:when>
-    <c:when test="${param.useraccess != null}">
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            Нет прав доступа
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-    </c:when>
-    <c:when test="${param.incorrectcard != null}">
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            Некорректный ид карты , пожалуйсто обратитесь к администратору
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-    </c:when>
-    <c:when test="${param.wrongquery != null}">
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            Некорректный запрос
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-    </c:when>
-    <c:when test="${param.scdrop != null}">
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            Карта успешно удалена , <strong>деньги переведены на счёт</strong>
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-    </c:when>
-    <c:when test="${param.sctran != null}">
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            Перевод прошёл успешно
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-    </c:when>
-    <c:when test="${param.successdelete != null}">
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            Аккаунт успешно удалён
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-    </c:when>
-    <c:when test="${param.sucmonacc != null}">
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            Деньги успешно переведены
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-    </c:when>
-</c:choose>
+<jsp:include page="../template/header.jsp"/>
+
 
 
 
