@@ -9,6 +9,7 @@ public class Application implements Serializable {
     private int id;
     private String action;
     private int accountId;
+    private String accountNumber;
 
     public Application() {
     }
@@ -17,6 +18,14 @@ public class Application implements Serializable {
         this.id = id;
         this.action = action;
         this.accountId = accountId;
+    }
+
+    public void setAccountNumber(String accountNumber) {
+        this.accountNumber = accountNumber;
+    }
+
+    public String getAccountNumber() {
+        return accountNumber;
     }
 
     public int getId() {

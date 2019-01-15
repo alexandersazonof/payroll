@@ -10,9 +10,11 @@ public interface AbstractAdminService {
     List<BankAccount> getAllBankAccount() throws ServiceException;
     List<Transfer> getAllTransfer() throws ServiceException;
     List<Operation> getAllOperation() throws ServiceException;
+    List<Application> getAllApplication() throws ServiceException;
 
     Rate checkRate (String name, String description) throws ServiceException;
     boolean updateRate (String name, String description) throws ServiceException;
     boolean addRate (String name, String description) throws ServiceException;
     boolean deleteRate (String name) throws ServiceException;
+    boolean unBlockAccount (String number) throws ServiceException;
 }

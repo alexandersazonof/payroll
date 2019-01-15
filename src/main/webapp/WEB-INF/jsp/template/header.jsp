@@ -222,5 +222,21 @@
             </button>
         </div>
     </c:when>
+    <c:when test="${param.successeditvalute != null}">
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            Курсы успешно изменены
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    </c:when>
+    <c:when test="${param.unblockaccount != null}">
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            Аккаунт успешно разблокирован
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    </c:when>
 
 </c:choose>

@@ -19,13 +19,18 @@
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
-                <a class="nav-link" href="/controller?command=newcardpage">Valutes</a>
+                <a class="nav-link" href="/controller?command=VALUTEPAGE">Valutes</a>
             </li>
             <li class="nav-item active">
                 <a class="nav-link" href="/controller?command=RATEPAGE">Rates</a>
             </li>
             <li class="nav-item active">
                 <a class="nav-link" href="/controller?command=HISTORYTRANSFER">Operation</a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="/controller?command=APPLICATION">
+                    Application<span class="badge badge-danger">${sessionScope.applicationSize}</span>
+                </a>
             </li>
         </ul>
     </div>

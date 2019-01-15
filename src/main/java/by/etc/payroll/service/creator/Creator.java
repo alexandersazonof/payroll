@@ -74,6 +74,37 @@ public class Creator {
         return application;
     }
 
+    public static ExchangeRate takeExchangeRate (int id, int fromValuteId, int toValiteId, float course) {
+        ExchangeRate exchangeRate = new ExchangeRate();
+        exchangeRate.setId(id);
+        exchangeRate.setFromValuteId(fromValuteId);
+        exchangeRate.setToValuteId(toValiteId);
+        exchangeRate.setCourse(course);
+
+        return exchangeRate;
+    }
+
+    public static List<Cource> takeCourceList (List<Valute> valuteList, List<ExchangeRate> exchangeRateList) {
+        List<Cource> courceList = new ArrayList<>();
+
+        for (Valute valute :valuteList) {
+            Cource cource = new Cource();
+            int valuteId  = valute.getId();
+            List<ExchangeRate> listChange = new ArrayList<>();
+
+            for (ExchangeRate e :exchangeRateList) {
+                if (e.getFromValuteId() == valuteId) {
+                    listChange.add(e);
+                }
+            }
+            cource.setNameValute(valute.getName());
+            cource.setListExchenge(listChange);
+            courceList.add(cource);
+        }
+
+        return courceList;
+    }
+
     public static BankAccount takeBankAccount (String name, String number, boolean status, int userId, int money,
                                                String valute) {
         BankAccount bankAccount = new BankAccount();

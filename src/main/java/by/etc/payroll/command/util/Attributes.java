@@ -13,6 +13,7 @@ public interface Attributes {
 
 
     String SESSION_FIELD_ROLE_USER = "user";
+    String SESSION_FIELD_APPLICATION_SIZE = "applicationSize";
 
     String REQUEST_ACCOUNT_NUMBER = "accountNumber";
     String REQUEST_SEARCH = "search";
@@ -21,8 +22,18 @@ public interface Attributes {
     String REQUEST_MONEY = "money";
     String REQUEST_USER_WITH_BANK_ACCOUNT_LIST = "userWithBankAccountList";
     String REQUEST_OPERATION_LIST = "operationList";
+    String REQUEST_APPLICATION_LIST = "applicationList";
     String REQUEST_RATE_LIST = "rateList";
     String REQUEST_RATE_NAME = "name";
     String REQUEST_RATE_DESCRIPTION = "description";
     String REQUEST_RATE = "rate";
+    String REQUEST_EXACHANGE_RATE_ID = "vid";
+    String REQUEST_FROM_VALUTE = "fromValute";
+    String REQUSET_TO_VALUTE = "toValute";
+    String REQUEST_EXACHANGE_RATE = "exachangeRate";
+    String REQUSET_COURSE = "course";
+    String REQUEST_ID = "id";
+
+    String REQUEST_VALUTE_LIST = "valuteList";
+    String REQUEST_COURSE_LIST = "courseList";
 }

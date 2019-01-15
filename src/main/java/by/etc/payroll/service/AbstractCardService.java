@@ -11,7 +11,10 @@ public interface AbstractCardService {
     List<Rate> getAllRate() throws ServiceException;
     List<Company> getAllCompany() throws ServiceException;
     List<Operation> getAllOperationByNumber(String number) throws ServiceException;
-
+    List<ExchangeRate> getAllExchangeRate() throws ServiceException;
+    ExchangeRate getExchangeRateById(String id) throws ServiceException;
+    String getValuteNameById (int id) throws ServiceException;
+    boolean editValite (String exchangeId, String course) throws ServiceException;
 
     Rate getRateById (int id) throws ServiceException;
     Valute getValuteById (String nameValute) throws ServiceException;

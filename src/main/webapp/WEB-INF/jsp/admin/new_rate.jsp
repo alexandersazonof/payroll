@@ -24,13 +24,13 @@
                 <div class="form-group row">
                     <label for="name" class="col-sm-4 col-form-label">Name: </label>
                     <div class="col-sm-4">
-                        <input type="text" class="form-control-plaintext" id="name"  name="name">
+                        <input type="text" class="form-control" id="name"  name="name">
                     </div>
                 </div>
                 <div class="form-group row">
                     <label for="description" class="col-sm-4 col-form-label">Description: </label>
                     <div class="col-sm-4">
-                        <input type="text" id="field1" class="form-control-plaintext" id="description" name="description">
+                        <input type="text" id="field1" class="form-control" id="description" name="description">
                     </div>
                 </div>
                 <img src="../img/save.png" width="30" height="30" id="save"/>

@@ -212,6 +212,30 @@ public enum CommandFactory {
         public ActionCommand createCommand() {
             return new DeleteRateCommand();
         }
+    },
+    VALUTEPAGE {
+        @Override
+        public ActionCommand createCommand() {
+            return new ValutePageCommand();
+        }
+    },
+    EDITVALUTEPAGE {
+        @Override
+        public ActionCommand createCommand() {
+            return new EditValutePageCommand();
+        }
+    },
+    EDITVALUTE {
+        @Override
+        public ActionCommand createCommand() {
+            return new EditValuteCommand();
+        }
+    },
+    APPLICATION {
+        @Override
+        public ActionCommand createCommand() {
+            return new HistoryApplicationCommand();
+        }
     };
 
     public abstract ActionCommand createCommand();
