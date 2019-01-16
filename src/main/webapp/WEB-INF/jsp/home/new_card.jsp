@@ -8,65 +8,61 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<fmt:setLocale value="${selectedLanguage}" />
+<fmt:setBundle basename="properties.content" var="local" />
 
+<fmt:message bundle="${local}" key="local.newcard.title" var="localTitle"/>
+<fmt:message bundle="${local}" key="local.newcard.account" var="localAccount"/>
+<fmt:message bundle="${local}" key="local.newcard.address" var="localAddress"/>
+<fmt:message bundle="${local}" key="local.newcard.button" var="button"/>
+<fmt:message bundle="${local}" key="local.newcard.city" var="localCity"/>
+<fmt:message bundle="${local}" key="local.newcard.company" var="localCompany"/>
+<fmt:message bundle="${local}" key="local.newcard.confirm" var="localConfrim"/>
+<fmt:message bundle="${local}" key="local.newcard.firstname" var="localFirst"/>
+<fmt:message bundle="${local}" key="local.newcard.lastname" var="localLast"/>
+<fmt:message bundle="${local}" key="local.newcard.rate" var="localRate"/>
+<fmt:message bundle="${local}" key="local.newcard.rules" var="localRules"/>
+<fmt:message bundle="${local}" key="local.newcard.rules1" var="rules1"/>
+<fmt:message bundle="${local}" key="local.newcard.rules2" var="rules2"/>
+<fmt:message bundle="${local}" key="local.newcard.rules3" var="rules3"/>
 <html>
 <head>
-    <title>Title</title>
+    <title>${localTitle}</title>
 
 </head>
 <body>
 <jsp:include page="../template/header.jsp"/>
 
-<c:choose>
-    <c:when test="${param.msgbox != null}">
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            Ознакомтесь с правилами
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-    </c:when>
-    <c:when test="${param.msgvalue != null}">
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            Некоректные данные
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-    </c:when>
-    <c:when test="${param.block != null}">
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            Счёт заблокирован
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-    </c:when>
-</c:choose>
+<div class="text-center">
+    <h2>
+        ${localTitle}
+    </h2>
+    <hr>
+</div>
 
 <form method="post" action="/controller">
     <input type="hidden" name="command" value="newcard">
     <div class="form-row">
         <div class="form-group col-md-6">
-            <label for="inputEmail4">First name</label>
-            <input type="text" class="form-control" id="inputEmail4" placeholder="First name" name="firstName" value="${param.firstName}">
+            <label for="inputEmail4">${localFirst}</label>
+            <input type="text" class="form-control" id="inputEmail4" placeholder="${localFirst}" name="firstName" value="${param.firstName}">
         </div>
         <div class="form-group col-md-6">
-            <label for="inputPassword4">Last name</label>
-            <input type="text" class="form-control" id="inputPassword4" placeholder="Last name" name="lastName" value="${param.lastName}">
+            <label for="inputPassword4">${localLast}</label>
+            <input type="text" class="form-control" id="inputPassword4" placeholder="${localLast}" name="lastName" value="${param.lastName}">
         </div>
     </div>
     <div class="form-group">
-        <label for="inputAddress">Address</label>
+        <label for="inputAddress">${localAddress}</label>
         <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St" name="address" value="${param.address}">
     </div>
     <div class="form-row">
         <div class="form-group col-md-6">
-            <label for="inputCity">City</label>
-            <input type="text" class="form-control" id="inputCity" name="city" value="${param.city}">
+            <label for="inputCity">${localCity}</label>
+            <input type="text" class="form-control" id="inputCity" name="${localCity}" value="${param.city}">
         </div>
         <div class="form-group col-md-6">
-            <label for="inputState">Company</label>
+            <label for="inputState">${localCompany}</label>
             <select id="inputState" class="form-control" name="company">
                 <c:forEach items="${listCompany}" var = "item">
                     <option>${item.name}</option>
@@ -76,7 +72,7 @@
     </div>
     <div class="form-row">
         <div class="form-group col-md-4">
-            <label for="inputAccount">Account</label>
+            <label for="inputAccount">${localAccount}</label>
             <select id="inputAccount" class="form-control" name="account">
                 <c:forEach items="${listBankAccount}" var = "item">
                     <option>${item.number}</option>
@@ -84,7 +80,7 @@
             </select>
         </div>
         <div class="form-group col-md-4">
-            <label for="inputRate">Rate</label>
+            <label for="inputRate">${localRate}</label>
             <select id="inputRate" class="form-control" name="rate">
                 <c:forEach items="${listRate}" var = "itemsa">
                     <option>${itemsa.name}</option>
@@ -96,12 +92,12 @@
         <div class="form-check">
             <input class="form-check-input" type="checkbox" id="gridCheck" name="rules">
             <label class="form-check-label" for="gridCheck">
-                Confirm with
+                ${localConfrim}
             </label>
             <a data-toggle="modal" data-target="#myModal" href="">rules</a>
         </div>
     </div>
-    <button type="submit" class="btn btn-primary">Get card</button>
+    <button type="submit" class="btn btn-primary">${button}</button>
 </form>
 
 
@@ -110,23 +106,19 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title" id="myModalLabel">Rules</h4>
+                <h4 class="modal-title" id="myModalLabel">${localRules}</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
 
             </div>
             <div class="modal-body">
-                <p>Charge only what you can afford
-                This rule is simple. With a credit card, you can walk out of a store with an extravagant item that you really can't afford. Don't do that. Live within or below your means.
+                <p>${rules1}</p>
+                <p>
+                ${rules2}
                 </p>
                 <p>
-                Aim to pay each bill in full
-                Making only partial payments will leave you with growing debt. That can be very hazardous to your wealth.
-                </p>
-                <p>
-                Pay each credit card bill on time
-                You can pay your bills late, but there are lots of reasons not to. Make it a personal rule to always pay your bill on time. Being late can hurt your credit score and can result in interest charges, too.
+                ${rules3}
                 </p>
             </div>
             <div class="modal-footer">

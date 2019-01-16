@@ -32,16 +32,16 @@
 <html>
 <head>
     <title>${siteName}</title>
-    <link rel="stylesheet" href="../../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../../css/bootstrap.min.css">
 
-    <script src="../../js/jquery-3.2.1.slim.min.js"></script>
-    <script src="../../js/popper.min.js"></script>
-    <script src="../../js/bootstrap.min.js"></script>
+    <script src="../../../js/jquery-3.2.1.slim.min.js"></script>
+    <script src="../../../js/popper.min.js"></script>
+    <script src="../../../js/bootstrap.min.js"></script>
 
 </head>
 <body>
 
-<%@ include file="template/general_header.jsp" %>
+<%@ include file="../template/general_header.jsp" %>
 
 <div class="container">
     <form class="form-horizontal" role="form" method="POST" action="/controller">
@@ -231,6 +231,6 @@
     }
 </style>
 
-<%@ include file="template/footer.jsp" %>
+<%@ include file="../template/footer.jsp" %>
 </body>
 </html>

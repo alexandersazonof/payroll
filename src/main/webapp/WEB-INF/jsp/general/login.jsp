@@ -20,14 +20,14 @@
 <html>
 <head>
     <title>${siteName}</title>
-    <link rel="stylesheet" href="../../css/font-awesome.min.css">
-    <link rel="stylesheet" href="../../css/bootstrap.min.css">
-    <script src="../../js/bootstrap.min.js"></script>
-    <script src="../../js/jquery-1.11.1.min.js"></script>
+    <link rel="stylesheet" href="../../../css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../../css/bootstrap.min.css">
+    <script src="../../../js/bootstrap.min.js"></script>
+    <script src="../../../js/jquery-1.11.1.min.js"></script>
 
 </head>
 <body>
-<%@ include file="template/general_header.jsp" %>
+<%@ include file="../template/general_header.jsp" %>
 
 <c:set var = "wrongLogin" scope = "session" value = "${param.wrongLogin}"/>
 <c:set var="wrongPassword" scope="session" value="${param.wrongPassword}"/>
@@ -100,9 +100,8 @@
     </form>
 </div>
 
-<br><br><br><br><br><br><br><br><br><br><br><br>
 
-<%@ include file="template/footer.jsp" %>
+<%@ include file="../template/footer.jsp" %>
 
 </body>
 </html>

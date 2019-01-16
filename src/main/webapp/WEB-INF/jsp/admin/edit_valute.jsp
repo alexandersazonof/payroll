@@ -6,22 +6,33 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+
+<fmt:setLocale value="${selectedLanguage}" />
+<fmt:setBundle basename="properties.content" var="local" />
+
+<fmt:message bundle="${local}" key="local.editvalute.title" var="title"/>
+<fmt:message bundle="${local}" key="local.editvalute.from" var="localForm"/>
+<fmt:message bundle="${local}" key="local.editvalute.to" var="localTo"/>
+<fmt:message bundle="${local}" key="local.editvalute.course" var="localCourse"/>
+<fmt:message bundle="${local}" key="local.editvalute.ask" var="localAsk"/>
+
 <html>
 <head>
-    <title>Title</title>
+    <title>${title}</title>
 </head>
 <body>
 <jsp:include page="../template/header.jsp"/>
 
 <div class="container">
     <div class="text-center">
-        <h2>From ${fromValute} to ${toValute}</h2>
+        <h2>${localForm} ${fromValute} ${localTo} ${toValute}</h2>
         <hr>
         <form action="/controller" method="post" id="myform">
             <input type="hidden" name="id" value="${exachangeRate.getId()}">
             <input type="hidden" name="command" value="EDITVALUTE">
             <div class="form-group row">
-                <label for="course" class="col-sm-2 col-form-label">Course</label>
+                <label for="course" class="col-sm-2 col-form-label">${localCourse}</label>
                 <div class="col-sm-4">
                     <input type="text" class="form-control" id="course" name="course" value="${exachangeRate.getCourse()}">
                 </div>
@@ -36,7 +47,7 @@
 <script type="text/javascript">
     $('#save').click(function(e) {
         e.preventDefault();
-        var msg = 'Изменить валюту ?';
+        var msg = '${localAsk}';
         bootbox.confirm(msg, function(result) {
             if (result) {
                 $('#myform').submit();

@@ -7,15 +7,21 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+
+<fmt:setLocale value="${selectedLanguage}" />
+<fmt:setBundle basename="properties.content" var="local" />
+
+<fmt:message bundle="${local}" key="local.valute.title" var="title"/>
 <html>
 <head>
-    <title>Title</title>
+    <title>${title}</title>
 </head>
 <body>
 <jsp:include page="../template/header.jsp"/>
 <div class="container">
     <div class="text-center">
-        <h2>Valute list</h2>
+        <h2>${title}</h2>
         <table class="table table-striped">
             <thead>
             <tr>
