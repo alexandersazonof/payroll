@@ -1,24 +1,34 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+
+<fmt:setLocale value="${selectedLanguage}" />
+<fmt:setBundle basename="properties.content" var="local" />
+
+<fmt:message bundle="${local}" key="local.adminmain.title" var="title"/>
+<fmt:message bundle="${local}" key="local.adminmain.nameMain" var="localNameMain"/>
+<fmt:message bundle="${local}" key="local.adminmain.login" var="localLogin"/>
+<fmt:message bundle="${local}" key="local.adminmain.Account" var="localAccount"/>
+<fmt:message bundle="${local}" key="local.adminmain.money" var="localMoney"/>
 
 <html>
 <head>
-    <title>Title</title>
+    <title>${title}</title>
 </head>
 <body>
 <jsp:include page="../template/header.jsp"/>
 <div class="text-center">
     <h1 class="text-capitalize">
-        Users list
+        ${localNameMain}
     </h1>
 </div>
 <table class="table table-striped table-striped">
     <thead>
     <tr>
         <th>#</th>
-        <th>Login</th>
-        <th>Accounts</th>
-        <th>Total money</th>
+        <th>${localLogin}</th>
+        <th>${localAccount}</th>
+        <th>${localMoney}</th>
     </tr>
     </thead>
     <tbody>

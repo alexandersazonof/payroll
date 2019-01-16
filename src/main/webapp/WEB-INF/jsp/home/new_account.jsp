@@ -12,18 +12,18 @@
 <fmt:setLocale value="${selectedLanguage}" />
 <fmt:setBundle basename="properties.content" var="local" />
 
-<fmt:message bundle="${local}" key="local.showcard.name" var="cardName"/>
-<fmt:message bundle="${local}" key="local.showcard.number" var="cardNumber"/>
-<fmt:message bundle="${local}" key="local.newcard.add" var="addButton"/>
-<fmt:message bundle="${local}" key="local.error.name" var="errorName"/>
-<fmt:message bundle="${local}" key="local.error.number" var="errorNumber"/>
-<fmt:message bundle="${local}" key="local.newcard.title" var="title"/>
+<fmt:message bundle="${local}" key="local.newaccount.button" var="localButton"/>
+<fmt:message bundle="${local}" key="local.newaccount.name" var="localName"/>
+<fmt:message bundle="${local}" key="local.newaccount.title" var="localTitle"/>
+<fmt:message bundle="${local}" key="local.newaccount.valute" var="localValute"/>
+<fmt:message bundle="${local}" key="local.newaccoutn.ask" var="localAsk"/>
+
 
 
 
 <html>
 <head>
-    <title>${title}</title>
+    <title>${localTitle}</title>
 
 </head>
 <body>
@@ -35,17 +35,17 @@
     <input type="hidden" name="command" value="newaccount" />
     <div class="text-center">
         <div class="container">
-            <h1>Create new account</h1>
+            <h1>${localTitle}</h1>
             <hr>
             <div class="form-group row">
-                <label for="exampleName" class="col-sm-2 col-form-label">${cardName} :</label>
+                <label for="exampleName" class="col-sm-2 col-form-label">${localName} :</label>
                 <div class="col-sm-6">
                     <input type="text" class="form-control" id="exampleName" name="Name"  value="${param.name}">
                 </div>
             </div>
 
         <div class="form-group row">
-            <label for="exampleFormControlSelect1" class="col-sm-2 col-form-label">Valute :</label>
+            <label for="exampleFormControlSelect1" class="col-sm-2 col-form-label">${localValute} :</label>
                 <div class="col-sm-6">
                     <select class="form-control" id="exampleFormControlSelect1" name="valute">
                         <c:forEach items="${valuteList}" var = "item">
@@ -54,7 +54,7 @@
                     </select>
                 </div>
         </div>
-        <button type="submit" id="myButton" class="btn btn-dark">${addButton}</button>
+        <button type="submit" id="myButton" class="btn btn-dark">${localButton}</button>
         </div>
     </div>
 </form>
@@ -63,7 +63,7 @@
 <script type="text/javascript">
     $('#myButton').click(function(e) {
         e.preventDefault();
-        var msg = 'Создать новый счёт ?';
+        var msg = '${localAsk}';
         bootbox.confirm(msg, function(result) {
             if (result) {
                 $('#createForm').submit();

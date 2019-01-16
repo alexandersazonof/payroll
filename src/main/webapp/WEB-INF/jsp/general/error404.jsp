@@ -12,10 +12,14 @@
     <title>Error page</title>
 </head>
 <body>
-<h1>Opps...</h1>
-<h1>Sorry, this page isn't here</h1>
+<div class="text-center">
+    <h1>Opps...</h1>
+    <h1>Sorry, this page isn't here</h1>
 
-<img src="../../img/404.png" alt="">
+    <img src="../../../img/404.png" alt="">
+
+</div>
+
 
 </body>
 </html>

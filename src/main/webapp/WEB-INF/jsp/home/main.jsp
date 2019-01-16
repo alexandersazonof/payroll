@@ -8,9 +8,23 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+
+<fmt:setLocale value="${selectedLanguage}" />
+<fmt:setBundle basename="properties.content" var="local" />
+
+<fmt:message bundle="${local}" key="local.main.account" var="localAccount"/>
+<fmt:message bundle="${local}" key="local.main.all" var="localMoney"/>
+<fmt:message bundle="${local}" key="local.main.credit" var="localCredits"/>
+<fmt:message bundle="${local}" key="local.main.open" var="localOpen"/>
+<fmt:message bundle="${local}" key="local.main.title" var="localTitle"/>
+
+
+
+
+
 <html>
 <head>
-    <title>Title</title>
+    <title>${localTitle}</title>
 </head>
 <body>
 <jsp:include page="../template/header.jsp"/>
@@ -21,10 +35,10 @@
 <div class="container">
     <div class="row">
         <div class="col">
-            <h3>Счета</h3>
+            <h3>${localAccount}</h3>
         </div>
         <div class="col">
-            <a href="/controller?command=newaccountpage"><img src="../img/plus.png" width="15" height="15">Открыть</a>
+            <a href="/controller?command=newaccountpage"><img src="../img/plus.png" width="15" height="15">${localOpen}</a>
         </div>
     </div>
 <ul class="list-group-flush">
@@ -49,7 +63,7 @@
             </c:forEach>
             </div>
             <div class="row">
-                Всего ${item.getCountOfMoney()} <strong>${item.getValute()}</strong>
+                ${localMoney} ${item.getCountOfMoney()} <strong>${item.getValute()}</strong>
             </div>
         </div>
     </li>
@@ -60,10 +74,10 @@
 <div class="container">
     <div class="row">
         <div class="col">
-            <h3>Кредиты</h3>
+            <h3>${localCredits}</h3>
         </div>
         <div class="col">
-            <a href="/controller?command=newcardpage"><img src="../img/plus.png" width="15" height="15">Оформить</a>
+            <a href="/controller?command=newcardpage"><img src="../img/plus.png" width="15" height="15">${localOpen}</a>
         </div>
     </div>
     <ul class="list-group-flush">
