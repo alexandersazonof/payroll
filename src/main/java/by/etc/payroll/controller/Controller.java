@@ -1,7 +1,7 @@
 package by.etc.payroll.controller;
 
-import by.etc.payroll.command.ActionCommand;
-import by.etc.payroll.command.factory.ActionFactory;
+import by.etc.payroll.controller.command.ActionCommand;
+import by.etc.payroll.controller.command.factory.ActionFactory;
 import by.etc.payroll.dao.dbmanager.ConnectionPool;
 import by.etc.payroll.controller.exception.CommandException;
 import org.apache.logging.log4j.LogManager;
@@ -38,7 +38,6 @@ public class Controller extends HttpServlet {
     private void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         try {
-            LOG.info("Get new request ...");
 
             ActionFactory factory = ActionFactory.getInstance();
             ActionCommand command = factory.defineCommand(request);

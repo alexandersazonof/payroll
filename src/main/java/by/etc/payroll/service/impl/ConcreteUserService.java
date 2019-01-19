@@ -13,12 +13,11 @@ import by.etc.payroll.service.exception.*;
 import by.etc.payroll.service.util.Validator;
 import by.etc.payroll.dao.exception.DAOException;
 import by.etc.payroll.service.AbstractUserService;
-import by.etc.payroll.util.Roles;
+import by.etc.payroll.service.util.Roles;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.mindrot.jbcrypt.BCrypt;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -42,19 +41,19 @@ public class ConcreteUserService implements AbstractUserService {
 
 
         if (!Validator.validateLogin(user.getLogin())) {
-            throw new ServiceWrongLoginException("Incorrect login");
+            throw new ServiceWrongLoginException();
         }
 
 
 
         if (!Validator.validatePassword(user.getPassword())) {
-            throw new ServiceWrongPasswordException("Incorrect password");
+            throw new ServiceWrongPasswordException();
         }
 
 
         if (!Validator.validateEmail(user.getEmail())) {
             System.out.println(user.getEmail());
-            throw new ServiceWrongEmailException("Incorrect email");
+            throw new ServiceWrongEmailException();
         }
 
 
@@ -62,7 +61,7 @@ public class ConcreteUserService implements AbstractUserService {
         if (!Validator.validateName(user.getFirstName()) ||
                 !Validator.validateName(user.getLastName())) {
 
-            throw new ServiceException("Incorrect value");
+            throw new ServiceException();
         }
 
 
@@ -73,11 +72,11 @@ public class ConcreteUserService implements AbstractUserService {
 
             User userWithThisLogin = userDAO.findByLogin(user.getLogin());
             if (userWithThisLogin != null) {
-                throw new ServiceWrongLoginException("Incorrect login");
+                throw new ServiceWrongLoginException();
             }
 
             if (userDAO.findByEmail(user.getEmail()) != null) {
-                throw new ServiceWrongEmailException("Incorrect email");
+                throw new ServiceWrongEmailException();
             }
 
             String encryptPassword = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt());
@@ -97,12 +96,12 @@ public class ConcreteUserService implements AbstractUserService {
 
         if (!Validator.validateLogin(login)) {
 
-            throw new ServiceWrongLoginException("Incorrect login");
+            throw new ServiceWrongLoginException();
         }
 
         if (!Validator.validateString(password)) {
 
-            throw new ServiceWrongPasswordException("Incorrect password");
+            throw new ServiceWrongPasswordException();
         }
 
         try {
@@ -113,39 +112,38 @@ public class ConcreteUserService implements AbstractUserService {
 
             if (user == null) {
 
-                throw new ServiceWrongLoginException("Incorrect login");
+                throw new ServiceWrongLoginException();
             }
             if (!BCrypt.checkpw(password, user.getPassword())) {
 
-                throw new ServiceWrongPasswordException("Incorrect password");
+                throw new ServiceWrongPasswordException();
             }
 
             return user;
         } catch (DAOException e) {
 
-            throw new ServiceException("Incorrect value", e);
+            throw new ServiceException(e.getMessage(), e);
         }
     }
 
     @Override
     public User save(int id, String login, String email, String firstName, String lastName, String newPassword, String confirmPassword, String oldPassword) throws ServiceException {
-        LOG.info("In service");
 
         SqlUserDAO userDAO = daoFactory.getUserDAO();
 
         try {
 
             if (!Validator.validateLogin(login) || !(userDAO.findByLoginNotConsideringId(login, id) == null)) {
-                throw new ServiceWrongLoginException("Incorrect login");
+                throw new ServiceWrongLoginException();
             }
 
 
             if (!Validator.validateEmail(email) || !(userDAO.findByEmailNotConsideringId(email, id) == null)) {
-                throw new ServiceWrongEmailException("Incorrect email");
+                throw new ServiceWrongEmailException();
             }
 
             if (!Validator.validateName(firstName) || !Validator.validateName(lastName)) {
-                throw new ServiceWrongNameException("Incorrect value");
+                throw new ServiceWrongNameException();
             }
 
 
@@ -153,7 +151,7 @@ public class ConcreteUserService implements AbstractUserService {
             User user;
 
             if (!BCrypt.checkpw(oldPassword, userDAO.find(id).getPassword())) {
-                throw new ServiceWrongPasswordException("Incorrect password");
+                throw new ServiceWrongPasswordException();
             }
 
             if (newPassword.isEmpty() || confirmPassword.isEmpty()) {
@@ -163,7 +161,7 @@ public class ConcreteUserService implements AbstractUserService {
 
             } else if (!Validator.validatePassword(newPassword) || !Validator.validatePassword(confirmPassword) || !newPassword.equals(confirmPassword)) {
 
-                throw new ServiceWrongPasswordConfirmExceprion("Incorrect password confirm");
+                throw new ServiceWrongPasswordConfirmExceprion();
             } else {
                 user = create(id, login, BCrypt.hashpw(newPassword, BCrypt.gensalt()), email, lastName, firstName);
             }
@@ -183,7 +181,7 @@ public class ConcreteUserService implements AbstractUserService {
 
 
         if (user == null || !user.getRole().equalsIgnoreCase(Roles.USER)) {
-            throw new ServiceUnauthorizedAccessException("Incorrect access");
+            throw new ServiceUnauthorizedAccessException();
         }
 
 
