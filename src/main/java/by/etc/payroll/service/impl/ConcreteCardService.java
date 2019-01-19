@@ -1,8 +1,8 @@
 package by.etc.payroll.service.impl;
 
 import by.etc.payroll.bean.*;
-import by.etc.payroll.command.util.Message;
-import by.etc.payroll.command.util.UserUtil;
+import by.etc.payroll.controller.command.util.Message;
+import by.etc.payroll.controller.command.util.UserUtil;
 import by.etc.payroll.dao.exception.DAOException;
 import by.etc.payroll.dao.factory.DaoFactory;
 import by.etc.payroll.dao.impl.*;

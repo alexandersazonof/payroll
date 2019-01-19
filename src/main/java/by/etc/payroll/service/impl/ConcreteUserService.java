@@ -13,12 +13,11 @@ import by.etc.payroll.service.exception.*;
 import by.etc.payroll.service.util.Validator;
 import by.etc.payroll.dao.exception.DAOException;
 import by.etc.payroll.service.AbstractUserService;
-import by.etc.payroll.util.Roles;
+import by.etc.payroll.service.util.Roles;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.mindrot.jbcrypt.BCrypt;
 
-import java.util.ArrayList;
 import java.util.List;
 
 

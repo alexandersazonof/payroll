@@ -1,8 +1,8 @@
 package by.etc.payroll.service.impl;
 
 import by.etc.payroll.bean.*;
-import by.etc.payroll.command.util.Message;
-import by.etc.payroll.command.util.UserUtil;
+import by.etc.payroll.controller.command.util.Message;
+import by.etc.payroll.controller.command.util.UserUtil;
 import by.etc.payroll.dao.factory.DaoFactory;
 import by.etc.payroll.dao.exception.DAOException;
 import by.etc.payroll.dao.impl.*;
@@ -11,9 +11,7 @@ import by.etc.payroll.service.exception.*;
 import by.etc.payroll.service.AbstractBankAccountService;
 import by.etc.payroll.service.util.EventLog;
 import by.etc.payroll.service.util.Validator;
-import by.etc.payroll.util.Roles;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import by.etc.payroll.service.util.Roles;
 
 import java.util.ArrayList;
 import java.util.List;
