@@ -73,7 +73,9 @@ public class ConcreteAdminService implements AbstractAdminService {
 
             for (Application a :applicationList) {
                 BankAccount bankAccount = bankAccountDAO.find(a.getAccountId());
-                a.setAccountNumber(bankAccount.getNumber());
+                if (bankAccount != null) {
+                    a.setAccountNumber(bankAccount.getNumber());
+                }
             }
             return applicationList;
         } catch (DAOException e) {

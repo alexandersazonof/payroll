@@ -1,6 +1,7 @@
 package by.etc.payroll.controller.command.impl.user;
 
 import by.etc.payroll.controller.command.ActionCommand;
+import by.etc.payroll.controller.command.util.Attributes;
 import by.etc.payroll.controller.exception.CommandException;
 
 import javax.servlet.http.HttpServletRequest;
@@ -10,7 +11,6 @@ import java.io.IOException;
 
 public class LogoutCommand implements ActionCommand {
     private static final String REDIRECT_PAGE = "/controller?command=mainpage";
-    public static final  String SESSION_FIELD_USER = "user";
 
 
     @Override
@@ -19,14 +19,13 @@ public class LogoutCommand implements ActionCommand {
 
 
         if (session != null) {
-            session.removeAttribute(SESSION_FIELD_USER);
+            session.removeAttribute(Attributes.SESSION_FIELD_ROLE_USER);
         }
 
         try {
             response.sendRedirect(REDIRECT_PAGE);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new CommandException(e.getMessage(), e);
         }
-
     }
 }

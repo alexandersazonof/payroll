@@ -39,13 +39,7 @@
                 <a class="nav-link" href="/controller?command=newcardpage">${newCard}</a>
             </li>
             <li class="nav-item active">
-                <a class="nav-link" href="/controller?command=showaccountpage">${showCard}</a>
-            </li>
-            <li class="nav-item active">
                 <a class="nav-link" href="/controller?command=transfermoney">${transfer}</a>
-            </li>
-            <li class="nav-item active">
-                <a class="nav-link" href="/controller?command=historypage">${history}</a>
             </li>
         </ul>
     </div>

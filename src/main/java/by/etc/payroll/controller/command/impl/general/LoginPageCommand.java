@@ -1,6 +1,7 @@
 package by.etc.payroll.controller.command.impl.general;
 
 import by.etc.payroll.controller.command.ActionCommand;
+import by.etc.payroll.controller.command.util.Attributes;
 import by.etc.payroll.controller.command.util.LanguageUtil;
 import by.etc.payroll.controller.command.util.QueryUtil;
 import by.etc.payroll.controller.exception.CommandException;
@@ -13,13 +14,12 @@ import java.io.IOException;
 public class LoginPageCommand implements ActionCommand {
 
     private static final String JSP_PAGE_PATH = "WEB-INF/jsp/login.jsp";
-    private static final String SELECTED_LANGUAGE_REQUEST_ATTR = "selectedLanguage";
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws CommandException, IOException {
         QueryUtil.saveCurrentQueryToSession(request);
         String languageId = LanguageUtil.getLanguageId(request);
-        request.setAttribute(SELECTED_LANGUAGE_REQUEST_ATTR, languageId);
+        request.setAttribute(Attributes.SELECTED_LANGUAGE_REQUEST_ATTR, languageId);
 
         try {
             request.getRequestDispatcher(JSP_PAGE_PATH).forward(request,response);

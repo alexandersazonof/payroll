@@ -5,9 +5,7 @@ import by.etc.payroll.bean.Card;
 import by.etc.payroll.bean.Operation;
 import by.etc.payroll.bean.User;
 import by.etc.payroll.controller.command.ActionCommand;
-import by.etc.payroll.controller.command.util.LanguageUtil;
-import by.etc.payroll.controller.command.util.QueryUtil;
-import by.etc.payroll.controller.command.util.UserUtil;
+import by.etc.payroll.controller.command.util.*;
 import by.etc.payroll.controller.exception.CommandException;
 import by.etc.payroll.service.creator.Creator;
 import by.etc.payroll.service.exception.ServiceException;
@@ -25,28 +23,22 @@ import java.io.IOException;
 
 public class DeleteCardCommand implements ActionCommand {
     private static final Logger LOG = LogManager.getLogger(DeleteCardCommand.class);
-    private static final String SELECTED_LANGUAGE_REQUEST_ATTR = "selectedLanguage";
 
     private final static String ACTION = "Delete card : ";
-
-    private static final String REDIRECT_PAGE_AFTER_UNAVTARIZED_ACCESS = "/controller?command=mainPage&useraccess=true";
-    private static final String REDIRECT_PAGE_INCORRECT_QUERY = "/controller?command=mainPage&wrongquery=true";
-    private static final String REDIRECT_AFTER_SUCCESS = "/controller?command=mainPage&scdrop=true";
-
 
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws CommandException, IOException {
         QueryUtil.saveCurrentQueryToSession(request);
         String languageId = LanguageUtil.getLanguageId(request);
-        request.setAttribute(SELECTED_LANGUAGE_REQUEST_ATTR, languageId);
+        request.setAttribute(Attributes.SELECTED_LANGUAGE_REQUEST_ATTR, languageId);
 
-        String cardId = request.getParameter("cid");
+        String cardId = request.getParameter(Attributes.REQUSET_CARD_ID);
 
         ServiceFactory serviceFactory = ServiceFactory.getInstance();
         ConcreteCardService concreteCardService = serviceFactory.getCardService();
         ConcreteBankAccountService concreteBankAccountService = serviceFactory.getBankAccountService();
-        User user = (User)request.getSession().getAttribute("user");
+        User user = (User)request.getSession().getAttribute(Attributes.SESSION_FIELD_ROLE_USER);
 
         try {
             Card card = concreteCardService.getCard(cardId);
@@ -56,15 +48,13 @@ public class DeleteCardCommand implements ActionCommand {
 
             concreteCardService.deleteCard(card, bankAccount, operation);
 
-            request.getSession().invalidate();
-            request.getSession().setAttribute("user", user);
-            response.sendRedirect(REDIRECT_AFTER_SUCCESS);
+            response.sendRedirect(Pages.REDIRECT_PAGE_SUCCESS_DELETE_CARD);
         } catch (ServiceUnauthorizedAccessException e) {
-            LOG.error("Incorrect access", e);
-            response.sendRedirect(REDIRECT_PAGE_AFTER_UNAVTARIZED_ACCESS);
+            LOG.error(Message.INCORRECT_ACCESS, e);
+            response.sendRedirect(Pages.REDIRECT_PAGE_AFTER_INCORRECT_ACCESS);
         } catch (ServiceWrongCardNumber e) {
-            LOG.error("Incorrect query", e);
-            response.sendRedirect(REDIRECT_PAGE_INCORRECT_QUERY);
+            LOG.error(Message.INCORRECT_QUERY, e);
+            response.sendRedirect(Pages.REDIRECT_PAGE_INCORRECT_QUERY);
         }
         catch (ServiceException e) {
             throw new CommandException(e.getMessage(), e);

@@ -26,7 +26,7 @@ public class ConcreteCardService implements AbstractCardService {
         if (!Validator.validateString(firstName) || !Validator.validateString(lastName)
                 || !Validator.validateString(address) || !Validator.validateString(city)
                 || !Validator.validateNumber(account) || !Validator.validateString(rate)) {
-            throw new ServiceWrongNameException("incorrect value");
+            throw new ServiceWrongNameException();
         }
 
         DaoFactory daoFactory = DaoFactory.getInstance();
@@ -39,7 +39,7 @@ public class ConcreteCardService implements AbstractCardService {
             BankAccount bankAccount = bankAccountDAO.getByNumber(account);
 
             if (!bankAccount.isStatus()) {
-                throw new ServiceBlockAccountException("Account block");
+                throw new ServiceBlockAccountException();
             }
             int idBankAccount = bankAccount.getId();
             int idRate = rateDAO.getIdByName(rate);
@@ -210,7 +210,7 @@ public class ConcreteCardService implements AbstractCardService {
     @Override
     public Card getCard(String cardId) throws ServiceException {
         if (!Validator.validateString(cardId)) {
-            throw new ServiceWrongCardNumber("Incorrect id");
+            throw new ServiceWrongCardNumber();
         }
 
         try {
@@ -221,7 +221,7 @@ public class ConcreteCardService implements AbstractCardService {
             Card card = cardDAO.find(id);
 
             if (card == null) {
-                throw new ServiceWrongCardNumber("Incorrect id");
+                throw new ServiceWrongCardNumber();
             }
 
             return card;
@@ -252,7 +252,7 @@ public class ConcreteCardService implements AbstractCardService {
     @Override
     public boolean blockCard(Card card) throws ServiceException {
         if (card == null) {
-            throw new ServiceQueryException("Incorrect query");
+            throw new ServiceQueryException();
         }
 
         DaoFactory daoFactory = DaoFactory.getInstance();
@@ -262,7 +262,7 @@ public class ConcreteCardService implements AbstractCardService {
         try {
             boolean nowStatus = cardDAO.isBlock(card.getId());
             if (nowStatus == true) {
-                throw new ServiceQueryException("Incorrect query");
+                throw new ServiceQueryException();
             }
 
             cardDAO.blockCard(card.getId());
@@ -278,7 +278,7 @@ public class ConcreteCardService implements AbstractCardService {
     @Override
     public boolean unBlockCard(Card card) throws ServiceException {
         if (card == null) {
-            throw new ServiceQueryException("Incorrect query");
+            throw new ServiceQueryException();
         }
 
         DaoFactory daoFactory = DaoFactory.getInstance();
@@ -288,7 +288,7 @@ public class ConcreteCardService implements AbstractCardService {
         try {
             boolean nowStatus = cardDAO.isBlock(card.getId());
             if (nowStatus == false) {
-                throw new ServiceQueryException("Incorrect query");
+                throw new ServiceQueryException();
             }
 
             cardDAO.clearCard(card.getId());
@@ -357,7 +357,7 @@ public class ConcreteCardService implements AbstractCardService {
         try {
             User userWithPassword = userDAO.findByLogin(user.getLogin());
             if (!BCrypt.checkpw(password, userWithPassword.getPassword())) {
-                throw new ServiceWrongPasswordException("Incorrect password");
+                throw new ServiceWrongPasswordException();
             }
 
             Card fromCard = cardDAO.getByCardNumber(fromNumber);
@@ -371,7 +371,7 @@ public class ConcreteCardService implements AbstractCardService {
             }
 
             if (fromCard == null || toCard == null) {
-                throw new ServiceWrongCardNumber("Incorrect card number");
+                throw new ServiceWrongCardNumber();
             }
 
 
@@ -383,7 +383,7 @@ public class ConcreteCardService implements AbstractCardService {
             }
 
             if (fromCard.getMoney() < count) {
-                throw new ServiceWrongCountException("Incorrect count");
+                throw new ServiceWrongCountException();
             }
 
             cardDAO.transefreMoney(fromCard, toCard, count);

@@ -4,9 +4,7 @@ import by.etc.payroll.bean.BankAccount;
 import by.etc.payroll.bean.Card;
 import by.etc.payroll.bean.User;
 import by.etc.payroll.controller.command.ActionCommand;
-import by.etc.payroll.controller.command.util.LanguageUtil;
-import by.etc.payroll.controller.command.util.QueryUtil;
-import by.etc.payroll.controller.command.util.UserUtil;
+import by.etc.payroll.controller.command.util.*;
 import by.etc.payroll.controller.exception.CommandException;
 import by.etc.payroll.service.exception.ServiceBlockAccountException;
 import by.etc.payroll.service.exception.ServiceException;
@@ -24,13 +22,10 @@ import java.io.IOException;
 
 public class UnblockCardCommand implements ActionCommand {
     private static final Logger LOG = LogManager.getLogger(UnblockCardCommand.class);
-    private static final String SELECTED_LANGUAGE_REQUEST_ATTR = "selectedLanguage";
 
 
     private static final String ACTION_BLOCK = "Unblock card : ";
 
-    private static final String REDIRECT_PAGE_AFTER_UNAVTARIZED_ACCESS = "/controller?command=mainPage&useraccess=true";
-    private static final String REDIRECT_PAGE_INCORRECT_QUERY = "/controller?command=mainPage&wrongquery=true";
     private static final String REDIRECT_PAGE_AFTER_SUCCESS = "/controller?command=showcardpage&cid=%d&unblocksuccess=true";
     private static final String REDIRECT_PAGE_INCORRECT_ACCOUNT_BLOCK = "/controller?command=showcardpage&cid=%d&blockaccount=true";
 
@@ -38,8 +33,8 @@ public class UnblockCardCommand implements ActionCommand {
     public void execute(HttpServletRequest request, HttpServletResponse response) throws CommandException, IOException {
         QueryUtil.saveCurrentQueryToSession(request);
         String languageId = LanguageUtil.getLanguageId(request);
-        request.setAttribute(SELECTED_LANGUAGE_REQUEST_ATTR, languageId);
-        String cid  = request.getParameter("cid");
+        request.setAttribute(Attributes.SELECTED_LANGUAGE_REQUEST_ATTR, languageId);
+        String cid  = request.getParameter(Attributes.REQUSET_CARD_ID);
 
         int cardId = 0;
 
@@ -47,8 +42,8 @@ public class UnblockCardCommand implements ActionCommand {
 
             cardId = Integer.valueOf(cid);
 
-            User user = (User)request.getSession().getAttribute("user");
-            String bankAccountNumber = request.getParameter("account");
+            User user = (User)request.getSession().getAttribute(Attributes.SESSION_FIELD_ROLE_USER);
+            String bankAccountNumber = request.getParameter(Attributes.REQUEST_ACCOUNT);
 
             ServiceFactory serviceFactory = ServiceFactory.getInstance();
             ConcreteBankAccountService bankAccountService = serviceFactory.getBankAccountService();
@@ -57,11 +52,11 @@ public class UnblockCardCommand implements ActionCommand {
             BankAccount bankAccount = bankAccountService.getCardByNumber(bankAccountNumber);
 
             if (!bankAccount.isStatus()) {
-                throw new ServiceBlockAccountException("Account is block");
+                throw new ServiceBlockAccountException();
             }
             UserUtil.isAccountOfUser(user, bankAccount);
 
-            String cardNumber = request.getParameter("card");
+            String cardNumber = request.getParameter(Attributes.REQUEST_CARD);
             Card card = concreteCardService.getCardByNumber(cardNumber);
             concreteCardService.unBlockCard(card);
             concreteCardService.doOperation(ACTION_BLOCK + cardNumber , bankAccountNumber, user.getId());
@@ -70,17 +65,17 @@ public class UnblockCardCommand implements ActionCommand {
 
 
         } catch (NumberFormatException e) {
-            LOG.error("Incorrect query", e);
-            response.sendRedirect(REDIRECT_PAGE_INCORRECT_QUERY);
+            LOG.error(Message.INCORRECT_QUERY, e);
+            response.sendRedirect(Pages.REDIRECT_PAGE_INCORRECT_QUERY);
         } catch (ServiceBlockAccountException e) {
-            LOG.error("Account is block", e);
+            LOG.error(Message.ALERT_ACCOUNT_IS_BLOCK, e);
             response.sendRedirect(String.format(REDIRECT_PAGE_INCORRECT_ACCOUNT_BLOCK, cardId));
         } catch (ServiceQueryException e) {
-            LOG.error("Incorrect query", e);
-            response.sendRedirect(REDIRECT_PAGE_INCORRECT_QUERY);
+            LOG.error(Message.INCORRECT_QUERY, e);
+            response.sendRedirect(Pages.REDIRECT_PAGE_INCORRECT_QUERY);
         } catch (ServiceUnauthorizedAccessException e) {
-            LOG.error("Incorrect access", e);
-            response.sendRedirect(REDIRECT_PAGE_AFTER_UNAVTARIZED_ACCESS);
+            LOG.error(Message.INCORRECT_ACCESS, e);
+            response.sendRedirect(Pages.REDIRECT_PAGE_AFTER_INCORRECT_ACCESS);
         } catch (ServiceException e) {
             throw new CommandException(e.getMessage(), e);
         }

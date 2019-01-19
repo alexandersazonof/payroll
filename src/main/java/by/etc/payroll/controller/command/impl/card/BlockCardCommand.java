@@ -21,23 +21,18 @@ import java.io.IOException;
 
 public class BlockCardCommand implements ActionCommand {
     private static final Logger LOG = LogManager.getLogger(BlockCardCommand.class);
-    private static final String SELECTED_LANGUAGE_REQUEST_ATTR = "selectedLanguage";
 
     private static final String ACTION_BLOCK = "Block card : ";
-
-    private static final String REDIRECT_PAGE_AFTER_UNAVTARIZED_ACCESS = "/controller?command=mainPage&useraccess=true";
-    private static final String REDIRECT_PAGE_INCORRECT_QUERY = "/controller?command=mainPage&wrongquery=true";
-    private static final String REDIRECT_PAGE_AFTER_SUCCESS = "/controller?command=showcardpage&cid=%d&blocksuccess=true";
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws CommandException, IOException {
         QueryUtil.saveCurrentQueryToSession(request);
         String languageId = LanguageUtil.getLanguageId(request);
-        request.setAttribute(SELECTED_LANGUAGE_REQUEST_ATTR, languageId);
+        request.setAttribute(Attributes.SELECTED_LANGUAGE_REQUEST_ATTR, languageId);
 
         try {
-            User user = (User)request.getSession().getAttribute("user");
-            String bankAccountNumber = request.getParameter("account");
+            User user = (User)request.getSession().getAttribute(Attributes.SESSION_FIELD_ROLE_USER);
+            String bankAccountNumber = request.getParameter(Attributes.REQUEST_ACCOUNT);
 
             ServiceFactory serviceFactory = ServiceFactory.getInstance();
             ConcreteBankAccountService bankAccountService = serviceFactory.getBankAccountService();
@@ -46,12 +41,12 @@ public class BlockCardCommand implements ActionCommand {
             BankAccount bankAccount = bankAccountService.getCardByNumber(bankAccountNumber);
             UserUtil.isAccountOfUser(user, bankAccount);
 
-            String cardNumber = request.getParameter("card");
+            String cardNumber = request.getParameter(Attributes.REQUEST_CARD);
             Card card = concreteCardService.getCardByNumber(cardNumber);
             concreteCardService.blockCard(card);
             concreteCardService.doOperation(ACTION_BLOCK + cardNumber , bankAccountNumber, user.getId());
 
-            response.sendRedirect(String.format(REDIRECT_PAGE_AFTER_SUCCESS, card.getId()));
+            response.sendRedirect(String.format(Pages.REDIRECT_PAGE_SUCCESS_BLOCK_CARD, card.getId()));
         } catch (ServiceQueryException e) {
             LOG.error(Message.INCORRECT_QUERY, e);
             response.sendRedirect(Pages.REDIRECT_PAGE_INCORRECT_QUERY);

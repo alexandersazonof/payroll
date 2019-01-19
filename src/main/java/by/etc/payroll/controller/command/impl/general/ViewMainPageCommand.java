@@ -2,6 +2,7 @@ package by.etc.payroll.controller.command.impl.general;
 
 import by.etc.payroll.bean.User;
 import by.etc.payroll.controller.command.ActionCommand;
+import by.etc.payroll.controller.command.util.Attributes;
 import by.etc.payroll.controller.command.util.LanguageUtil;
 import by.etc.payroll.controller.command.util.Pages;
 import by.etc.payroll.controller.command.util.QueryUtil;
@@ -18,7 +19,6 @@ import java.io.IOException;
 public class ViewMainPageCommand implements ActionCommand {
 
     private Logger LOG = LogManager.getLogger(ViewMainPageCommand.class);
-    private static final String SELECTED_LANGUAGE_REQUEST_ATTR = "selectedLanguage";
 
     private static final String USER_PAGE_PATH = "/controller?command=usermainpage";
     private static final String JSP_PAGE_PATH = "WEB-INF/jsp/general/main.jsp";
@@ -27,10 +27,10 @@ public class ViewMainPageCommand implements ActionCommand {
     public void execute(HttpServletRequest request, HttpServletResponse response) throws CommandException, IOException {
         QueryUtil.saveCurrentQueryToSession(request);
         String languageId = LanguageUtil.getLanguageId(request);
-        request.setAttribute(SELECTED_LANGUAGE_REQUEST_ATTR, languageId);
+        request.setAttribute(Attributes.SELECTED_LANGUAGE_REQUEST_ATTR, languageId);
 
         try {
-            User user = (User) request.getSession().getAttribute("user");
+            User user = (User) request.getSession().getAttribute(Attributes.SESSION_FIELD_ROLE_USER);
 
             if (user == null) {
                 request.getRequestDispatcher(JSP_PAGE_PATH).forward(request, response);
@@ -40,7 +40,6 @@ public class ViewMainPageCommand implements ActionCommand {
                 request.getRequestDispatcher(USER_PAGE_PATH).forward(request, response);
             }
         } catch (ServletException e) {
-            LOG.error(e.getMessage(), e);
             throw new CommandException(e);
         }
     }

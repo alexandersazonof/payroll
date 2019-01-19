@@ -18,13 +18,12 @@ import java.io.IOException;
 
 public class DeleteRateCommand implements ActionCommand {
     private static final Logger LOG = LogManager.getLogger(DeleteRateCommand.class);
-    private static final String SELECTED_LANGUAGE_REQUEST_ATTR = "selectedLanguage";
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws CommandException, IOException {
         QueryUtil.saveCurrentQueryToSession(request);
         String languageId = LanguageUtil.getLanguageId(request);
-        request.setAttribute(SELECTED_LANGUAGE_REQUEST_ATTR, languageId);
+        request.setAttribute(Attributes.SELECTED_LANGUAGE_REQUEST_ATTR, languageId);
 
         User user = (User)request.getSession().getAttribute(Attributes.SESSION_FIELD_ROLE_USER);
         String name = request.getParameter(Attributes.REQUEST_RATE_NAME);

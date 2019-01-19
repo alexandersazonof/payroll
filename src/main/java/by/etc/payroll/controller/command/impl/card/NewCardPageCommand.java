@@ -2,8 +2,7 @@ package by.etc.payroll.controller.command.impl.card;
 
 import by.etc.payroll.bean.*;
 import by.etc.payroll.controller.command.ActionCommand;
-import by.etc.payroll.controller.command.util.LanguageUtil;
-import by.etc.payroll.controller.command.util.QueryUtil;
+import by.etc.payroll.controller.command.util.*;
 import by.etc.payroll.controller.exception.CommandException;
 import by.etc.payroll.service.exception.ServiceException;
 import by.etc.payroll.service.exception.ServiceUnauthorizedAccessException;
@@ -22,22 +21,19 @@ import java.util.List;
 
 public class NewCardPageCommand implements ActionCommand {
     private Logger LOG = LogManager.getLogger(NewCardPageCommand.class);
-    private static final String REDIRECT_PAGE_AFTER_UNAVTARIZED_ACCESS = "/controller?commad=loginpage";
 
-    private static final String SELECTED_LANGUAGE_REQUEST_ATTR = "selectedLanguage";
     private static final String JSP_PAGE_PATH = "WEB-INF/jsp/home/new_card.jsp";
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws CommandException, IOException {
         try {
-            User user = (User)request.getSession().getAttribute("user");
-            if (!Validator.validateUser(user)) {
-                throw new ServiceUnauthorizedAccessException("Incorrect access");
-            }
+            User user = (User)request.getSession().getAttribute(Attributes.SESSION_FIELD_ROLE_USER);
+            UserUtil.isUser(user);
+
 
             QueryUtil.saveCurrentQueryToSession(request);
             String languageId = LanguageUtil.getLanguageId(request);
-            request.setAttribute(SELECTED_LANGUAGE_REQUEST_ATTR, languageId);
+            request.setAttribute(Attributes.SELECTED_LANGUAGE_REQUEST_ATTR, languageId);
 
             ServiceFactory serviceFactory = ServiceFactory.getInstance();
             ConcreteCardService concreteCardService = serviceFactory.getCardService();
@@ -49,15 +45,15 @@ public class NewCardPageCommand implements ActionCommand {
             List<Company> listCompany = concreteCardService.getAllCompany();
 
 
-            request.setAttribute("listRate", listRate);
-            request.setAttribute("listValute", listValute);
-            request.setAttribute("listBankAccount", listBankAccount);
-            request.setAttribute("listCompany", listCompany);
+            request.setAttribute(Attributes.REQUEST_LIST_RATE, listRate);
+            request.setAttribute(Attributes.REQUEST_LIST_VALUTE, listValute);
+            request.setAttribute(Attributes.REQUEST_LIST_BANK_ACCOUNT, listBankAccount);
+            request.setAttribute(Attributes.REQUEST_LIST_COMPANY, listCompany);
 
             request.getRequestDispatcher(JSP_PAGE_PATH).forward(request, response);
         } catch (ServiceUnauthorizedAccessException e) {
-            LOG.error(e.getMessage(), e);
-            response.sendRedirect(REDIRECT_PAGE_AFTER_UNAVTARIZED_ACCESS);
+            LOG.error(Message.INCORRECT_ACCESS, e);
+            response.sendRedirect(Pages.REDIRECT_PAGE_AFTER_INCORRECT_ACCESS);
         } catch (ServletException e) {
             throw new CommandException(e.getMessage(), e);
         } catch (ServiceException e) {

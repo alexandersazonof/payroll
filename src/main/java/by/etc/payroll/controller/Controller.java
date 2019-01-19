@@ -38,7 +38,6 @@ public class Controller extends HttpServlet {
     private void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         try {
-            LOG.info("Get new request ...");
 
             ActionFactory factory = ActionFactory.getInstance();
             ActionCommand command = factory.defineCommand(request);

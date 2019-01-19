@@ -2,6 +2,8 @@ package by.etc.payroll.controller.command.impl.account;
 
 import by.etc.payroll.bean.User;
 import by.etc.payroll.controller.command.ActionCommand;
+import by.etc.payroll.controller.command.util.Message;
+import by.etc.payroll.controller.command.util.Pages;
 import by.etc.payroll.service.exception.ServiceUnauthorizedAccessException;
 import by.etc.payroll.service.exception.ServiceWrongNameException;
 import by.etc.payroll.service.factory.ServiceFactory;
@@ -18,12 +20,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class NewAccountCommand implements ActionCommand {
-    private AbstractBankAccountService service = new ConcreteBankAccountService();
     private Logger LOG = LogManager.getLogger(NewAccountCommand.class);
 
-    private static final String REDIRECT_PAGE_AFTER_UNAVTARIZED_ACCESS = "/controller?commad=mainpage&useraccess=true";
-    private static final String REDIRECT_PAGE_AFTER_ERROR = "/controller?command=newaccountpage&";
-    private static final String REDIRECT_PAGE_AFTER_SUCCESS = "/controller?command=mainpage&msg=success";
 
     private static final String WRONG_NAME_REQUEST_ATTR = "wrongName";
     private static final String NAME_REQUEST_ATTR = "name";
@@ -35,7 +33,7 @@ public class NewAccountCommand implements ActionCommand {
     public void execute(HttpServletRequest request, HttpServletResponse response) throws CommandException, IOException {
 
         String name = request.getParameter(Attributes.FIELD_NAME);
-        String valute = request.getParameter("valute");
+        String valute = request.getParameter(Attributes.REQUEST_VALUTE);
 
         try {
 
@@ -46,13 +44,13 @@ public class NewAccountCommand implements ActionCommand {
             ConcreteBankAccountService bankAccountService = serviceFactory.getBankAccountService();
 
             bankAccountService.addCard(name, valute, user);
-            response.sendRedirect(REDIRECT_PAGE_AFTER_SUCCESS);
+            response.sendRedirect(Pages.REDIRECT_PAGE_SUCCESS_CREATE_NEW_ACCOUNT);
 
         } catch (ServiceUnauthorizedAccessException e) {
-            LOG.error(e.getMessage(), e);
-            response.sendRedirect(REDIRECT_PAGE_AFTER_UNAVTARIZED_ACCESS);
+            LOG.error(Message.INCORRECT_ACCESS, e);
+            response.sendRedirect(Pages.REDIRECT_PAGE_AFTER_INCORRECT_ACCESS);
         } catch (ServiceWrongNameException e) {
-            LOG.error(e.getMessage(), e);
+            LOG.error(Message.INCORRECT_VALUE, e);
             response.sendRedirect(makeErrorRedirectString(WRONG_NAME_REQUEST_ATTR, name));
         } catch(ServiceException e) {
             throw new CommandException(e.getMessage(), e);
@@ -66,7 +64,7 @@ public class NewAccountCommand implements ActionCommand {
     private String makeErrorRedirectString(String errorName, String name) {
 
         StringBuilder parameters = new StringBuilder();
-        parameters.append(REDIRECT_PAGE_AFTER_ERROR);
+        parameters.append(Pages.REDIRECT_PAGE_AFTER_UNSUCCESS_CREATE_NEW_ACCOUNT);
         parameters.append(errorName);
         parameters.append(EQ);
         parameters.append(true);

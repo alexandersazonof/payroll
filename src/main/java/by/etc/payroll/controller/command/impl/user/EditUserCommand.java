@@ -50,7 +50,6 @@ public class EditUserCommand implements ActionCommand {
 
         try {
 
-            LOG.info("In command");
             int id = ((User) request.getSession().getAttribute(SESSION_ATTRIBUTE_USER)).getId();
             String login = request.getParameter(FORM_FIELD_LOGIN);
             String email = request.getParameter(FORM_FIELD_EMAIL);

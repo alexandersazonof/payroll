@@ -3,8 +3,7 @@ package by.etc.payroll.controller.command.impl.account;
 import by.etc.payroll.bean.User;
 import by.etc.payroll.controller.command.ActionCommand;
 import by.etc.payroll.controller.command.impl.card.BlockCardCommand;
-import by.etc.payroll.controller.command.util.LanguageUtil;
-import by.etc.payroll.controller.command.util.QueryUtil;
+import by.etc.payroll.controller.command.util.*;
 import by.etc.payroll.controller.exception.CommandException;
 import by.etc.payroll.service.AbstractBankAccountService;
 import by.etc.payroll.service.exception.ServiceException;
@@ -20,34 +19,29 @@ import java.io.IOException;
 
 public class BlockAccountCommand implements ActionCommand {
     private static final Logger LOG = LogManager.getLogger(BlockAccountCommand.class);
-    private static final String SELECTED_LANGUAGE_REQUEST_ATTR = "selectedLanguage";
 
-
-    private static final String REDIRECT_PAGE_AFTER_UNAVTARIZED_ACCESS = "/controller?command=mainPage&useraccess=true";
-    private static final String REDIRECT_PAGE_INCORRECT_QUERY = "/controller?command=mainPage&wrongquery=true";
-    private static final String REDIRECT_PAGE_AFTER_SUCCESS = "/controller?command=showaccount&number=%s&sucblock=true";
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws CommandException, IOException {
         QueryUtil.saveCurrentQueryToSession(request);
         String languageId = LanguageUtil.getLanguageId(request);
-        request.setAttribute(SELECTED_LANGUAGE_REQUEST_ATTR, languageId);
+        request.setAttribute(Attributes.SELECTED_LANGUAGE_REQUEST_ATTR, languageId);
 
-        User user = (User)request.getSession().getAttribute("user");
-        String bankAccountNumber = request.getParameter("accountNumber");
+        User user = (User)request.getSession().getAttribute(Attributes.SESSION_FIELD_ROLE_USER);
+        String bankAccountNumber = request.getParameter(Attributes.REQUEST_ACCOUNT_NUMBER);
 
         ServiceFactory serviceFactory = ServiceFactory.getInstance();
         AbstractBankAccountService bankAccountService = serviceFactory.getBankAccountService();
 
         try {
             bankAccountService.blockAccount(bankAccountNumber, user);
-            response.sendRedirect(String.format(REDIRECT_PAGE_AFTER_SUCCESS, bankAccountNumber));
+            response.sendRedirect(String.format(Pages.REDIRECT_PAGE_SUCCESS_BLOCK_ACCOUNT, bankAccountNumber));
         } catch (ServiceQueryException e) {
-            LOG.error("Incorrect query", e);
-            response.sendRedirect(REDIRECT_PAGE_INCORRECT_QUERY);
+            LOG.error(Message.INCORRECT_QUERY, e);
+            response.sendRedirect(Pages.REDIRECT_PAGE_INCORRECT_QUERY);
         } catch (ServiceUnauthorizedAccessException e) {
-            LOG.error("Incorrect access", e);
-            response.sendRedirect(REDIRECT_PAGE_AFTER_UNAVTARIZED_ACCESS);
+            LOG.error(Message.INCORRECT_ACCESS, e);
+            response.sendRedirect(Pages.REDIRECT_PAGE_AFTER_INCORRECT_ACCESS);
         } catch (ServiceException e) {
             throw new CommandException(e.getMessage(), e);
         }

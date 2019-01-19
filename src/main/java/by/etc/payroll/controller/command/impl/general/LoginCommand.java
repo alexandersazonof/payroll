@@ -54,7 +54,7 @@ public class LoginCommand implements ActionCommand {
             user = userService.logIn(login, password);
 
             HttpSession session = request.getSession(true);
-            user.setPassword("");
+            user.setPassword(EQ);
             session.setAttribute(Attributes.FIELD_USER, user);
 
             response.sendRedirect(REDIRECT_PAGE_AFTER_LOGIN);

@@ -2,10 +2,7 @@ package by.etc.payroll.controller.command.impl.card;
 
 import by.etc.payroll.bean.User;
 import by.etc.payroll.controller.command.ActionCommand;
-import by.etc.payroll.controller.command.util.LanguageUtil;
-import by.etc.payroll.controller.command.util.Message;
-import by.etc.payroll.controller.command.util.Pages;
-import by.etc.payroll.controller.command.util.QueryUtil;
+import by.etc.payroll.controller.command.util.*;
 import by.etc.payroll.controller.exception.CommandException;
 import by.etc.payroll.service.AbstractCardService;
 import by.etc.payroll.service.exception.*;
@@ -24,7 +21,6 @@ import java.util.GregorianCalendar;
 
 public class NewCardCommand implements ActionCommand {
     private Logger LOG = LogManager.getLogger(NewCardCommand.class);
-    private static final String SELECTED_LANGUAGE_REQUEST_ATTR = "selectedLanguage";
 
 
     private static final String REDIRECT_WRONG_VALUE = "/controller?command=newcardpage&";
@@ -49,29 +45,26 @@ public class NewCardCommand implements ActionCommand {
 
         QueryUtil.saveCurrentQueryToSession(request);
         String languageId = LanguageUtil.getLanguageId(request);
-        request.setAttribute(SELECTED_LANGUAGE_REQUEST_ATTR, languageId);
+        request.setAttribute(Attributes.SELECTED_LANGUAGE_REQUEST_ATTR, languageId);
 
 
-        String firstName = request.getParameter("firstName");
-        String lastName = request.getParameter("lastName");
-        String address = request.getParameter("address");
-        String city = request.getParameter("city");
-        String company = request.getParameter("company");
+        String firstName = request.getParameter(FIRST_NAME_REQUEST_ATTR);
+        String lastName = request.getParameter(LAST_NAME_REQUEST_ATTR);
+        String address = request.getParameter(ADDRESS_NAME_REQUEST_ATTR);
+        String city = request.getParameter(CITY_NAME_REQUSET_ATTR);
+        String company = request.getParameter(Attributes.REQUEST_COMPANY);
 
         try {
-            User user = (User) request.getSession().getAttribute("user");
-
-        if (!Validator.validateUser(user)) {
-            throw new ServiceUnauthorizedAccessException("Incorrect access");
-        }
+            User user = (User) request.getSession().getAttribute(Attributes.SESSION_FIELD_ROLE_USER);
+            UserUtil.isUser(user);
 
 
-            if (request.getParameter("rules") == null) {
-                throw new ServiceWrongBoxException("False box");
+            if (request.getParameter(Attributes.REQUEST_RULES) == null) {
+                throw new ServiceWrongBoxException(Message.INCORRECT_VALUE);
             }
 
-            String bankAccount = request.getParameter("account");
-            String rate = request.getParameter("rate");
+            String bankAccount = request.getParameter(Attributes.REQUEST_ACCOUNT);
+            String rate = request.getParameter(Attributes.REQUEST_RATE);
 
 
             ServiceFactory serviceFactory = ServiceFactory.getInstance();

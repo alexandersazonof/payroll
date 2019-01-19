@@ -32,7 +32,7 @@ public class ConcreteBankAccountService implements AbstractBankAccountService {
         List<BankAccount> bankAccountList = new ArrayList<>();
 
         if (user == null || !user.getRole().equalsIgnoreCase(Roles.USER)) {
-            throw new ServiceUnauthorizedAccessException("Incorrect access");
+            throw new ServiceUnauthorizedAccessException();
         }
 
         try {
@@ -55,7 +55,7 @@ public class ConcreteBankAccountService implements AbstractBankAccountService {
         try {
 
             if (!Validator.validateString(number)) {
-                throw new ServiceQueryException("Incorrect number");
+                throw new ServiceQueryException();
             }
 
 
@@ -64,7 +64,7 @@ public class ConcreteBankAccountService implements AbstractBankAccountService {
             bankAccount = bankAccountDAO.getByNumber(number);
 
             if (bankAccount == null) {
-                throw new ServiceQueryException("Incorrect number");
+                throw new ServiceQueryException();
             }
 
             SqlCardDAO cardDAO = daoFactory.getCardDAO();
@@ -84,7 +84,7 @@ public class ConcreteBankAccountService implements AbstractBankAccountService {
 
         UserUtil.isUser(user);
         if (!Validator.validateString(name)) {
-            throw new ServiceWrongNameException("Incorrect name");
+            throw new ServiceWrongNameException();
         }
 
         int count = 0;
@@ -125,7 +125,7 @@ public class ConcreteBankAccountService implements AbstractBankAccountService {
     @Override
     public boolean blockAccount(String bankAccountNumber, User user) throws ServiceException {
         if (!Validator.validateString(bankAccountNumber)) {
-            throw new ServiceQueryException("Incorrect number");
+            throw new ServiceQueryException();
         }
 
         DaoFactory daoFactory = DaoFactory.getInstance();
@@ -136,7 +136,7 @@ public class ConcreteBankAccountService implements AbstractBankAccountService {
             BankAccount bankAccount = bankAccountDAO.getByNumber(bankAccountNumber);
 
             if (bankAccount == null) {
-                throw new ServiceQueryException("Incorrect number");
+                throw new ServiceQueryException();
             }
 
             UserUtil.isAccountOfUser(user, bankAccount);
@@ -165,7 +165,7 @@ public class ConcreteBankAccountService implements AbstractBankAccountService {
     @Override
     public boolean unBlockAccount(String bankAccountNumber, User user) throws ServiceException {
         if (!Validator.validateString(bankAccountNumber)) {
-            throw new ServiceQueryException("Incorrect number");
+            throw new ServiceQueryException();
         }
 
         DaoFactory daoFactory = DaoFactory.getInstance();
@@ -177,7 +177,7 @@ public class ConcreteBankAccountService implements AbstractBankAccountService {
             BankAccount bankAccount = bankAccountDAO.getByNumber(bankAccountNumber);
 
             if (bankAccount == null) {
-                throw new ServiceQueryException("Incorrect number");
+                throw new ServiceQueryException();
             }
 
             UserUtil.isAccountOfUser(user, bankAccount);

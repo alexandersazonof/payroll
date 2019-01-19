@@ -41,7 +41,6 @@ public class SignUpCommand implements ActionCommand {
 
         User user = null;
 
-            LOG.info("Begin processing registry form..");
             String login = request.getParameter(Attributes.FIELD_USERNAME);
             String email = request.getParameter(Attributes.FIELD_EMAIL);
             String password = request.getParameter(Attributes.FIELD_PASSWORD);
@@ -55,7 +54,7 @@ public class SignUpCommand implements ActionCommand {
 
                try {
                    if (!password.equals(passwordConfirm)) {
-                       throw new ServiceWrongPasswordException("Incorrect password");
+                       throw new ServiceWrongPasswordException();
                    }
                    ServiceFactory serviceFactory = ServiceFactory.getInstance();
                    ConcreteUserService userService = serviceFactory.getUserService();
@@ -66,28 +65,26 @@ public class SignUpCommand implements ActionCommand {
 
 
                } catch (ServiceWrongEmailException e) {
-                   LOG.error(e);
+                   LOG.error(e.getMessage(), e);
 
                    response.sendRedirect(makeErrorRedirectString(WRONG_EMAIL_REQUEST_ATTR, login,
                            email, firstName, lastName));
 
                } catch (ServiceWrongLoginException e) {
-                   LOG.error(e);
+                   LOG.error(e.getMessage(), e);
                    response.sendRedirect(makeErrorRedirectString(WRONG_LOGIN_REQUEST_ATTR, login,
                            email, firstName, lastName));
 
                } catch (ServiceWrongPasswordException e) {
                    response.sendRedirect(makeErrorRedirectString(WRONG_PASSWORD_REQUEST_ATTR, login,
                            email, firstName, lastName));
-                   LOG.error(e);
+                   LOG.error(e.getMessage(), e);
 
                } catch (ServiceException e) {
                    response.sendRedirect(makeErrorRedirectString(WRONG_VALUE_REQUEST_ATTR, login,
                            email, firstName, lastName));
 
                } catch (IOException e) {
-
-                   LOG.error(e.getMessage(), e);
                    throw new CommandException(e);
                }
            }

@@ -2,6 +2,7 @@ package by.etc.payroll.controller.command.impl.transfer;
 
 import by.etc.payroll.bean.User;
 import by.etc.payroll.controller.command.ActionCommand;
+import by.etc.payroll.controller.command.util.Attributes;
 import by.etc.payroll.controller.command.util.LanguageUtil;
 import by.etc.payroll.controller.command.util.QueryUtil;
 import by.etc.payroll.controller.exception.CommandException;
@@ -18,7 +19,6 @@ import java.io.IOException;
 public class SendCardMoneyCommand implements ActionCommand {
     private static final Logger LOG = LogManager.getLogger(SendCardMoneyCommand.class);
 
-    private static final String SELECTED_LANGUAGE_REQUEST_ATTR = "selectedLanguage";
 
     private static final String REDIRECT_PAGE_AFTER_UNAVTARIZED_ACCESS = "/controller?command=mainPage&useraccess=true";
     private static final String REDIRECT_AFTER_SUCCESS = "/controller?command=mainPage&sctran=true";
@@ -40,13 +40,13 @@ public class SendCardMoneyCommand implements ActionCommand {
     public void execute(HttpServletRequest request, HttpServletResponse response) throws CommandException, IOException {
         QueryUtil.saveCurrentQueryToSession(request);
         String languageId = LanguageUtil.getLanguageId(request);
-        request.setAttribute(SELECTED_LANGUAGE_REQUEST_ATTR, languageId);
+        request.setAttribute(Attributes.SELECTED_LANGUAGE_REQUEST_ATTR, languageId);
 
-        User user = (User)request.getSession().getAttribute("user");
-        String fromCard = request.getParameter("fromCardNumber");
-        String toCard = request.getParameter("toCardNumber");
-        String count = request.getParameter("money");
-        String password = request.getParameter("password");
+        User user = (User)request.getSession().getAttribute(Attributes.SESSION_FIELD_ROLE_USER);
+        String fromCard = request.getParameter(Attributes.REQUEST_FROM_CARD_NUMBER);
+        String toCard = request.getParameter(Attributes.REQUEST_TO_CARD_NUMBER);
+        String count = request.getParameter(Attributes.REQUEST_MONEY);
+        String password = request.getParameter(Attributes.FIELD_PASSWORD);
 
         ServiceFactory serviceFactory = ServiceFactory.getInstance();
         ConcreteCardService concreteCardService = serviceFactory.getCardService();
